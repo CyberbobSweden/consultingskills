@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Konsultrollen i praktiken – Enhetsträff</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
 .header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .header h1{font-size:20px;font-weight:500;color:white}
 .header .sub{font-size:12px;opacity:.75;margin-top:3px;color:white}
-.mode-btns{display:flex;gap:6px}
+.mode-btns{display:flex;gap:6px;align-items:center}
 .mbtn{padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:transparent;color:white;font-size:12px;cursor:pointer;transition:all .15s}
 .mbtn.active{background:white;color:#0F6E56;font-weight:500}
 .tbar{background:rgba(15,110,86,0.88);padding:.65rem 2rem;display:flex;align-items:center;gap:1rem}
@@ -19,7 +20,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tctrl{display:flex;gap:5px}
 .tbtn{padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:12px;cursor:pointer}
 .tbtn:hover{background:rgba(255,255,255,.2)}
-.pbar{height:4px;background:rgba(255,255,255,.15);background-color:#0a4a38}
+.pbar{height:4px;background:#0a4a38}
 .pfill{height:100%;background:#5DCAA5;transition:width .5s}
 .content{padding:1.5rem 2rem;max-width:900px;margin:0 auto}
 .pnav{display:flex;gap:6px;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:4px}
@@ -37,12 +38,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .qbox.blue h4{color:#185FA5}
 .fnote{background:#e8f2fb;border-radius:8px;padding:.65rem 1rem;font-size:12px;color:#0C447C;margin-bottom:.85rem;border-left:3px solid #185FA5;line-height:1.5}
 .ins{background:#e8f5ef;border-radius:8px;padding:.7rem 1rem;margin-bottom:.6rem}
-.ins h4{font-size:12px;font-weight:600;color:#085041;margin-bottom:.4rem}
 .ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:3px 9px;border-radius:10px;margin:.15rem;border:1px solid #9FE1CB}
-textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:13px;min-height:72px;resize:vertical;background:white;color:#1a1a1a;font-family:inherit;margin-top:.4rem}
+textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:13px;min-height:80px;resize:vertical;background:white;color:#1a1a1a;font-family:inherit;margin-top:.4rem}
 textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,110,86,.1)}
 .sbtn{padding:7px 18px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;cursor:pointer;margin-top:.5rem;font-weight:500}
 .sbtn:hover{background:#085041}
+.sbtn:disabled{background:#aaa;cursor:default}
 .stag{font-size:12px;color:#0F6E56;margin-left:8px;opacity:0;transition:opacity .3s}
 .stag.show{opacity:1}
 .slabel{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem;margin-top:.7rem}
@@ -53,12 +54,44 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .stbl{width:100%;border-collapse:collapse;font-size:13px}
 .stbl td{padding:.45rem .7rem;border-bottom:1px solid #f0f0ec;vertical-align:top}
 .stbl td:first-child{color:#888;width:110px;font-weight:500}
+.expbtn{padding:7px 16px;border:1px solid #0F6E56;border-radius:7px;background:white;color:#0F6E56;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-weight:500}
+.expbtn:hover{background:#e8f5ef}
 .nextbtn{padding:7px 16px;border:1px solid #ddd;border-radius:7px;background:white;color:#333;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-top:.75rem}
 .nextbtn:hover{background:#f5f5f2}
-@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.header{padding:1rem}.content{padding:1rem}}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:100}
+.login-box{background:white;border-radius:16px;padding:2rem;width:320px;box-shadow:0 8px 32px rgba(0,0,0,.18);text-align:center}
+.login-box h2{font-size:17px;font-weight:600;margin-bottom:.4rem}
+.login-box p{font-size:13px;color:#888;margin-bottom:1.25rem}
+.login-box input{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:14px;text-align:center;margin-bottom:.75rem;letter-spacing:.1em}
+.login-box input:focus{outline:none;border-color:#0F6E56}
+.login-err{font-size:12px;color:#c0392b;margin-top:-.4rem;margin-bottom:.5rem;min-height:16px}
+.lbtn{width:100%;padding:9px;background:#0F6E56;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer}
+.cancel-link{font-size:12px;color:#aaa;cursor:pointer;margin-top:.75rem;display:inline-block;text-decoration:underline}
+.grp-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.grp-btn{padding:7px 16px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;transition:all .15s;color:#555}
+.grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
+.live-badge{display:inline-block;width:8px;height:8px;background:#2ecc71;border-radius:50%;margin-right:4px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-note{font-size:11px;color:#aaa;margin-left:6px}
+.qr-wrap{text-align:center;padding:1rem 0}
+.qr-wrap p{font-size:13px;color:#555;margin-bottom:.75rem}
+#qrcode{display:inline-block;padding:12px;background:white;border:1px solid #ddd;border-radius:10px}
+.qr-url{font-size:11px;color:#aaa;margin-top:.5rem;word-break:break-all}
+@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:1rem}.header{padding:1rem}}
 </style>
 </head>
 <body>
+
+<div class="overlay" id="loginOverlay" style="display:none">
+  <div class="login-box">
+    <h2>Facilitatorvy</h2>
+    <p>Ange lösenord för att fortsätta</p>
+    <input type="password" id="pwInput" placeholder="Lösenord" onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="login-err" id="pwErr"></div>
+    <button class="lbtn" onclick="checkPw()">Logga in</button>
+    <div class="cancel-link" onclick="closeLogin()">Avbryt</div>
+  </div>
+</div>
 
 <div class="header">
   <div>
@@ -66,15 +99,15 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
     <div class="sub">Enhetsträff · arbetspass · 90 min</div>
   </div>
   <div class="mode-btns">
-    <button class="mbtn active" onclick="setMode('fac')">Facilitator</button>
-    <button class="mbtn" onclick="setMode('grp')">Gruppvy</button>
-    <button class="mbtn" onclick="setMode('sum')">Summering</button>
+    <button class="mbtn" id="btnFac" onclick="tryFac()">🔒 Facilitator</button>
+    <button class="mbtn active" id="btnGrp" onclick="setMode('grp')">Gruppvy</button>
+    <button class="mbtn" id="btnSum" onclick="trySum()">Summering</button>
   </div>
 </div>
 
 <div class="tbar">
   <div class="tdisp" id="tdisp">90:00</div>
-  <div class="tlabel" id="tlabel">Klicka start när ni är redo</div>
+  <div class="tlabel" id="tlabel">Välkommen! Scanna QR-koden eller vänta på facilitatorn.</div>
   <div class="tctrl">
     <button class="tbtn" onclick="startT()">▶ Start</button>
     <button class="tbtn" onclick="pauseT()">⏸ Paus</button>
@@ -82,74 +115,285 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
   </div>
 </div>
 <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
-
 <div class="content" id="mc"></div>
 
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",
+  authDomain: "consultingskills-938d9.firebaseapp.com",
+  projectId: "consultingskills-938d9",
+  storageBucket: "consultingskills-938d9.firebasestorage.app",
+  messagingSenderId: "250530809846",
+  appId: "1:250530809846:web:eacdb035347952c595e9d7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const SESSION = "enhetsträff-2026";
+
+// Save a group answer to Firestore
+window.fbSave = async function(del, group, text) {
+  try {
+    await setDoc(doc(db, SESSION, del + '_' + group), { text, group, del, ts: Date.now() }, { merge: true });
+  } catch(e) { console.error('Firebase save error', e); }
+};
+
+// Listen to all answers in real time (for facilitator/summary)
+window.fbListen = function(callback) {
+  onSnapshot(collection(db, SESSION), (snap) => {
+    const data = {};
+    snap.forEach(d => { data[d.id] = d.data().text || ''; });
+    callback(data);
+  });
+};
+
+// Export all answers from Firestore
+window.fbExport = async function() {
+  const snap = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js")
+    .then(m => m.getDocs(collection(db, SESSION)));
+  return snap;
+};
+
+window.fbReady = true;
+window.dispatchEvent(new Event('fbReady'));
+</script>
+
 <script>
-const PHASES=[
-  {id:'intro',label:'Intro',mins:10},
-  {id:'del1',label:'Del 1 – Skills',mins:25},
-  {id:'del2',label:'Del 2 – Varumärke',mins:25},
-  {id:'del3',label:'Del 3 – Hattar',mins:20},
-  {id:'avsl',label:'Avslut',mins:10},
+const PASS = 'cyberbob';
+const GROUPS = ['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
+const TOTAL = 90 * 60;
+const PHASES = [
+  {label:'Intro', mins:10},
+  {label:'Del 1 – Skills', mins:25},
+  {label:'Del 2 – Varumärke', mins:25},
+  {label:'Del 3 – Hattar', mins:20},
+  {label:'Avslut', mins:10},
 ];
-const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
-const TOTAL=90*60;
-let mode='fac',phase=0,secs=TOTAL,running=false,iv=null,ans={},done={};
+
+let mode = 'grp', phase = 0, secs = TOTAL, running = false, iv = null;
+let isAuth = false, done = {};
+let ans = {}; // live-synced from Firebase
+let selectedGroup = localStorage.getItem('selectedGroup') || '';
+
+// Wait for Firebase then start listening
+window.addEventListener('fbReady', () => {
+  window.fbListen(data => {
+    ans = data;
+    render();
+  });
+});
+
+function tryFac(){ document.getElementById('loginOverlay').style.display='flex'; setTimeout(()=>document.getElementById('pwInput').focus(),100); }
+function trySum(){ if(isAuth) setMode('sum'); else tryFac(); }
+function closeLogin(){ document.getElementById('loginOverlay').style.display='none'; document.getElementById('pwErr').textContent=''; document.getElementById('pwInput').value=''; }
+function checkPw(){
+  if(document.getElementById('pwInput').value === PASS){ isAuth=true; closeLogin(); setMode('fac'); }
+  else { document.getElementById('pwErr').textContent='Fel lösenord'; document.getElementById('pwInput').value=''; document.getElementById('pwInput').focus(); }
+}
 
 function setMode(m){
   mode=m;
-  document.querySelectorAll('.mbtn').forEach((b,i)=>b.classList.toggle('active',['fac','grp','sum'][i]===m));
+  ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
+  document.getElementById('btnFac').textContent = isAuth ? '✓ Facilitator' : '🔒 Facilitator';
   render();
 }
-function startT(){if(running)return;running=true;iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);}
-function pauseT(){clearInterval(iv);running=false;}
-function resetT(){clearInterval(iv);running=false;secs=TOTAL;upd();}
+
+function startT(){ if(running)return; running=true; iv=setInterval(()=>{ if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;} },1000); }
+function pauseT(){ clearInterval(iv); running=false; }
+function resetT(){ clearInterval(iv); running=false; secs=TOTAL; upd(); }
 function upd(){
-  const m=Math.floor(secs/60),s=secs%60;
+  const m=Math.floor(secs/60), s=secs%60;
   document.getElementById('tdisp').textContent=`${m}:${s.toString().padStart(2,'0')}`;
   document.getElementById('pfill').style.width=`${((TOTAL-secs)/TOTAL*100).toFixed(1)}%`;
 }
-function sv(k,v){ans[k]=v;const t=document.getElementById('st_'+k);if(t){t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1400);}}
-function ga(k){return ans[k]||'';}
-function go(i){phase=Math.max(0,Math.min(i,PHASES.length-1));document.getElementById('tlabel').textContent=PHASES[phase].label;render();}
+
+function go(i){ phase=Math.max(0,Math.min(i,PHASES.length-1)); document.getElementById('tlabel').textContent=PHASES[phase].label; render(); }
+
+function ga(k){ return ans[k] || ''; }
+
+async function groupSubmit(del, group, inputId, btnId, tagId) {
+  const val = document.getElementById(inputId).value;
+  if(!val.trim()) return;
+  const btn = document.getElementById(btnId);
+  btn.disabled = true; btn.textContent = 'Sparar...';
+  await window.fbSave(del, group, val);
+  btn.textContent = 'Skickat!';
+  const tag = document.getElementById(tagId);
+  if(tag){ tag.classList.add('show'); setTimeout(()=>tag.classList.remove('show'),2000); }
+}
+
+function selectGroup(g){
+  selectedGroup = g;
+  localStorage.setItem('selectedGroup', g);
+  render();
+}
+
+function render(){
+  const c = document.getElementById('mc');
+  if(mode==='fac') c.innerHTML = renderFac();
+  else if(mode==='grp') c.innerHTML = renderGrp();
+  else c.innerHTML = renderSum();
+  if(mode==='grp' && phase===0) generateQR();
+}
 
 function phaseNav(){
   return `<div class="pnav">${PHASES.map((p,i)=>`<div class="ppill ${i===phase?'active':done[i]?'done':''}" onclick="go(${i})">${p.label} <span style="opacity:.5;font-size:11px">${p.mins}m</span></div>`).join('')}</div>`;
 }
-function groupInputs(eid){
-  return GROUPS.map(g=>`
-    <div>
-      <div class="slabel">${g}</div>
-      <textarea placeholder="Vad delade de?" onchange="sv('${eid}_${g}',this.value)">${ga(eid+'_'+g)}</textarea>
-      <span class="stag" id="st_${eid}_${g}">Sparat ✓</span>
-    </div>`).join('');
-}
 
-function render(){
-  const c=document.getElementById('mc');
-  if(mode==='fac') c.innerHTML=renderFac();
-  else if(mode==='grp') c.innerHTML=renderGrp();
-  else c.innerHTML=renderSum();
+// Facilitator input fields (read-only view of what groups submitted)
+function facGroupView(del){
+  return GROUPS.map(g=>{
+    const val = ga(del+'_'+g);
+    return `<div style="margin-bottom:.7rem">
+      <div class="slabel">${g} ${val?'<span style="color:#0F6E56">✓ svar inkommet</span>':''}</div>
+      <div style="background:#f7f7f4;border-radius:8px;padding:.65rem;font-size:13px;min-height:44px;border:1px solid #eee;color:${val?'#1a1a1a':'#bbb'}">${val || 'Inväntar svar…'}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderFac(){
   if(phase===0) return phaseNav()+renderIntro();
-  if(phase===1) return phaseNav()+renderD1(true);
-  if(phase===2) return phaseNav()+renderD2(true);
-  if(phase===3) return phaseNav()+renderD3(true);
+  if(phase===1) return phaseNav()+renderD(1,true);
+  if(phase===2) return phaseNav()+renderD(2,true);
+  if(phase===3) return phaseNav()+renderD(3,true);
   return phaseNav()+renderAvsl();
 }
+
 function renderGrp(){
-  if(phase===1) return renderD1(false);
-  if(phase===2) return renderD2(false);
-  if(phase===3) return renderD3(false);
-  return `<div class="card"><div class="empty">Ingen aktiv gruppuppgift just nu – vänta på facilitatorn.</div></div>`;
+  if(phase===0) return renderWelcome();
+  if(!selectedGroup) return renderGroupPicker();
+  if(phase===1) return renderD(1,false);
+  if(phase===2) return renderD(2,false);
+  if(phase===3) return renderD(3,false);
+  return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
+}
+
+function renderWelcome(){
+  return `<div class="card" style="text-align:center;padding:2rem">
+    <div class="ctitle" style="justify-content:center;font-size:18px;margin-bottom:.5rem">Välkommen!</div>
+    <p style="font-size:13px;color:#666;margin-bottom:1.5rem">Passet startar strax. Sätt dig i din grupp och vänta på facilitatorn.</p>
+    <div class="qr-wrap">
+      <p>Dela länken med kollegor via QR-kod</p>
+      <div id="qrcode"></div>
+      <div class="qr-url" id="qrurl"></div>
+    </div>
+  </div>`;
+}
+
+function renderGroupPicker(){
+  return `<div class="card">
+    <div class="ctitle">Välj din grupp</div>
+    <div class="csub">Välj en gång – dina svar kopplas till gruppen</div>
+    <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn" onclick="selectGroup('${g}')">${g}</button>`).join('')}</div>
+  </div>`;
+}
+
+function generateQR(){
+  setTimeout(()=>{
+    const el=document.getElementById('qrcode'), urlEl=document.getElementById('qrurl');
+    if(!el) return;
+    const url = window.location.href.split('?')[0];
+    if(urlEl) urlEl.textContent = url;
+    el.innerHTML = '';
+    try{ new QRCode(el,{text:url,width:160,height:160,colorDark:'#0F6E56',colorLight:'#ffffff'}); }
+    catch(e){ el.textContent=url; }
+  },200);
+}
+
+const DEFS = {
+  1: {
+    title: 'Del 1 · Core Consulting Skills i praktiken',
+    time: '25 min · Diskussion 12 min → Redovisning 8–10 min',
+    questions: [
+      ['Diskutera 1', 'Vilka av dessa fyra är <em>svårast</em> i ert dagliga arbete – och varför?<br><span style="font-size:12px;opacity:.7">Kundförståelse & problemlösning · Effektiv kommunikation · Professionalism & ansvar · Värdeskapande</span>'],
+      ['Diskutera 2', 'Ge ett konkret exempel från ett riktigt uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet.'],
+      ['Diskutera 3', 'Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt?'],
+    ],
+    deliverable: 'Varje grupp delar: <strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på',
+    insights: ['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
+  },
+  2: {
+    title: 'Del 2 · Konsultmässighet – eget varumärke',
+    time: '25 min · Diskussion 12 min → Redovisning 8–10 min',
+    questions: [
+      ['Diskutera 1', 'Vilka konkreta beteenden/attityder skapar förtroende hos kunden? Tänk på ett uppdrag ni minns – vad var det som byggde relationen?'],
+      ['Diskutera 2', 'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'],
+      ['Diskutera 3', 'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'],
+    ],
+    deliverable: 'Varje grupp delar: <strong>1 konkret tips</strong> eller exempel på bra konsultmässighet ni sett eller gjort',
+    insights: ['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – styrketecken','Du ÄR Combitech hos kunden'],
+  },
+  3: {
+    title: 'Del 3 · Många hattar – scenario',
+    time: '20 min · Diskussion 10 min → Redovisning 5 min (30–45 sek/grupp)',
+    questions: [
+      ['Scenario A', 'Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Mötet handlar om komplexa tekniska krav du förberett inför. Hur agerar du?'],
+      ['Scenario B', 'Kunden ifrågasätter er leverans och vill minska scopet – men problemet är deras egna interna processer, inte er lösning. Hur hanterar ni det utan att peka finger?'],
+      ['Scenario C', 'Du hittar ett stort risk/problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är inte din uppgift. Vad gör du?'],
+    ],
+    deliverable: 'Välj <strong>ett scenario</strong> och dela er bästa approach – och varför just den',
+    insights: ['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation löser mer än teknik','Att flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen'],
+  }
+};
+
+function renderD(n, isFac){
+  const d = DEFS[n];
+  const key = 'd'+n;
+  const qs = d.questions.map(([h,p])=>`<div class="qbox"><h4>${h}</h4><p>${p}</p></div>`).join('');
+  const deliverable = `<div class="qbox blue"><h4>Leverans</h4><p>${d.deliverable}</p></div>`;
+
+  // Group answer input
+  let groupInput = '';
+  if(!isFac && selectedGroup){
+    const existing = ga(key+'_'+selectedGroup);
+    const inputId = `ginput_${key}`;
+    const btnId = `gbtn_${key}`;
+    const tagId = `gtag_${key}`;
+    groupInput = `<div class="card" style="border-color:#0F6E56">
+      <div class="ctitle"><span class="live-badge"></span>${selectedGroup} – ert svar</div>
+      <div class="csub">Skriv ert svar här – det syns direkt hos facilitatorn</div>
+      <textarea id="${inputId}" placeholder="Skriv gruppens svar / viktigaste punkter här…">${existing}</textarea>
+      <div style="display:flex;align-items:center;margin-top:.5rem;gap:.75rem">
+        <button class="sbtn" id="${btnId}" onclick="groupSubmit('${key}','${selectedGroup}','${inputId}','${btnId}','${tagId}')">Skicka svar</button>
+        <span class="stag" id="${tagId}">✓ Skickat till facilitatorn!</span>
+      </div>
+    </div>`;
+  }
+
+  // Facilitator view
+  let facView = '';
+  if(isFac){
+    facView = `
+    <div class="card">
+      <div class="ctitle">Seniora insikter – lyft vid behov</div>
+      <div class="ins">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
+    </div>
+    <div class="card">
+      <div class="ctitle"><span class="live-badge"></span> Inkomna svar <span class="sync-note">uppdateras live</span></div>
+      ${facGroupView(key)}
+      <div style="margin-top:1rem">
+        <button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="card">
+    <div class="ctitle">${d.title}</div>
+    <div class="csub">${d.time}</div>
+    ${qs}${deliverable}
+  </div>
+  ${groupInput}
+  ${facView}`;
 }
 
 function renderIntro(){
   return `
-  <div class="fnote">Facilitatorvy · Intro (10 min) – Välkomna alla, gör en snabb runda och sätt tonen: det här är ett öppet samtal mellan kollegor, inga rätta svar.</div>
+  <div class="fnote">Facilitatorvy · Intro (10 min) – Välkomna alla, gör en snabb runda. Sätt tonen: öppet samtal, inga rätta svar.</div>
   <div class="card">
     <div class="ctitle">Agenda – 90 min</div>
     <table class="stbl">
@@ -162,132 +406,64 @@ function renderIntro(){
     <button class="sbtn" onclick="go(1)" style="margin-top:1rem">Starta Del 1 →</button>
   </div>
   <div class="card">
-    <div class="ctitle">Snabb icebreaker-runda (5 min)</div>
-    <div class="csub">Gå runt i rummet – alla svarar på en fråga</div>
+    <div class="ctitle">Icebreaker-runda (5 min)</div>
     <div class="qbox">
-      <h4>Fråga till alla</h4>
-      <p>"Vilken roll hade du inte förväntade dig att du skulle ha i din konsultroll – men som du ändå tagit?"</p>
-      <p style="font-size:12px;color:#888;margin-top:.5rem">Ex: psykolog, projektledare, konfliktlösare, säljare, mentor… Alla har minst ett svar – det är meningen.</p>
+      <h4>Fråga till alla i rummet</h4>
+      <p>"Vilken roll hade du inte förväntade dig att ta i din konsultroll – men som du ändå tagit?"</p>
+      <p style="font-size:12px;color:#888;margin-top:.4rem">Ex: psykolog, projektledare, konfliktlösare, säljare, mentor…</p>
     </div>
-  </div>`;
-}
-
-function renderD1(isFac){
-  const q=`
-  <div class="card">
-    <div class="ctitle">Del 1 · Core Consulting Skills i praktiken</div>
-    <div class="csub">25 min totalt · Gruppdiskussion 12 min → Redovisning 8–10 min</div>
-    <div class="qbox"><h4>Diskutera 1</h4><p>Vilka av dessa fyra är <em>svårast</em> i ert dagliga arbete – och varför?<br><span style="font-size:12px;opacity:.7">Kundförståelse &amp; problemlösning · Effektiv kommunikation · Professionalism &amp; ansvar · Värdeskapande</span></p></div>
-    <div class="qbox"><h4>Diskutera 2</h4><p>Ge ett konkret exempel från ett riktigt uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet.</p></div>
-    <div class="qbox"><h4>Diskutera 3</h4><p>Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt?</p></div>
-    <div class="qbox blue"><h4>Leverans</h4><p>Varje grupp delar: <strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på</p></div>
-  </div>`;
-  if(!isFac) return q;
-  return q+`
-  <div class="card">
-    <div class="ctitle">Seniora insikter – lyft vid behov</div>
-    <div class="ins"><h4>Om diskussionen behöver bränsle</h4>
-      <span class="ibadge">"Kommunikation är halva leveransen"</span>
-      <span class="ibadge">Kunden köper trygghet, inte bara timmar</span>
-      <span class="ibadge">Lyssnande är en teknisk skill</span>
-      <span class="ibadge">Soft skills syns mest när det krisar</span>
-      <span class="ibadge">"Rätt rapport i rätt tid > perfekt rapport för sent"</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="ctitle">Samla in från grupperna</div>
-    ${groupInputs('d1')}
-    <br><button class="sbtn" onclick="done[1]=true;go(2)">Gå till Del 2 →</button>
-  </div>`;
-}
-
-function renderD2(isFac){
-  const q=`
-  <div class="card">
-    <div class="ctitle">Del 2 · Konsultmässighet – eget varumärke</div>
-    <div class="csub">25 min totalt · Gruppdiskussion 12 min → Redovisning 8–10 min</div>
-    <div class="qbox"><h4>Diskutera 1</h4><p>Vilka konkreta beteenden/attityder skapar förtroende hos kunden? Tänk på ett uppdrag ni minns – vad var det som byggde relationen?</p></div>
-    <div class="qbox"><h4>Diskutera 2</h4><p>Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera en intern konflikt hos kunden, eller sälja in nästa fas?</p></div>
-    <div class="qbox"><h4>Diskutera 3</h4><p>Vad är den tydligaste skillnaden mot att jobba i linjeroll? Vad saknar ni – och vad uppskattar ni mest med konsultrollen?</p></div>
-    <div class="qbox blue"><h4>Leverans</h4><p>Varje grupp delar: <strong>1 konkret tips</strong> eller exempel på bra konsultmässighet ni sett eller gjort</p></div>
-  </div>`;
-  if(!isFac) return q;
-  return q+`
-  <div class="card">
-    <div class="ctitle">Seniora insikter – lyft vid behov</div>
-    <div class="ins"><h4></h4>
-      <span class="ibadge">"Ingen frågar vad du kostar om du levererar värde"</span>
-      <span class="ibadge">Varumärket byggs i varje möte, varje mail</span>
-      <span class="ibadge">Pålitlighet > Briljans</span>
-      <span class="ibadge">"Hur du avslutar minns folk lika länge"</span>
-      <span class="ibadge">Be om feedback – det är ett styrketecken</span>
-      <span class="ibadge">Du ÄR Combitech hos kunden</span>
-    </div>
-  </div>
-  <div class="card">
-    <div class="ctitle">Samla in från grupperna</div>
-    ${groupInputs('d2')}
-    <br><button class="sbtn" onclick="done[2]=true;go(3)">Gå till Del 3 →</button>
-  </div>`;
-}
-
-function renderD3(isFac){
-  const q=`
-  <div class="card">
-    <div class="ctitle">Del 3 · Många hattar – scenario</div>
-    <div class="csub">20 min · 10 min diskussion → 5 min redovisning (30–45 sek/grupp)</div>
-    ${isFac?'<div class="fnote">Dela ut ett scenario per grupp – eller låt dem välja ett de känner igen sig i. Det finns inget rätt svar.</div>':''}
-    <div class="qbox"><h4>Scenario A</h4><p>Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Mötet handlar om komplexa tekniska krav du förberett dig inför. Hur agerar du?</p></div>
-    <div class="qbox"><h4>Scenario B</h4><p>Kunden ifrågasätter er leverans och pratar om att minska scopet – men problemet är att deras egna interna processer är trasiga, inte er lösning. Hur hanterar ni det utan att peka finger?</p></div>
-    <div class="qbox"><h4>Scenario C</h4><p>Du hittar ett stort risk/problem hos kunden som ligger utanför ditt uppdrag. Det är inte din uppgift – men du är expert nog att se det. Vad gör du?</p></div>
-    <div class="qbox blue"><h4>Diskutera i gruppen</h4><p>Hur använder ni Core Skills + konsultmässighet i scenariot? Välj <strong>en approach</strong> att dela – och varför just den.</p></div>
-  </div>`;
-  if(!isFac) return q;
-  return q+`
-  <div class="card">
-    <div class="ctitle">Samla in från grupperna</div>
-    ${groupInputs('d3')}
-    <br><button class="sbtn" onclick="done[3]=true;go(4)">Gå till Avslut →</button>
   </div>`;
 }
 
 function renderAvsl(){
   return `
-  <div class="fnote">Avslut (10 min) – Summera det bästa från grupperna. Avsluta med kärnbudskapet nedan.</div>
+  <div class="fnote">Avslut (10 min) – Summera det bästa från grupperna med kärnbudskapet nedan.</div>
   <div class="card">
-    <div class="ctitle">Kärnbudskap att avsluta med</div>
+    <div class="ctitle">Kärnbudskap</div>
     <div class="qbox"><p>Konsultrollen är alltid <em>fler hattar än jobbtiteln</em>. Det är inte en nackdel – det är det som skapar verkligt värde.</p></div>
     <div class="qbox"><p>Konsultmässighet byggs inte på kurserna – den byggs i varje möte, varje mail, varje leverans. Och ni gör det redan.</p></div>
-    <div class="qbox"><p>De bästa konsulterna är inte de som kan mest tekniskt – de är de som gör kunden trygg och vet när de ska vara psykolog, när de ska vara expert och när de ska ringa chefen.</p></div>
+    <div class="qbox"><p>De bästa konsulterna vet när de ska vara psykolog, när de ska vara expert och när de ska ringa chefen.</p></div>
   </div>
   <div class="card">
-    <div class="ctitle">Egna anteckningar / uppföljning</div>
-    <textarea placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" onchange="sv('avsl_notes',this.value)" style="min-height:90px">${ga('avsl_notes')}</textarea>
-    <span class="stag" id="st_avsl_notes">Sparat ✓</span>
-    <div style="margin-top:.75rem">
+    <div class="ctitle">Uppföljning / egna anteckningar</div>
+    <textarea id="notes_avsl" placeholder="Vad ska följas upp? Vad fastnade?" style="min-height:90px">${ga('avsl_notes')}</textarea>
+    <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="nextbtn" onclick="setMode('sum')">Visa summering →</button>
+      <button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button>
     </div>
   </div>`;
 }
 
 function renderSum(){
-  const parts=[
-    {id:'d1',label:'Del 1 · Core Consulting Skills'},
-    {id:'d2',label:'Del 2 · Konsultmässighet'},
-    {id:'d3',label:'Del 3 · Scenario – Många hattar'},
-  ];
-  const hasAny=parts.some(p=>GROUPS.some(g=>ans[p.id+'_'+g]));
-  if(!hasAny) return `<div class="card"><div class="empty">Inga svar insamlade ännu. Fyll i gruppernas svar under Facilitatorvyn.</div></div>`;
-  let html='';
+  const parts = [{id:'d1',label:'Del 1 · Core Consulting Skills'},{id:'d2',label:'Del 2 · Konsultmässighet'},{id:'d3',label:'Del 3 · Scenario'}];
+  const hasAny = parts.some(p=>GROUPS.some(g=>ans[p.id+'_'+g]));
+  let html = `<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
+    <button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button>
+  </div>`;
+  if(!hasAny) return html+`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
   parts.forEach(p=>{
-    const filled=GROUPS.filter(g=>ans[p.id+'_'+g]);
+    const filled = GROUPS.filter(g=>ans[p.id+'_'+g]);
     if(!filled.length) return;
-    html+=`<div class="card"><div class="ctitle">${p.label}</div><div class="ansgrid">`;
-    filled.forEach(g=>{html+=`<div class="ansitem"><div class="ansgrp">${g}</div>${ans[p.id+'_'+g]}</div>`;});
+    html+=`<div class="card"><div class="ctitle"><span class="live-badge"></span>${p.label}</div><div class="ansgrid">`;
+    filled.forEach(g=>{ html+=`<div class="ansitem"><div class="ansgrp">${g}</div>${ans[p.id+'_'+g]}</div>`; });
     html+=`</div></div>`;
   });
-  if(ans['avsl_notes']) html+=`<div class="card"><div class="ctitle">Uppföljning</div><p style="font-size:13px;line-height:1.6">${ans['avsl_notes']}</p></div>`;
   return html;
+}
+
+function exportAnswers(){
+  const parts = [{id:'d1',label:'Del 1 · Core Consulting Skills'},{id:'d2',label:'Del 2 · Konsultmässighet'},{id:'d3',label:'Del 3 · Scenario'}];
+  let txt = 'WORKSHOP – Konsultrollen i praktiken\nEnhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
+  parts.forEach(p=>{
+    txt += p.label+'\n'+'-'.repeat(30)+'\n';
+    GROUPS.forEach(g=>{ if(ans[p.id+'_'+g]) txt += g+': '+ans[p.id+'_'+g]+'\n'; });
+    txt += '\n';
+  });
+  const blob = new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'workshop-svar-'+new Date().toISOString().slice(0,10)+'.txt';
+  a.click();
 }
 
 render();
