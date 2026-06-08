@@ -9,24 +9,30 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
 .header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.header h1{font-size:20px;font-weight:500;color:white}
+.header h1{font-size:20px;font-weight:500;color:white;margin:0}
 .header .sub{font-size:12px;opacity:.75;margin-top:3px;color:white}
-.mode-btns{display:flex;gap:6px;align-items:center}
+.mode-btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .mbtn{padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:transparent;color:white;font-size:12px;cursor:pointer;transition:all .15s}
 .mbtn.active{background:white;color:#0F6E56;font-weight:500}
-.tbar{background:rgba(15,110,86,0.88);padding:.65rem 2rem;display:flex;align-items:center;gap:1rem}
-.tdisp{font-size:20px;font-weight:500;color:white;min-width:60px;font-variant-numeric:tabular-nums}
-.tlabel{font-size:12px;color:rgba(255,255,255,.7);flex:1}
-.tctrl{display:flex;gap:5px}
-.tbtn{padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:12px;cursor:pointer}
+.tbar{background:rgba(15,110,86,0.92);padding:.75rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.tdisp{font-size:28px;font-weight:700;color:white;min-width:72px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.tdisp.warn{color:#FFD166}
+.tdisp.crit{color:#FF6B6B;animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.phase-time-row{display:flex;gap:12px;flex-wrap:wrap;flex:1}
+.ptime-chip{background:rgba(255,255,255,.15);border-radius:8px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:64px}
+.ptime-chip.active-phase{background:rgba(255,255,255,.35);font-weight:600}
+.ptime-chip span{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.tctrl{display:flex;gap:5px;align-items:center}
+.tbtn{padding:5px 13px;border-radius:6px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:12px;cursor:pointer}
 .tbtn:hover{background:rgba(255,255,255,.2)}
-.pbar{height:4px;background:#0a4a38}
+.tbtn.primary{background:rgba(255,255,255,.25)}
+.pbar{height:5px;background:#0a4a38;position:relative}
 .pfill{height:100%;background:#5DCAA5;transition:width .5s}
-.content{padding:1.5rem 2rem;max-width:900px;margin:0 auto}
+.content{padding:1.5rem 2rem;max-width:920px;margin:0 auto}
 .pnav{display:flex;gap:6px;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:4px}
 .ppill{padding:5px 14px;border-radius:20px;border:1px solid #ddd;background:white;font-size:12px;cursor:pointer;white-space:nowrap;color:#666;transition:all .15s}
 .ppill.active{background:#0F6E56;color:white;border-color:#0F6E56}
-.ppill.done{background:#f0f0ec;color:#888}
 .ppill.done::after{content:" ✓"}
 .card{background:white;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:.9rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .ctitle{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:.2rem;display:flex;align-items:center;gap:7px}
@@ -36,12 +42,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .qbox p{font-size:13px;color:#333;line-height:1.6}
 .qbox.blue{border-left-color:#185FA5}
 .qbox.blue h4{color:#185FA5}
+.qbox.orange{border-left-color:#E07B39}
+.qbox.orange h4{color:#E07B39}
 .fnote{background:#e8f2fb;border-radius:8px;padding:.65rem 1rem;font-size:12px;color:#0C447C;margin-bottom:.85rem;border-left:3px solid #185FA5;line-height:1.5}
 .ins{background:#e8f5ef;border-radius:8px;padding:.7rem 1rem;margin-bottom:.6rem}
 .ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:3px 9px;border-radius:10px;margin:.15rem;border:1px solid #9FE1CB}
 textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:13px;min-height:80px;resize:vertical;background:white;color:#1a1a1a;font-family:inherit;margin-top:.4rem}
 textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,110,86,.1)}
-.sbtn{padding:7px 18px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;cursor:pointer;margin-top:.5rem;font-weight:500}
+.sbtn{padding:7px 18px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;cursor:pointer;font-weight:500}
 .sbtn:hover{background:#085041}
 .sbtn:disabled{background:#aaa;cursor:default}
 .stag{font-size:12px;color:#0F6E56;margin-left:8px;opacity:0;transition:opacity .3s}
@@ -53,223 +61,324 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .empty{text-align:center;padding:2.5rem;color:#aaa;font-size:13px}
 .stbl{width:100%;border-collapse:collapse;font-size:13px}
 .stbl td{padding:.45rem .7rem;border-bottom:1px solid #f0f0ec;vertical-align:top}
-.stbl td:first-child{color:#888;width:110px;font-weight:500}
+.stbl td:first-child{color:#888;width:120px;font-weight:500}
 .expbtn{padding:7px 16px;border:1px solid #0F6E56;border-radius:7px;background:white;color:#0F6E56;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-weight:500}
 .expbtn:hover{background:#e8f5ef}
-.nextbtn{padding:7px 16px;border:1px solid #ddd;border-radius:7px;background:white;color:#333;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-top:.75rem}
+.nextbtn{padding:7px 16px;border:1px solid #ddd;border-radius:7px;background:white;color:#333;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .nextbtn:hover{background:#f5f5f2}
+/* overlay */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:100}
-.login-box{background:white;border-radius:16px;padding:2rem;width:320px;box-shadow:0 8px 32px rgba(0,0,0,.18);text-align:center}
-.login-box h2{font-size:17px;font-weight:600;margin-bottom:.4rem}
-.login-box p{font-size:13px;color:#888;margin-bottom:1.25rem}
-.login-box input{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:14px;text-align:center;margin-bottom:.75rem;letter-spacing:.1em}
-.login-box input:focus{outline:none;border-color:#0F6E56}
-.login-err{font-size:12px;color:#c0392b;margin-top:-.4rem;margin-bottom:.5rem;min-height:16px}
-.lbtn{width:100%;padding:9px;background:#0F6E56;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer}
-.cancel-link{font-size:12px;color:#aaa;cursor:pointer;margin-top:.75rem;display:inline-block;text-decoration:underline}
-.grp-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
-.grp-btn{padding:7px 16px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;transition:all .15s;color:#555}
+.modal{background:white;border-radius:16px;padding:2rem;width:340px;box-shadow:0 8px 32px rgba(0,0,0,.18);text-align:center}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:.4rem}
+.modal p{font-size:13px;color:#888;margin-bottom:1.25rem;line-height:1.5}
+.modal input[type=password],.modal input[type=text],.modal input[type=number]{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:14px;text-align:center;margin-bottom:.6rem}
+.modal input:focus{outline:none;border-color:#0F6E56}
+.merr{font-size:12px;color:#c0392b;min-height:16px;margin-bottom:.4rem}
+.lbtn{width:100%;padding:9px;background:#0F6E56;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:.4rem}
+.lbtn:hover{background:#085041}
+.cancel-link{font-size:12px;color:#aaa;cursor:pointer;text-decoration:underline}
+/* group entry */
+.entry-code{display:flex;gap:6px;justify-content:center;margin-bottom:.75rem}
+.entry-code input{width:52px;height:56px;border:2px solid #ddd;border-radius:10px;font-size:24px;text-align:center;font-weight:700;color:#0F6E56}
+.entry-code input:focus{outline:none;border-color:#0F6E56}
+.grp-select{display:flex;gap:8px;flex-wrap:wrap;margin:.75rem 0}
+.grp-btn{padding:7px 16px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555;transition:all .15s}
 .grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
 .live-badge{display:inline-block;width:8px;height:8px;background:#2ecc71;border-radius:50%;margin-right:4px;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.sync-note{font-size:11px;color:#aaa;margin-left:6px}
-.qr-wrap{text-align:center;padding:1rem 0}
+.sync-note{font-size:11px;color:#aaa;margin-left:4px}
+/* admin time editor */
+.time-editor{display:flex;flex-direction:column;gap:.5rem}
+.time-row{display:flex;align-items:center;gap:.5rem;justify-content:space-between}
+.time-row label{font-size:13px;color:#333;flex:1}
+.time-row input[type=number]{width:64px;border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:13px;text-align:center}
+/* qr */
+.qr-wrap{text-align:center;padding:.75rem 0}
 .qr-wrap p{font-size:13px;color:#555;margin-bottom:.75rem}
 #qrcode{display:inline-block;padding:12px;background:white;border:1px solid #ddd;border-radius:10px}
 .qr-url{font-size:11px;color:#aaa;margin-top:.5rem;word-break:break-all}
-@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:1rem}.header{padding:1rem}}
+@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:1rem}.header{padding:1rem}.tdisp{font-size:22px}}
 </style>
 </head>
 <body>
 
+<!-- Modals -->
 <div class="overlay" id="loginOverlay" style="display:none">
-  <div class="login-box">
+  <div class="modal">
     <h2>Facilitatorvy</h2>
-    <p>Ange lösenord för att fortsätta</p>
+    <p>Ange lösenord</p>
     <input type="password" id="pwInput" placeholder="Lösenord" onkeydown="if(event.key==='Enter')checkPw()">
-    <div class="login-err" id="pwErr"></div>
+    <div class="merr" id="pwErr"></div>
     <button class="lbtn" onclick="checkPw()">Logga in</button>
-    <div class="cancel-link" onclick="closeLogin()">Avbryt</div>
+    <div class="cancel-link" onclick="closeModal('loginOverlay')">Avbryt</div>
+  </div>
+</div>
+
+<div class="overlay" id="timeOverlay" style="display:none">
+  <div class="modal">
+    <h2>⏱ Justera tider</h2>
+    <p>Ange antal minuter per del (totalt visas automatiskt)</p>
+    <div class="time-editor" id="timeEditor"></div>
+    <div style="margin-top:1rem;font-size:13px;color:#555">Totalt: <strong id="totalMins">0</strong> min</div>
+    <button class="lbtn" style="margin-top:1rem" onclick="applyTimes()">Spara &amp; stäng</button>
+    <div class="cancel-link" onclick="closeModal('timeOverlay')">Avbryt</div>
+  </div>
+</div>
+
+<div class="overlay" id="groupOverlay" style="display:none">
+  <div class="modal">
+    <h2>Välkommen!</h2>
+    <p>Ange åtkomstkoden för att gå med i grupparbetet</p>
+    <div class="entry-code" id="codeInputs"></div>
+    <div class="merr" id="codeErr"></div>
+    <div id="groupPickerInModal" style="display:none">
+      <p style="font-size:13px;color:#333;margin-bottom:.5rem">Välj din grupp:</p>
+      <div class="grp-select" id="grpBtns"></div>
+    </div>
+    <button class="lbtn" id="codeBtn" onclick="checkCode()">Fortsätt</button>
+    <div class="cancel-link" onclick="closeModal('groupOverlay')">Avbryt</div>
   </div>
 </div>
 
 <div class="header">
   <div>
     <h1>Konsultrollen i praktiken</h1>
-    <div class="sub">Enhetsträff · arbetspass · 90 min</div>
+    <div class="sub">Enhetsträff · arbetspass</div>
   </div>
   <div class="mode-btns">
     <button class="mbtn" id="btnFac" onclick="tryFac()">🔒 Facilitator</button>
-    <button class="mbtn active" id="btnGrp" onclick="setMode('grp')">Gruppvy</button>
+    <button class="mbtn active" id="btnGrp" onclick="tryGrp()">Gruppvy</button>
     <button class="mbtn" id="btnSum" onclick="trySum()">Summering</button>
   </div>
 </div>
 
 <div class="tbar">
-  <div class="tdisp" id="tdisp">90:00</div>
-  <div class="tlabel" id="tlabel">Välkommen! Scanna QR-koden eller vänta på facilitatorn.</div>
+  <div id="tdisp" class="tdisp">—:——</div>
+  <div class="phase-time-row" id="phaseTimeRow"></div>
   <div class="tctrl">
-    <button class="tbtn" onclick="startT()">▶ Start</button>
-    <button class="tbtn" onclick="pauseT()">⏸ Paus</button>
-    <button class="tbtn" onclick="resetT()">↺ Reset</button>
+    <button class="tbtn primary" onclick="startT()">▶ Start</button>
+    <button class="tbtn" onclick="pauseT()">⏸</button>
+    <button class="tbtn" onclick="resetT()">↺</button>
+    <button class="tbtn" onclick="openTimeEditor()" title="Justera tider">⚙️</button>
   </div>
 </div>
 <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+
 <div class="content" id="mc"></div>
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",
-  authDomain: "consultingskills-938d9.firebaseapp.com",
-  projectId: "consultingskills-938d9",
-  storageBucket: "consultingskills-938d9.firebasestorage.app",
-  messagingSenderId: "250530809846",
-  appId: "1:250530809846:web:eacdb035347952c595e9d7"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const SESSION = "enhetsträff-2026";
-
-// Save a group answer to Firestore
-window.fbSave = async function(del, group, text) {
-  try {
-    await setDoc(doc(db, SESSION, del + '_' + group), { text, group, del, ts: Date.now() }, { merge: true });
-  } catch(e) { console.error('Firebase save error', e); }
-};
-
-// Listen to all answers in real time (for facilitator/summary)
-window.fbListen = function(callback) {
-  onSnapshot(collection(db, SESSION), (snap) => {
-    const data = {};
-    snap.forEach(d => { data[d.id] = d.data().text || ''; });
-    callback(data);
-  });
-};
-
-// Export all answers from Firestore
-window.fbExport = async function() {
-  const snap = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js")
-    .then(m => m.getDocs(collection(db, SESSION)));
-  return snap;
-};
-
-window.fbReady = true;
+import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",authDomain:"consultingskills-938d9.firebaseapp.com",projectId:"consultingskills-938d9",storageBucket:"consultingskills-938d9.firebasestorage.app",messagingSenderId:"250530809846",appId:"1:250530809846:web:eacdb035347952c595e9d7"};
+const app=initializeApp(cfg);
+const db=getFirestore(app);
+const SESSION="enhetsträff-2026";
+window.fbSave=async(del,group,text)=>{try{await setDoc(doc(db,SESSION,del+'_'+group),{text,group,del,ts:Date.now()},{merge:true});}catch(e){console.error(e);}};
+window.fbListen=(cb)=>{onSnapshot(collection(db,SESSION),(snap)=>{const d={};snap.forEach(s=>{d[s.id]=s.data().text||'';});cb(d);});};
+window.fbReady=true;
 window.dispatchEvent(new Event('fbReady'));
 </script>
 
 <script>
-const PASS = 'cyberbob';
-const GROUPS = ['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
-const TOTAL = 90 * 60;
-const PHASES = [
-  {label:'Intro', mins:10},
-  {label:'Del 1 – Skills', mins:25},
-  {label:'Del 2 – Varumärke', mins:25},
-  {label:'Del 3 – Hattar', mins:20},
-  {label:'Avslut', mins:10},
-];
+const PASS='cyberbob';
+const JOIN_CODE='1234'; // 4-digit code for participants
+const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
 
-let mode = 'grp', phase = 0, secs = TOTAL, running = false, iv = null;
-let isAuth = false, done = {};
-let ans = {}; // live-synced from Firebase
-let selectedGroup = localStorage.getItem('selectedGroup') || '';
+// Default phase minutes – editable
+let PHASE_MINS=[10,20,20,20,15,5];
+const PHASE_LABELS=['Intro','Del 1 – Skills','Del 2 – Varumärke','Del 3 – Obelagd tid','Del 4 – Hattar','Avslut'];
 
-// Wait for Firebase then start listening
-window.addEventListener('fbReady', () => {
-  window.fbListen(data => {
-    ans = data;
-    render();
-  });
-});
+let totalSecs=()=>PHASE_MINS.reduce((a,b)=>a+b,0)*60;
+let secs=totalSecs(),running=false,iv=null;
+let mode='grp',phase=0,isAuth=false,done={};
+let ans={},selectedGroup=localStorage.getItem('sg')||'',groupUnlocked=localStorage.getItem('gu')==='1';
 
-function tryFac(){ document.getElementById('loginOverlay').style.display='flex'; setTimeout(()=>document.getElementById('pwInput').focus(),100); }
-function trySum(){ if(isAuth) setMode('sum'); else tryFac(); }
-function closeLogin(){ document.getElementById('loginOverlay').style.display='none'; document.getElementById('pwErr').textContent=''; document.getElementById('pwInput').value=''; }
+window.addEventListener('fbReady',()=>{ window.fbListen(d=>{ans=d;render();}); });
+
+// ---- MODALS ----
+function closeModal(id){document.getElementById(id).style.display='none';}
+function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
 function checkPw(){
-  if(document.getElementById('pwInput').value === PASS){ isAuth=true; closeLogin(); setMode('fac'); }
-  else { document.getElementById('pwErr').textContent='Fel lösenord'; document.getElementById('pwInput').value=''; document.getElementById('pwInput').focus(); }
+  if(document.getElementById('pwInput').value===PASS){isAuth=true;closeModal('loginOverlay');document.getElementById('pwInput').value='';setMode('fac');}
+  else{document.getElementById('pwErr').textContent='Fel lösenord';document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();}
+}
+function trySum(){if(isAuth)setMode('sum');else tryFac();}
+function tryGrp(){
+  if(groupUnlocked){setMode('grp');}
+  else{openGroupOverlay();}
+}
+function openGroupOverlay(){
+  const ci=document.getElementById('codeInputs');
+  ci.innerHTML='';
+  for(let i=0;i<4;i++){
+    const inp=document.createElement('input');
+    inp.type='text';inp.maxLength=1;inp.inputMode='numeric';inp.id='ci'+i;
+    inp.addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/,'');if(e.target.value&&i<3)document.getElementById('ci'+(i+1)).focus();});
+    inp.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value&&i>0)document.getElementById('ci'+(i-1)).focus();});
+    ci.appendChild(inp);
+  }
+  document.getElementById('codeErr').textContent='';
+  document.getElementById('groupPickerInModal').style.display='none';
+  document.getElementById('codeBtn').textContent='Fortsätt';
+  document.getElementById('groupOverlay').style.display='flex';
+  setTimeout(()=>document.getElementById('ci0').focus(),100);
+}
+function checkCode(){
+  const code=['ci0','ci1','ci2','ci3'].map(id=>document.getElementById(id).value).join('');
+  if(code===JOIN_CODE){
+    document.getElementById('codeErr').textContent='';
+    document.getElementById('groupPickerInModal').style.display='block';
+    const gb=document.getElementById('grpBtns');
+    gb.innerHTML=GROUPS.map(g=>`<button class="grp-btn ${selectedGroup===g?'sel':''}" onclick="pickGroup('${g}')">${g}</button>`).join('');
+    document.getElementById('codeBtn').textContent='Gå in';
+    document.getElementById('codeBtn').onclick=confirmGroup;
+  } else {
+    document.getElementById('codeErr').textContent='Fel kod – försök igen';
+    ['ci0','ci1','ci2','ci3'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('ci0').focus();
+  }
+}
+function pickGroup(g){
+  selectedGroup=g;
+  document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent===g));
+}
+function confirmGroup(){
+  if(!selectedGroup){document.getElementById('codeErr').textContent='Välj en grupp';return;}
+  groupUnlocked=true;
+  localStorage.setItem('sg',selectedGroup);
+  localStorage.setItem('gu','1');
+  closeModal('groupOverlay');
+  setMode('grp');
 }
 
-function setMode(m){
-  mode=m;
-  ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
-  document.getElementById('btnFac').textContent = isAuth ? '✓ Facilitator' : '🔒 Facilitator';
-  render();
+// ---- TIME EDITOR ----
+function openTimeEditor(){
+  const ed=document.getElementById('timeEditor');
+  ed.innerHTML=PHASE_LABELS.map((l,i)=>`
+    <div class="time-row">
+      <label>${l}</label>
+      <input type="number" id="te${i}" min="1" max="60" value="${PHASE_MINS[i]}"> min
+    </div>`).join('');
+  updateTotalMins();
+  PHASE_LABELS.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updateTotalMins));
+  document.getElementById('timeOverlay').style.display='flex';
+}
+function updateTotalMins(){
+  let t=0;
+  PHASE_LABELS.forEach((_,i)=>{t+=parseInt(document.getElementById('te'+i).value)||0;});
+  document.getElementById('totalMins').textContent=t;
+}
+function applyTimes(){
+  PHASE_LABELS.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
+  secs=totalSecs();running=false;clearInterval(iv);
+  upd();renderPhaseChips();
+  closeModal('timeOverlay');
 }
 
-function startT(){ if(running)return; running=true; iv=setInterval(()=>{ if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;} },1000); }
-function pauseT(){ clearInterval(iv); running=false; }
-function resetT(){ clearInterval(iv); running=false; secs=TOTAL; upd(); }
+// ---- TIMER ----
+function startT(){if(running)return;running=true;iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);}
+function pauseT(){clearInterval(iv);running=false;}
+function resetT(){clearInterval(iv);running=false;secs=totalSecs();upd();}
 function upd(){
-  const m=Math.floor(secs/60), s=secs%60;
-  document.getElementById('tdisp').textContent=`${m}:${s.toString().padStart(2,'0')}`;
-  document.getElementById('pfill').style.width=`${((TOTAL-secs)/TOTAL*100).toFixed(1)}%`;
+  const tot=totalSecs();
+  const m=Math.floor(secs/60),s=secs%60;
+  const el=document.getElementById('tdisp');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.className='tdisp'+(secs<300?' crit':secs<600?' warn':'');
+  document.getElementById('pfill').style.width=`${((tot-secs)/tot*100).toFixed(1)}%`;
+  renderPhaseChips();
 }
-
-function go(i){ phase=Math.max(0,Math.min(i,PHASES.length-1)); document.getElementById('tlabel').textContent=PHASES[phase].label; render(); }
-
-function ga(k){ return ans[k] || ''; }
-
-async function groupSubmit(del, group, inputId, btnId, tagId) {
-  const val = document.getElementById(inputId).value;
-  if(!val.trim()) return;
-  const btn = document.getElementById(btnId);
-  btn.disabled = true; btn.textContent = 'Sparar...';
-  await window.fbSave(del, group, val);
-  btn.textContent = 'Skickat!';
-  const tag = document.getElementById(tagId);
-  if(tag){ tag.classList.add('show'); setTimeout(()=>tag.classList.remove('show'),2000); }
-}
-
-function selectGroup(g){
-  selectedGroup = g;
-  localStorage.setItem('selectedGroup', g);
-  render();
-}
-
-function render(){
-  const c = document.getElementById('mc');
-  if(mode==='fac') c.innerHTML = renderFac();
-  else if(mode==='grp') c.innerHTML = renderGrp();
-  else c.innerHTML = renderSum();
-  if(mode==='grp' && phase===0) generateQR();
-}
-
-function phaseNav(){
-  return `<div class="pnav">${PHASES.map((p,i)=>`<div class="ppill ${i===phase?'active':done[i]?'done':''}" onclick="go(${i})">${p.label} <span style="opacity:.5;font-size:11px">${p.mins}m</span></div>`).join('')}</div>`;
-}
-
-// Facilitator input fields (read-only view of what groups submitted)
-function facGroupView(del){
-  return GROUPS.map(g=>{
-    const val = ga(del+'_'+g);
-    return `<div style="margin-bottom:.7rem">
-      <div class="slabel">${g} ${val?'<span style="color:#0F6E56">✓ svar inkommet</span>':''}</div>
-      <div style="background:#f7f7f4;border-radius:8px;padding:.65rem;font-size:13px;min-height:44px;border:1px solid #eee;color:${val?'#1a1a1a':'#bbb'}">${val || 'Inväntar svar…'}</div>
+function renderPhaseChips(){
+  const tot=totalSecs();
+  const elapsed=tot-secs;
+  let cum=0;
+  const row=document.getElementById('phaseTimeRow');
+  if(!row)return;
+  row.innerHTML=PHASE_LABELS.map((l,i)=>{
+    const start=cum*60;
+    cum+=PHASE_MINS[i];
+    const end=cum*60;
+    const isActive=elapsed>=start&&elapsed<end;
+    const remSecs=Math.max(0,end-elapsed);
+    const rm=Math.floor(remSecs/60),rs=remSecs%60;
+    return `<div class="ptime-chip ${isActive?'active-phase':''}">
+      <span>${isActive?rm+':'+rs.toString().padStart(2,'0'):PHASE_MINS[i]+'m'}</span>
+      <span style="font-size:10px;opacity:.8">${l}</span>
     </div>`;
   }).join('');
 }
 
-function renderFac(){
-  if(phase===0) return phaseNav()+renderIntro();
-  if(phase===1) return phaseNav()+renderD(1,true);
-  if(phase===2) return phaseNav()+renderD(2,true);
-  if(phase===3) return phaseNav()+renderD(3,true);
-  return phaseNav()+renderAvsl();
+// ---- MODE ----
+function setMode(m){
+  mode=m;
+  ['fac','grp','sum'].forEach((v,i)=>{
+    const b=document.getElementById(['btnFac','btnGrp','btnSum'][i]);
+    b.classList.toggle('active',v===m);
+  });
+  document.getElementById('btnFac').textContent=isAuth?'✓ Facilitator':'🔒 Facilitator';
+  render();
+}
+function go(i){phase=Math.max(0,Math.min(i,PHASE_LABELS.length-1));renderPhaseChips();render();}
+function ga(k){return ans[k]||'';}
+
+async function groupSubmit(del,group,inputId,btnId,tagId){
+  const val=document.getElementById(inputId).value;
+  if(!val.trim())return;
+  const btn=document.getElementById(btnId);
+  btn.disabled=true;btn.textContent='Sparar…';
+  await window.fbSave(del,group,val);
+  btn.textContent='Skickat!';
+  const tag=document.getElementById(tagId);
+  if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),2500);}
 }
 
+// ---- RENDER ----
+function render(){
+  const c=document.getElementById('mc');
+  if(mode==='fac') c.innerHTML=renderFac();
+  else if(mode==='grp') c.innerHTML=renderGrp();
+  else c.innerHTML=renderSum();
+  if(mode==='grp'&&phase===0)generateQR();
+  renderPhaseChips();
+}
+
+function phaseNav(){
+  return `<div class="pnav">${PHASE_LABELS.map((l,i)=>`<div class="ppill ${i===phase?'active':done[i]?'done':''}" onclick="go(${i})">${l} <span style="opacity:.5;font-size:11px">${PHASE_MINS[i]}m</span></div>`).join('')}</div>`;
+}
+
+function facGroupView(key){
+  return GROUPS.map(g=>{
+    const val=ga(key+'_'+g);
+    return `<div style="margin-bottom:.7rem">
+      <div class="slabel">${g} ${val?'<span style="color:#0F6E56;font-size:11px">✓ svar inkommet</span>':''}</div>
+      <div style="background:#f7f7f4;border-radius:8px;padding:.65rem;font-size:13px;min-height:44px;border:1px solid #eee;color:${val?'#1a1a1a':'#bbb'}">${val||'Inväntar svar…'}</div>
+    </div>`;
+  }).join('');
+}
+
+function groupAnswerBox(key){
+  if(!selectedGroup) return '';
+  const existing=ga(key+'_'+selectedGroup);
+  const iid=`gi_${key}`,bid=`gb_${key}`,tid=`gt_${key}`;
+  return `<div class="card" style="border:1.5px solid #0F6E56">
+    <div class="ctitle"><span class="live-badge"></span>${selectedGroup} – ert svar</div>
+    <div class="csub">Skriv ert svar här – det syns direkt hos facilitatorn</div>
+    <textarea id="${iid}" placeholder="Skriv gruppens viktigaste punkter…">${existing}</textarea>
+    <div style="display:flex;align-items:center;gap:.75rem;margin-top:.5rem">
+      <button class="sbtn" id="${bid}" onclick="groupSubmit('${key}','${selectedGroup}','${iid}','${bid}','${tid}')">Skicka svar</button>
+      <span class="stag" id="${tid}">✓ Skickat!</span>
+    </div>
+  </div>`;
+}
+
+function renderFac(){
+  if(phase===0) return phaseNav()+renderIntro();
+  if(phase>=1&&phase<=4) return phaseNav()+renderDel(phase,true);
+  return phaseNav()+renderAvsl();
+}
 function renderGrp(){
   if(phase===0) return renderWelcome();
-  if(!selectedGroup) return renderGroupPicker();
-  if(phase===1) return renderD(1,false);
-  if(phase===2) return renderD(2,false);
-  if(phase===3) return renderD(3,false);
+  if(phase>=1&&phase<=4) return renderDel(phase,false);
   return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
 }
 
@@ -278,130 +387,122 @@ function renderWelcome(){
     <div class="ctitle" style="justify-content:center;font-size:18px;margin-bottom:.5rem">Välkommen!</div>
     <p style="font-size:13px;color:#666;margin-bottom:1.5rem">Passet startar strax. Sätt dig i din grupp och vänta på facilitatorn.</p>
     <div class="qr-wrap">
-      <p>Dela länken med kollegor via QR-kod</p>
+      <p>Scanna QR-koden för att komma åt grupparbetet</p>
       <div id="qrcode"></div>
       <div class="qr-url" id="qrurl"></div>
     </div>
-  </div>`;
-}
-
-function renderGroupPicker(){
-  return `<div class="card">
-    <div class="ctitle">Välj din grupp</div>
-    <div class="csub">Välj en gång – dina svar kopplas till gruppen</div>
-    <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn" onclick="selectGroup('${g}')">${g}</button>`).join('')}</div>
+    <div style="margin-top:1rem;font-size:13px;color:#555">Eller klicka på <strong>Gruppvy</strong> och ange koden <strong>${JOIN_CODE}</strong></div>
   </div>`;
 }
 
 function generateQR(){
   setTimeout(()=>{
-    const el=document.getElementById('qrcode'), urlEl=document.getElementById('qrurl');
-    if(!el) return;
-    const url = window.location.href.split('?')[0];
-    if(urlEl) urlEl.textContent = url;
-    el.innerHTML = '';
-    try{ new QRCode(el,{text:url,width:160,height:160,colorDark:'#0F6E56',colorLight:'#ffffff'}); }
-    catch(e){ el.textContent=url; }
+    const el=document.getElementById('qrcode'),urlEl=document.getElementById('qrurl');
+    if(!el)return;
+    const url=window.location.href.split('?')[0];
+    if(urlEl)urlEl.textContent=url;
+    el.innerHTML='';
+    try{new QRCode(el,{text:url,width:160,height:160,colorDark:'#0F6E56',colorLight:'#ffffff'});}
+    catch(e){el.textContent=url;}
   },200);
 }
 
-const DEFS = {
-  1: {
-    title: 'Del 1 · Core Consulting Skills i praktiken',
-    time: '25 min · Diskussion 12 min → Redovisning 8–10 min',
-    questions: [
-      ['Diskutera 1', 'Vilka av dessa fyra är <em>svårast</em> i ert dagliga arbete – och varför?<br><span style="font-size:12px;opacity:.7">Kundförståelse & problemlösning · Effektiv kommunikation · Professionalism & ansvar · Värdeskapande</span>'],
-      ['Diskutera 2', 'Ge ett konkret exempel från ett riktigt uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet.'],
-      ['Diskutera 3', 'Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt?'],
+// ---- DEL DEFINITIONS ----
+const DEFS={
+  1:{
+    title:'Del 1 · Core Consulting Skills i praktiken',
+    time:'Diskussion 12 min → Redovisning 8 min',
+    questions:[
+      ['Diskutera 1','Vilka av dessa fyra är <em>svårast</em> i ert dagliga arbete – och varför?<br><span style="font-size:12px;opacity:.7">Kundförståelse & problemlösning · Effektiv kommunikation · Professionalism & ansvar · Värdeskapande</span>'],
+      ['Diskutera 2','Ge ett konkret exempel från ett riktigt uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet.'],
+      ['Diskutera 3','Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt?'],
     ],
-    deliverable: 'Varje grupp delar: <strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på',
-    insights: ['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
+    deliverable:'<strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på',
+    insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
   },
-  2: {
-    title: 'Del 2 · Konsultmässighet – eget varumärke',
-    time: '25 min · Diskussion 12 min → Redovisning 8–10 min',
-    questions: [
-      ['Diskutera 1', 'Vilka konkreta beteenden/attityder skapar förtroende hos kunden? Tänk på ett uppdrag ni minns – vad var det som byggde relationen?'],
-      ['Diskutera 2', 'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'],
-      ['Diskutera 3', 'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'],
+  2:{
+    title:'Del 2 · Konsultmässighet – eget varumärke',
+    time:'Diskussion 12 min → Redovisning 8 min',
+    questions:[
+      ['Diskutera 1','Vilka konkreta beteenden/attityder skapar förtroende hos kunden? Tänk på ett uppdrag ni minns – vad var det som byggde relationen?'],
+      ['Diskutera 2','Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'],
+      ['Diskutera 3','Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest med konsultrollen?'],
     ],
-    deliverable: 'Varje grupp delar: <strong>1 konkret tips</strong> eller exempel på bra konsultmässighet ni sett eller gjort',
-    insights: ['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – styrketecken','Du ÄR Combitech hos kunden'],
+    deliverable:'<strong>1 konkret tips</strong> eller exempel på bra konsultmässighet ni sett eller gjort',
+    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – styrketecken','Du ÄR Combitech hos kunden'],
   },
-  3: {
-    title: 'Del 3 · Många hattar – scenario',
-    time: '20 min · Diskussion 10 min → Redovisning 5 min (30–45 sek/grupp)',
-    questions: [
-      ['Scenario A', 'Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Mötet handlar om komplexa tekniska krav du förberett inför. Hur agerar du?'],
-      ['Scenario B', 'Kunden ifrågasätter er leverans och vill minska scopet – men problemet är deras egna interna processer, inte er lösning. Hur hanterar ni det utan att peka finger?'],
-      ['Scenario C', 'Du hittar ett stort risk/problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är inte din uppgift. Vad gör du?'],
+  3:{
+    title:'Del 3 · Värdeskapande på obelagd tid',
+    time:'Diskussion 12 min → Redovisning 8 min',
+    questions:[
+      ['Diskutera 1','Vad gör ni faktiskt med obelagd tid? Vad <em>borde</em> man göra – och vad hindrar er i praktiken?'],
+      ['Diskutera 2','<strong>"Jag är för feg för att tidrapportera det som är bestämt"</strong> – känner ni igen det? Varför underrapporterar konsulter ibland, och vad kostar det egentligen – för er själva och för Combitech?'],
+      ['Diskutera 3','Hur kan man skapa värde för Combitech och kunder <em>utan</em> att vara på ett aktivt uppdrag? Ge konkreta exempel.'],
     ],
-    deliverable: 'Välj <strong>ett scenario</strong> och dela er bästa approach – och varför just den',
-    insights: ['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation löser mer än teknik','Att flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen'],
-  }
+    deliverable:'<strong>1 konkret sak</strong> ni kan göra nästa gång ni har obelagd tid',
+    insights:[
+      'Obelagd tid ≠ ledig tid – det är investeringstid',
+      'Skriva one-pagers, LinkedIn-inlägg, delta i offert',
+      'Bygga intern kompetens: certifikat, studiegrupp, demo',
+      'Nätverka internt – ni vet inte vem som behöver er om 3 mån',
+      '"Rätt tidrapportering är inte girighet – det är ärlighet"',
+      'Underrapportering döljer verkliga kostnader och snedvrider prissättning',
+      'Prova: sätt av 1h/vecka för något som ger dig energi OCH värde',
+    ],
+    extraNote:'Värdeskapande exempel att lyfta: säljstöd, kunskapsdelning, metoddokumentation, rekrytering, kompetensutv., kundanalys, demo-bygge',
+  },
+  4:{
+    title:'Del 4 · Många hattar – scenario',
+    time:'Diskussion 10 min → Redovisning 5 min (30–45 sek/grupp)',
+    questions:[
+      ['Scenario A','Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Mötet handlar om komplexa tekniska krav du förberett inför. Hur agerar du?'],
+      ['Scenario B','Kunden ifrågasätter er leverans och vill minska scopet – men problemet är deras egna interna processer, inte er lösning. Hur hanterar ni det utan att peka finger?'],
+      ['Scenario C','Du hittar ett stort risk/problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är inte din uppgift. Vad gör du?'],
+    ],
+    deliverable:'Välj <strong>ett scenario</strong> och dela er bästa approach – och varför just den',
+    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation löser mer än teknik','Att flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen'],
+    extraNote:'Facilitator: Det finns inget rätt svar – poängen är att konsultrollen alltid är mer än jobbtiteln.',
+  },
 };
 
-function renderD(n, isFac){
-  const d = DEFS[n];
-  const key = 'd'+n;
-  const qs = d.questions.map(([h,p])=>`<div class="qbox"><h4>${h}</h4><p>${p}</p></div>`).join('');
-  const deliverable = `<div class="qbox blue"><h4>Leverans</h4><p>${d.deliverable}</p></div>`;
+function renderDel(n,isFac){
+  const d=DEFS[n];
+  const key='d'+n;
+  const qs=d.questions.map(([h,p])=>`<div class="qbox"><h4>${h}</h4><p>${p}</p></div>`).join('');
+  const deliverable=`<div class="qbox blue"><h4>Leverans till gruppen</h4><p>${d.deliverable}</p></div>`;
+  const extra=d.extraNote&&isFac?`<div class="fnote">${d.extraNote}</div>`:'';
 
-  // Group answer input
-  let groupInput = '';
-  if(!isFac && selectedGroup){
-    const existing = ga(key+'_'+selectedGroup);
-    const inputId = `ginput_${key}`;
-    const btnId = `gbtn_${key}`;
-    const tagId = `gtag_${key}`;
-    groupInput = `<div class="card" style="border-color:#0F6E56">
-      <div class="ctitle"><span class="live-badge"></span>${selectedGroup} – ert svar</div>
-      <div class="csub">Skriv ert svar här – det syns direkt hos facilitatorn</div>
-      <textarea id="${inputId}" placeholder="Skriv gruppens svar / viktigaste punkter här…">${existing}</textarea>
-      <div style="display:flex;align-items:center;margin-top:.5rem;gap:.75rem">
-        <button class="sbtn" id="${btnId}" onclick="groupSubmit('${key}','${selectedGroup}','${inputId}','${btnId}','${tagId}')">Skicka svar</button>
-        <span class="stag" id="${tagId}">✓ Skickat till facilitatorn!</span>
-      </div>
-    </div>`;
-  }
+  const groupInput=!isFac?groupAnswerBox(key):'';
 
-  // Facilitator view
-  let facView = '';
-  if(isFac){
-    facView = `
+  const facView=isFac?`
     <div class="card">
       <div class="ctitle">Seniora insikter – lyft vid behov</div>
       <div class="ins">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
     </div>
     <div class="card">
-      <div class="ctitle"><span class="live-badge"></span> Inkomna svar <span class="sync-note">uppdateras live</span></div>
+      <div class="ctitle"><span class="live-badge"></span>Inkomna svar <span class="sync-note">live</span></div>
       ${facGroupView(key)}
-      <div style="margin-top:1rem">
-        <button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button>
-      </div>
-    </div>`;
-  }
+      <div style="margin-top:1rem"><button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button></div>
+    </div>`:'';
 
   return `<div class="card">
     <div class="ctitle">${d.title}</div>
     <div class="csub">${d.time}</div>
     ${qs}${deliverable}
   </div>
+  ${extra}
   ${groupInput}
   ${facView}`;
 }
 
 function renderIntro(){
+  const totalMin=PHASE_MINS.reduce((a,b)=>a+b,0);
   return `
-  <div class="fnote">Facilitatorvy · Intro (10 min) – Välkomna alla, gör en snabb runda. Sätt tonen: öppet samtal, inga rätta svar.</div>
+  <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min) – Välkomna alla. Öppet samtal, inga rätta svar. Koden för deltagare: <strong>${JOIN_CODE}</strong></div>
   <div class="card">
-    <div class="ctitle">Agenda – 90 min</div>
+    <div class="ctitle">Agenda – ${totalMin} min</div>
     <table class="stbl">
-      <tr><td>0–10 min</td><td>Intro &amp; snabb runda</td></tr>
-      <tr><td>10–35 min</td><td>Del 1 · Core Consulting Skills i praktiken</td></tr>
-      <tr><td>35–60 min</td><td>Del 2 · Konsultmässighet – eget varumärke</td></tr>
-      <tr><td>60–80 min</td><td>Del 3 · Många hattar – scenario</td></tr>
-      <tr><td>80–90 min</td><td>Summering &amp; avslut</td></tr>
+      ${PHASE_LABELS.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}
     </table>
     <button class="sbtn" onclick="go(1)" style="margin-top:1rem">Starta Del 1 →</button>
   </div>
@@ -410,23 +511,23 @@ function renderIntro(){
     <div class="qbox">
       <h4>Fråga till alla i rummet</h4>
       <p>"Vilken roll hade du inte förväntade dig att ta i din konsultroll – men som du ändå tagit?"</p>
-      <p style="font-size:12px;color:#888;margin-top:.4rem">Ex: psykolog, projektledare, konfliktlösare, säljare, mentor…</p>
+      <p style="font-size:12px;color:#888;margin-top:.4rem">Ex: psykolog, projektledare, konfliktlösare, säljare, terapeut, mentor, arkitekt, revisor…</p>
     </div>
   </div>`;
 }
 
 function renderAvsl(){
   return `
-  <div class="fnote">Avslut (10 min) – Summera det bästa från grupperna med kärnbudskapet nedan.</div>
+  <div class="fnote">Avslut (${PHASE_MINS[5]} min) – Summera det bästa från grupperna med kärnbudskapet nedan.</div>
   <div class="card">
     <div class="ctitle">Kärnbudskap</div>
     <div class="qbox"><p>Konsultrollen är alltid <em>fler hattar än jobbtiteln</em>. Det är inte en nackdel – det är det som skapar verkligt värde.</p></div>
-    <div class="qbox"><p>Konsultmässighet byggs inte på kurserna – den byggs i varje möte, varje mail, varje leverans. Och ni gör det redan.</p></div>
-    <div class="qbox"><p>De bästa konsulterna vet när de ska vara psykolog, när de ska vara expert och när de ska ringa chefen.</p></div>
+    <div class="qbox"><p>Konsultmässighet och tidrapportering hänger ihop: att rapportera rätt är inte girighet – det är ärlighet mot sig själv och Combitech.</p></div>
+    <div class="qbox"><p>Obelagd tid är investeringstid. De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
   </div>
   <div class="card">
     <div class="ctitle">Uppföljning / egna anteckningar</div>
-    <textarea id="notes_avsl" placeholder="Vad ska följas upp? Vad fastnade?" style="min-height:90px">${ga('avsl_notes')}</textarea>
+    <textarea placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" style="min-height:90px"></textarea>
     <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="nextbtn" onclick="setMode('sum')">Visa summering →</button>
       <button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button>
@@ -435,37 +536,38 @@ function renderAvsl(){
 }
 
 function renderSum(){
-  const parts = [{id:'d1',label:'Del 1 · Core Consulting Skills'},{id:'d2',label:'Del 2 · Konsultmässighet'},{id:'d3',label:'Del 3 · Scenario'}];
-  const hasAny = parts.some(p=>GROUPS.some(g=>ans[p.id+'_'+g]));
-  let html = `<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem">
-    <button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button>
-  </div>`;
+  const parts=[{id:'d1',label:'Del 1 · Core Consulting Skills'},{id:'d2',label:'Del 2 · Konsultmässighet'},{id:'d3',label:'Del 3 · Obelagd tid & tidrapportering'},{id:'d4',label:'Del 4 · Scenario – Många hattar'}];
+  const hasAny=parts.some(p=>GROUPS.some(g=>ans[p.id+'_'+g]));
+  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem"><button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button></div>`;
   if(!hasAny) return html+`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
   parts.forEach(p=>{
-    const filled = GROUPS.filter(g=>ans[p.id+'_'+g]);
-    if(!filled.length) return;
+    const filled=GROUPS.filter(g=>ans[p.id+'_'+g]);
+    if(!filled.length)return;
     html+=`<div class="card"><div class="ctitle"><span class="live-badge"></span>${p.label}</div><div class="ansgrid">`;
-    filled.forEach(g=>{ html+=`<div class="ansitem"><div class="ansgrp">${g}</div>${ans[p.id+'_'+g]}</div>`; });
+    filled.forEach(g=>{html+=`<div class="ansitem"><div class="ansgrp">${g}</div>${ans[p.id+'_'+g]}</div>`;});
     html+=`</div></div>`;
   });
   return html;
 }
 
 function exportAnswers(){
-  const parts = [{id:'d1',label:'Del 1 · Core Consulting Skills'},{id:'d2',label:'Del 2 · Konsultmässighet'},{id:'d3',label:'Del 3 · Scenario'}];
-  let txt = 'WORKSHOP – Konsultrollen i praktiken\nEnhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
+  const parts=[{id:'d1',label:'Del 1 · Core Consulting Skills'},{id:'d2',label:'Del 2 · Konsultmässighet'},{id:'d3',label:'Del 3 · Obelagd tid & tidrapportering'},{id:'d4',label:'Del 4 · Scenario'}];
+  let txt='WORKSHOP – Konsultrollen i praktiken\nEnhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
   parts.forEach(p=>{
-    txt += p.label+'\n'+'-'.repeat(30)+'\n';
-    GROUPS.forEach(g=>{ if(ans[p.id+'_'+g]) txt += g+': '+ans[p.id+'_'+g]+'\n'; });
-    txt += '\n';
+    txt+=p.label+'\n'+'-'.repeat(30)+'\n';
+    GROUPS.forEach(g=>{if(ans[p.id+'_'+g])txt+=g+': '+ans[p.id+'_'+g]+'\n';});
+    txt+='\n';
   });
-  const blob = new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'workshop-svar-'+new Date().toISOString().slice(0,10)+'.txt';
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='workshop-'+new Date().toISOString().slice(0,10)+'.txt';
   a.click();
 }
 
+// Init
+secs=totalSecs();
+upd();
 render();
 </script>
 </body>
