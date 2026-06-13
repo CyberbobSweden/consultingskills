@@ -28,20 +28,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
 .phase-time-row{display:flex;gap:5px;flex-wrap:wrap;flex:1}
 .ptime-chip{background:rgba(255,255,255,.15);border-radius:6px;padding:3px 7px;font-size:9px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:46px}
-.ptime-chip.active-phase{background:rgba(255,255,255,.38);font-weight:700}
+.ptime-chip.ap{background:rgba(255,255,255,.38);font-weight:700}
 .ptime-chip span{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
-.tctrl{display:flex;gap:4px;align-items:center}
+/* Timer controls: hidden by default, only shown when .fac-mode class on body */
+#tctrl{display:none}
+body.fac-mode #tctrl{display:flex}
 .tbtn{padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.35);background:transparent;color:white;font-size:11px;cursor:pointer}
 .tbtn:hover{background:rgba(255,255,255,.2)}
 .tbtn.primary{background:rgba(255,255,255,.25)}
 .pbar{height:4px;background:#0a4a38}
 .pfill{height:100%;background:#5DCAA5;transition:width .5s}
 .content{padding:1rem 1.5rem;max-width:900px;margin:0 auto;width:100%;flex:1}
-.pnav{display:flex;gap:4px;margin-bottom:.9rem;overflow-x:auto;padding-bottom:3px;-webkit-overflow-scrolling:touch}
-.ppill{padding:4px 10px;border-radius:16px;border:1px solid #ddd;background:white;font-size:11px;cursor:pointer;white-space:nowrap;color:#666;transition:all .15s;flex-shrink:0}
+.pnav{display:flex;gap:4px;margin-bottom:.9rem;overflow-x:auto;padding-bottom:3px}
+.ppill{padding:4px 10px;border-radius:16px;border:1px solid #ddd;background:white;font-size:11px;white-space:nowrap;color:#666;flex-shrink:0}
 .ppill.active{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:600}
+.ppill.clickable{cursor:pointer}
 .ppill.done::after{content:" ✓"}
-.ppill.nocursor{cursor:default}
 .card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:.95rem 1.2rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .ctitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:.15rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .csub{font-size:11px;color:#888;margin-bottom:.75rem}
@@ -65,11 +67,11 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .stag{font-size:11px;color:#0F6E56;opacity:0;transition:opacity .3s}
 .stag.show{opacity:1}
 .stag.blue{color:#185FA5}
-.insights-toggle{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#085041;cursor:pointer;padding:.4rem 0;user-select:none}
-.insights-toggle::before{content:'▶';font-size:9px;transition:transform .2s;display:inline-block}
-.insights-toggle.open::before{transform:rotate(90deg)}
-.insights-body{display:none;padding:.5rem .7rem;background:#e8f5ef;border-radius:7px;margin-bottom:.4rem}
-.insights-body.open{display:block}
+.ins-toggle{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#085041;cursor:pointer;padding:.4rem 0;user-select:none}
+.ins-toggle::before{content:'▶';font-size:9px;transition:transform .2s;display:inline-block}
+.ins-toggle.open::before{transform:rotate(90deg)}
+.ins-body{display:none;padding:.5rem .7rem;background:#e8f5ef;border-radius:7px}
+.ins-body.open{display:block}
 .ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:2px 8px;border-radius:8px;margin:.1rem;border:1px solid #9FE1CB}
 .fnote{background:#e8f2fb;border-radius:7px;padding:.55rem .9rem;font-size:11px;color:#0C447C;margin-bottom:.7rem;border-left:3px solid #185FA5;line-height:1.5}
 .slabel{font-size:10px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;margin-top:.5rem}
@@ -94,16 +96,16 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .lbtn{width:100%;padding:8px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:.4rem}
 .lbtn:hover{background:#085041}
 .cancel-link{font-size:11px;color:#aaa;cursor:pointer;text-decoration:underline}
-.big-code-display{font-size:50px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.6rem 0}
+.big-code{font-size:50px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.6rem 0}
 .join-wrap{max-width:420px;margin:0 auto;padding-top:.5rem}
 .join-card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:1.75rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .join-card h2{font-size:17px;font-weight:600;margin-bottom:.35rem}
 .join-card .sub{font-size:13px;color:#666;margin-bottom:1.1rem}
 .code-row{display:flex;gap:9px;justify-content:center;margin:.65rem 0 .2rem}
-.code-row input{width:58px;height:62px;border:2px solid #ddd;border-radius:9px;font-size:28px;text-align:center;font-weight:700;color:#0F6E56;outline:none;transition:border-color .15s}
+.code-row input{width:58px;height:62px;border:2px solid #ddd;border-radius:9px;font-size:28px;text-align:center;font-weight:700;color:#0F6E56;outline:none}
 .code-row input:focus{border-color:#0F6E56;background:#f7fdf9}
 .grp-select{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:.65rem 0}
-.grp-btn{padding:7px 15px;border-radius:18px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555;transition:all .15s}
+.grp-btn{padding:7px 15px;border-radius:18px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555}
 .grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
 .divider{display:flex;align-items:center;gap:.65rem;margin:.9rem 0;color:#bbb;font-size:11px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
@@ -132,7 +134,7 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 @media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:.85rem 1rem}.header{padding:.75rem 1rem}.tdisp{font-size:20px}.code-row input{width:50px;height:54px;font-size:24px}}
 </style>
 </head>
-<body>
+<body><!-- NO fac-mode class by default = timer hidden -->
 
 <div class="overlay" id="loginOverlay" style="display:none">
   <div class="modal">
@@ -143,17 +145,15 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
     <div class="cancel-link" onclick="closeModal('loginOverlay')">Avbryt</div>
   </div>
 </div>
-
 <div class="overlay" id="qrOverlay" style="display:none">
   <div class="modal">
     <h2>Visa för deltagarna</h2><p>Scanna QR-koden eller ange koden manuellt</p>
     <div id="qrModalCode" style="margin:.4rem 0"></div>
-    <div class="big-code-display">1234</div>
+    <div class="big-code">1234</div>
     <div class="qr-url" id="qrModalUrl"></div>
     <button class="lbtn" style="margin-top:.85rem" onclick="closeModal('qrOverlay')">Stäng</button>
   </div>
 </div>
-
 <div class="overlay" id="timeOverlay" style="display:none">
   <div class="modal">
     <h2>⏱ Justera tider</h2><p>Minuter per del</p>
@@ -177,11 +177,10 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
   </div>
 </div>
 <div class="grc-bar"></div>
-
 <div class="tbar">
   <div id="tdisp" class="tdisp">—:——</div>
-  <div class="phase-time-row" id="phaseTimeRow"></div>
-  <div class="tctrl" id="tctrl">
+  <div class="phase-time-row" id="ptrow"></div>
+  <div id="tctrl"><!-- hidden unless fac-mode -->
     <button class="tbtn primary" onclick="startT()">▶</button>
     <button class="tbtn" onclick="pauseT()">⏸</button>
     <button class="tbtn" onclick="resetT()">↺</button>
@@ -197,47 +196,27 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getFirestore,doc,setDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const cfg={
-  apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",
-  authDomain:"consultingskills-938d9.firebaseapp.com",
-  projectId:"consultingskills-938d9",
-  storageBucket:"consultingskills-938d9.firebasestorage.app",
-  messagingSenderId:"250530809846",
-  appId:"1:250530809846:web:eacdb035347952c595e9d7"
-};
+const cfg={apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",authDomain:"consultingskills-938d9.firebaseapp.com",projectId:"consultingskills-938d9",storageBucket:"consultingskills-938d9.firebasestorage.app",messagingSenderId:"250530809846",appId:"1:250530809846:web:eacdb035347952c595e9d7"};
 const app=initializeApp(cfg);
 const db=getFirestore(app);
-const SESSION="grc-v5";
+const SESSION="grc-v6";
 
 window.fbSave=async(key,text)=>{
   try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}
-  catch(e){console.error('fbSave error',e);}
+  catch(e){console.error('fbSave',e);}
 };
-
-window.fbSaveState=async(phase,secs)=>{
-  try{
-    await setDoc(doc(db,SESSION,'__state__'),{phase,secs,ts:Date.now()});
-    console.log('State saved: phase='+phase+' secs='+secs);
-  }
-  catch(e){console.error('fbSaveState error',e);}
+window.fbSaveState=async(ph,sc)=>{
+  try{await setDoc(doc(db,SESSION,'__state__'),{phase:ph,secs:sc,ts:Date.now()});}
+  catch(e){console.error('fbSaveState',e);}
 };
-
-// Single persistent listener – never recreated
-window.fbStartListening=()=>{
-  onSnapshot(collection(db,SESSION),(snap)=>{
-    const answers={};
-    let state=null;
-    snap.forEach(d=>{
-      if(d.id==='__state__') state=d.data();
-      else answers[d.id]=d.data().text||'';
-    });
-    window.onFirebaseUpdate(answers,state);
-  });
-};
-
-window.fbReady=true;
-window.dispatchEvent(new Event('fbReady'));
+// Start ONE permanent listener
+onSnapshot(collection(db,SESSION),(snap)=>{
+  const a={};let st=null;
+  snap.forEach(d=>{if(d.id==='__state__')st=d.data();else a[d.id]=d.data().text||'';});
+  window._fbAnswers=a;
+  window._fbState=st;
+  window._onFbUpdate(a,st);
+});
 </script>
 
 <script>
@@ -245,83 +224,83 @@ const PASS='cyberbob';
 const JOIN_CODE='1234';
 const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
 let PHASE_MINS=[10,20,20,20,15,5];
-const PHASE_LABELS=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
+const PL=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 
-// App state
-let secs, running=false, iv=null, broadcastIv=null;
-let mode='grp', phase=0, isAuth=false, done={};
-let ans={};  // answers from firebase
-let selectedGroup=localStorage.getItem('sg')||'';
-let codeEntered=localStorage.getItem('ce')==='1';
-let groupChosen=localStorage.getItem('gc')==='1';
+let secs,running=false,iv=null,bcastIv=null;
+let mode='grp',phase=0,isAuth=false,done={};
+let ans={};
+let codeOK=localStorage.getItem('ce')==='1';
+let groupOK=localStorage.getItem('gc')==='1';
+let selGrp=localStorage.getItem('sg')||'';
+
+// Restore fac auth across reload
+if(sessionStorage.getItem('fa')==='1'){
+  isAuth=true;
+  document.body.classList.add('fac-mode');
+  mode='fac';
+}
 
 function totalSecs(){return PHASE_MINS.reduce((a,b)=>a+b,0)*60;}
 secs=totalSecs();
 
-// Called every time Firebase updates
-window.onFirebaseUpdate=function(answers, state){
-  ans=answers;
-
-  // Only sync for group view
-  if(mode==='grp' && state){
-    const newPhase=state.phase;
-    const newSecs=state.secs;
-    let needRender=false;
-
-    if(typeof newPhase==='number' && newPhase!==phase){
-      phase=newPhase;
-      needRender=true;
-      console.log('Phase synced to '+phase);
+// THE single update handler called by Firebase
+window._onFbUpdate=function(a,st){
+  ans=a;
+  if(mode==='grp'&&st){
+    let changed=false;
+    if(typeof st.phase==='number'&&st.phase!==phase){
+      phase=st.phase;changed=true;
     }
-
-    if(typeof newSecs==='number'){
-      const diff=Math.abs(secs-newSecs);
-      if(diff>8){
-        secs=newSecs;
-        upd();
-        console.log('Secs synced to '+secs);
-      }
+    if(typeof st.secs==='number'&&Math.abs(secs-st.secs)>8){
+      secs=st.secs;upd();
     }
-
-    if(needRender) render();
-  } else if(mode==='fac'||mode==='sum'){
-    // Just update answers display, don't change phase
-    render();
+    if(changed)fullRender();
+    else softUpdate(); // just update answer displays without rebuilding inputs
+  } else {
+    softUpdate();
   }
 };
+// _onFbUpdate before firebase loads: no-op
+window._fbAnswers={};window._fbState=null;
 
-window.addEventListener('fbReady',()=>{
-  window.fbStartListening();
-});
+// softUpdate: update fac answer rows without full re-render (preserves textarea focus)
+function softUpdate(){
+  if(mode==='fac'&&phase>=1&&phase<=4){
+    // update each group answer row in place
+    for(let n=1;n<=4;n++){
+      if(n!==phase)continue;
+      const d=DEFS[n];
+      d.questions.forEach((q,qi)=>{
+        GROUPS.forEach(g=>{
+          const el=document.getElementById(`gval_${n}_${qi}_${g}`);
+          if(el){const v=ga(qKey(n,qi,g));el.textContent=v||'inväntar…';el.className='gv'+(v?'':' empty');}
+        });
+        const hdr=document.getElementById(`qhdr_${n}_${qi}`);
+        if(hdr){const has=GROUPS.some(g=>ga(qKey(n,qi,g)));const span=hdr.querySelector('.has-span');if(span)span.style.display=has?'':'none';}
+      });
+      GROUPS.forEach(g=>{
+        const el=document.getElementById(`levval_${n}_${g}`);
+        if(el){const v=ga(levKey(n,g));el.textContent=v||'inväntar…';el.className='gv'+(v?'':' empty');}
+      });
+    }
+  } else if(mode==='sum'){
+    fullRender();
+  }
+}
 
-// ── TIMER ──
+// TIMER
 function startT(){
-  if(running)return;
-  running=true;
-  iv=setInterval(()=>{
-    if(secs>0){secs--;upd();}
-    else{clearInterval(iv);running=false;}
-  },1000);
-  // Broadcast state every 5 seconds when running
-  if(broadcastIv)clearInterval(broadcastIv);
-  broadcastIv=setInterval(()=>{
-    if(isAuth&&running) window.fbSaveState(phase,secs);
-  },5000);
-  if(isAuth) window.fbSaveState(phase,secs);
+  if(running)return;running=true;
+  iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);
+  if(bcastIv)clearInterval(bcastIv);
+  bcastIv=setInterval(()=>{if(isAuth&&running)window.fbSaveState(phase,secs);},5000);
+  if(isAuth)window.fbSaveState(phase,secs);
 }
-function pauseT(){
-  clearInterval(iv);running=false;
-  if(isAuth) window.fbSaveState(phase,secs);
-}
-function resetT(){
-  clearInterval(iv);running=false;
-  secs=totalSecs();upd();
-  if(isAuth) window.fbSaveState(phase,secs);
-}
+function pauseT(){clearInterval(iv);running=false;if(isAuth)window.fbSaveState(phase,secs);}
+function resetT(){clearInterval(iv);running=false;secs=totalSecs();upd();if(isAuth)window.fbSaveState(phase,secs);}
 function upd(){
   const tot=totalSecs(),m=Math.floor(secs/60),s=secs%60;
-  const el=document.getElementById('tdisp');
-  if(!el)return;
+  const el=document.getElementById('tdisp');if(!el)return;
   el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
   el.className='tdisp'+(secs<300?' crit':secs<600?' warn':'');
   document.getElementById('pfill').style.width=`${((tot-secs)/tot*100).toFixed(1)}%`;
@@ -329,126 +308,105 @@ function upd(){
 }
 function renderChips(){
   const tot=totalSecs(),elapsed=tot-secs;let cum=0;
-  const row=document.getElementById('phaseTimeRow');if(!row)return;
-  row.innerHTML=PHASE_LABELS.map((l,i)=>{
-    const start=cum*60;cum+=PHASE_MINS[i];const end=cum*60;
-    const isActive=elapsed>=start&&elapsed<end;
-    const rem=Math.max(0,end-elapsed),rm=Math.floor(rem/60),rs=rem%60;
-    return `<div class="ptime-chip${isActive?' active-phase':''}"><span>${isActive?rm+':'+rs.toString().padStart(2,'0'):PHASE_MINS[i]+'m'}</span><span>${l}</span></div>`;
+  const row=document.getElementById('ptrow');if(!row)return;
+  row.innerHTML=PL.map((l,i)=>{
+    const s0=cum*60;cum+=PHASE_MINS[i];const e=cum*60;
+    const active=elapsed>=s0&&elapsed<e;
+    const rem=Math.max(0,e-elapsed),rm=Math.floor(rem/60),rs=rem%60;
+    return `<div class="ptime-chip${active?' ap':''}"><span>${active?rm+':'+rs.toString().padStart(2,'0'):PHASE_MINS[i]+'m'}</span><span>${l}</span></div>`;
   }).join('');
 }
 
-// ── MODALS ──
+// MODALS
 function closeModal(id){document.getElementById(id).style.display='none';}
 function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
 function trySum(){if(isAuth)setMode('sum');else tryFac();}
 function checkPw(){
   if(document.getElementById('pwInput').value===PASS){
-    isAuth=true;closeModal('loginOverlay');document.getElementById('pwInput').value='';setMode('fac');
-  }else{
-    document.getElementById('pwErr').textContent='Fel lösenord';
-    document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();
-  }
+    isAuth=true;sessionStorage.setItem('fa','1');
+    closeModal('loginOverlay');document.getElementById('pwInput').value='';setMode('fac');
+  }else{document.getElementById('pwErr').textContent='Fel lösenord';document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();}
 }
 function openQR(){
-  const url=window.location.origin+window.location.pathname+'?join=1';
+  const url=window.location.href.split('?')[0];
   document.getElementById('qrModalUrl').textContent=url;
   const el=document.getElementById('qrModalCode');el.innerHTML='';
-  try{new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'});}
-  catch(e){el.textContent=url;}
+  try{new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'});}catch(e){el.textContent=url;}
   document.getElementById('qrOverlay').style.display='flex';
 }
 function openTimeEditor(){
-  document.getElementById('timeEditor').innerHTML=PHASE_LABELS.map((l,i)=>
-    `<div class="time-row-e"><label>${l}</label><input type="number" id="te${i}" min="1" max="90" value="${PHASE_MINS[i]}"> min</div>`
-  ).join('');
-  updateTotalMins();
-  PHASE_LABELS.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updateTotalMins));
+  document.getElementById('timeEditor').innerHTML=PL.map((l,i)=>
+    `<div class="time-row-e"><label>${l}</label><input type="number" id="te${i}" min="1" max="90" value="${PHASE_MINS[i]}"> min</div>`).join('');
+  updTotal();
+  PL.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updTotal));
   document.getElementById('timeOverlay').style.display='flex';
 }
-function updateTotalMins(){let t=0;PHASE_LABELS.forEach((_,i)=>{t+=parseInt(document.getElementById('te'+i).value)||0;});document.getElementById('totalMins').textContent=t;}
+function updTotal(){let t=0;PL.forEach((_,i)=>{t+=parseInt(document.getElementById('te'+i).value)||0;});document.getElementById('totalMins').textContent=t;}
 function applyTimes(){
-  PHASE_LABELS.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
+  PL.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
   secs=totalSecs();running=false;clearInterval(iv);upd();closeModal('timeOverlay');
-  if(isAuth) window.fbSaveState(phase,secs);
+  if(isAuth)window.fbSaveState(phase,secs);
 }
 
-// ── MODE ──
+// MODE
 function setMode(m){
   mode=m;
-  ['fac','grp','sum'].forEach((v,i)=>
-    document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m)
-  );
+  ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
   document.getElementById('btnFac').textContent=isAuth?'✓ Facilitator':'🔒 Facilitator';
-  // Timer controls: ONLY show in fac/sum mode, NEVER in grp
-  document.getElementById('tctrl').style.display=(m==='grp')?'none':'flex';
-  render();
+  // CSS class controls timer visibility
+  document.body.classList.toggle('fac-mode',m==='fac');
+  fullRender();
 }
 
 function go(i){
-  phase=Math.max(0,Math.min(i,PHASE_LABELS.length-1));
-  renderChips();
-  render();
-  if(isAuth) window.fbSaveState(phase,secs);
+  phase=Math.max(0,Math.min(i,PL.length-1));
+  renderChips();fullRender();
+  if(isAuth)window.fbSaveState(phase,secs);
 }
 
 function ga(k){return ans[k]||'';}
-function qKey(del,qi,grp){return `d${del}_q${qi}_${grp}`;}
-function levKey(del,grp){return `d${del}_lev_${grp}`;}
+function qKey(n,qi,g){return `d${n}_q${qi}_${g}`;}
+function levKey(n,g){return `d${n}_lev_${g}`;}
 
 async function sendAnswer(key,inputId,btnId,tagId){
-  const val=document.getElementById(inputId)?.value||'';
-  if(!val.trim())return;
-  const btn=document.getElementById(btnId);
-  if(btn){btn.disabled=true;btn.textContent='Sparar…';}
+  const val=document.getElementById(inputId)?.value||'';if(!val.trim())return;
+  const btn=document.getElementById(btnId);if(btn){btn.disabled=true;btn.textContent='Sparar…';}
   await window.fbSave(key,val);
   if(btn){btn.disabled=false;btn.textContent='Skickat ✓';}
-  const tag=document.getElementById(tagId);
-  if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),2500);}
+  const tag=document.getElementById(tagId);if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),2500);}
 }
-
-function toggleInsights(id){
+function togIns(id){
   const b=document.getElementById('ib_'+id),t=document.getElementById('it_'+id);
-  if(!b||!t)return;
-  const o=b.classList.toggle('open');t.classList.toggle('open',o);
+  if(!b||!t)return;const o=b.classList.toggle('open');t.classList.toggle('open',o);
 }
 
-// ── RENDER ──
-function render(){
-  const c=document.getElementById('mc');
-  if(!c)return;
-  if(mode==='fac') c.innerHTML=renderFac();
-  else if(mode==='grp') c.innerHTML=renderGrp();
+// RENDER
+function fullRender(){
+  const c=document.getElementById('mc');if(!c)return;
+  if(mode==='fac')c.innerHTML=renderFac();
+  else if(mode==='grp')c.innerHTML=renderGrp();
   else c.innerHTML=renderSum();
   renderChips();
-  // Focus first code input if on code entry
-  setTimeout(()=>document.getElementById('c0')?.focus(),100);
 }
 
 function phaseNav(clickable){
-  return `<div class="pnav">${PHASE_LABELS.map((l,i)=>
-    `<div class="ppill${i===phase?' active':done[i]?' done':''}${!clickable?' nocursor':''}"
-      ${clickable?`onclick="go(${i})"`:''}>
-      ${l}<span style="opacity:.45;font-size:10px;margin-left:3px">${PHASE_MINS[i]}m</span>
+  return `<div class="pnav">${PL.map((l,i)=>
+    `<div class="ppill${i===phase?' active':done[i]?' done':''}${clickable?' clickable':''}" ${clickable?`onclick="go(${i})"`:''}>
+      ${l}<span style="opacity:.4;font-size:10px;margin-left:3px">${PHASE_MINS[i]}m</span>
     </div>`).join('')}</div>`;
 }
 
-// ── GROUP VIEW ──
+// GROUP FLOW
 function renderGrp(){
-  // Step 1: Must enter code
-  if(!codeEntered) return renderCodeEntry();
-  // Step 2: Must choose group
-  if(!groupChosen) return renderGroupPicker();
-  // Step 3: Show content based on synced phase
-  if(phase===0) return renderWaitingForFac();
-  if(phase>=1&&phase<=4) return renderDelGrp(phase);
+  if(!codeOK)return renderCodeEntry();
+  if(!groupOK)return renderGroupPicker();
+  if(phase===0)return renderWaiting();
+  if(phase>=1&&phase<=4)return renderDelGrp(phase);
   return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
 }
-
 function renderCodeEntry(){
   return `<div class="join-wrap"><div class="join-card">
-    <h2>Välkommen!</h2>
-    <div class="sub">Ange den 4-siffriga koden för att komma in</div>
+    <h2>Välkommen!</h2><div class="sub">Ange koden för att komma in</div>
     <div class="code-row">
       <input type="tel" maxlength="1" id="c0" oninput="ci(0)" onkeydown="cb(event,0)" autocomplete="off">
       <input type="tel" maxlength="1" id="c1" oninput="ci(1)" onkeydown="cb(event,1)" autocomplete="off">
@@ -462,19 +420,11 @@ function renderCodeEntry(){
 function ci(i){
   const el=document.getElementById('c'+i);
   el.value=el.value.replace(/\D/,'').slice(-1);
-  if(el.value&&i<3) document.getElementById('c'+(i+1)).focus();
+  if(el.value&&i<3)document.getElementById('c'+(i+1)).focus();
   const code=['c0','c1','c2','c3'].map(id=>document.getElementById(id)?.value||'').join('');
   if(code.length===4){
-    if(code===JOIN_CODE){
-      codeEntered=true;
-      localStorage.setItem('ce','1');
-      render();
-    } else {
-      const e=document.getElementById('cErr');
-      if(e) e.textContent='Fel kod – försök igen';
-      ['c0','c1','c2','c3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-      document.getElementById('c0')?.focus();
-    }
+    if(code===JOIN_CODE){codeOK=true;localStorage.setItem('ce','1');fullRender();}
+    else{const e=document.getElementById('cErr');if(e)e.textContent='Fel kod';['c0','c1','c2','c3'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';});document.getElementById('c0')?.focus();}
   }
 }
 function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&&i>0)document.getElementById('c'+(i-1)).focus();}
@@ -482,93 +432,77 @@ function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&
 function renderGroupPicker(){
   return `<div class="join-wrap"><div class="join-card">
     <h2>Välj din grupp</h2>
-    <div class="sub">${selectedGroup?`Du är i <strong>${selectedGroup}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
-    <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn${selectedGroup===g?' sel':''}" onclick="pickGrp('${g}')">${g}</button>`).join('')}</div>
+    <div class="sub">${selGrp?`Du är i <strong>${selGrp}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
+    <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn${selGrp===g?' sel':''}" onclick="pickGrp('${g}')">${g}</button>`).join('')}</div>
     <button class="lbtn" onclick="confirmGrp()" style="margin-top:.5rem">Gå in →</button>
   </div></div>`;
 }
-function pickGrp(g){
-  selectedGroup=g;
-  localStorage.setItem('sg',g);
-  document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));
-}
-function confirmGrp(){
-  if(!selectedGroup)return;
-  groupChosen=true;
-  localStorage.setItem('gc','1');
-  render();
-}
-
-function renderWaitingForFac(){
+function pickGrp(g){selGrp=g;localStorage.setItem('sg',g);document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));}
+function confirmGrp(){if(!selGrp)return;groupOK=true;localStorage.setItem('gc','1');fullRender();}
+function renderWaiting(){
   return `<div class="join-wrap"><div class="join-card">
     <h2>Du är inne!</h2>
-    <div class="sub">Du är i <strong>${selectedGroup}</strong>. Väntar på att facilitatorn startar passet…</div>
+    <div class="sub">Du är i <strong>${selGrp}</strong>.<br>Väntar på att facilitatorn startar…</div>
     <div style="margin-top:1rem;font-size:13px;color:#aaa"><span class="live-dot" style="vertical-align:middle"></span> Ansluten – synkar automatiskt</div>
-    <div style="margin-top:1.5rem">
-      <div class="cancel-link" onclick="resetGroupChoice()">Byt grupp</div>
-    </div>
+    <div style="margin-top:1rem"><span class="cancel-link" onclick="resetGrp()">Byt grupp</span></div>
   </div></div>`;
 }
-function resetGroupChoice(){
-  groupChosen=false;selectedGroup='';
-  localStorage.removeItem('gc');localStorage.removeItem('sg');
-  render();
-}
+function resetGrp(){groupOK=false;selGrp='';localStorage.removeItem('gc');localStorage.removeItem('sg');fullRender();}
 
-// ── DEFS ──
+// DEFS
 const DEFS={
   1:{title:'Del 1 · Core Consulting Skills i praktiken',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
-      {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – och varför? Ge ett konkret exempel.<br><span style="font-size:11px;opacity:.65;font-style:italic">Kundförståelse & problemlösning · Kommunikation & anpassning · Professionalism & ansvar · Värdeskapande</span>'},
-      {h:'Diskutera 2',p:'Berätta om ett uppdrag där en soft skill – inte teknisk kompetens – avgjorde utfallet. Vad hände och vad lärde ni er?'},
-      {h:'Diskutera 3',p:'Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt – och varför?'},
+      {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – varför? Ge ett konkret exempel.<br><span style="font-size:11px;opacity:.65;font-style:italic">Kundförståelse & problemlösning · Kommunikation & anpassning · Professionalism & ansvar · Värdeskapande</span>'},
+      {h:'Diskutera 2',p:'Berätta om ett uppdrag där en soft skill – inte teknisk kompetens – avgjorde utfallet.'},
+      {h:'Diskutera 3',p:'Hur kopplar ni Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket glömmer man?'},
     ],
-    deliverable:'Välj <strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
+    deliverable:'<strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
     insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
   },
   2:{title:'Del 2 · Konsultmässighet – eget varumärke',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
       {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden?'},
-      {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'},
+      {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – coacha kund, hantera konflikter, sälja in nästa fas?'},
       {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'},
     ],
-    deliverable:'Dela <strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
+    deliverable:'<strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
     insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Du ÄR Combitech hos kunden'],
   },
   3:{title:'Del 3 · Värdeskapande på obelagd tid',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
-      {h:'Diskutera 1',p:'Vad gör ni faktiskt med obelagd tid? Vad borde man göra – och vad hindrar er i praktiken?'},
-      {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Varför underrapporterar konsulter, och vad kostar det?'},
-      {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på ett aktivt uppdrag? Brainstorma konkreta exempel.'},
+      {h:'Diskutera 1',p:'Vad gör ni faktiskt med obelagd tid? Vad borde man göra – och vad hindrar er?'},
+      {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Vad kostar det?'},
+      {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på aktivt uppdrag? Brainstorma.'},
     ],
-    deliverable:'<strong>1 konkret sak</strong> ni faktiskt kan göra nästa gång ni har obelagd tid.',
-    insights:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er','Rätt tidrapportering = ärlighet, inte girighet'],
+    deliverable:'<strong>1 konkret sak</strong> ni kan göra nästa gång ni har obelagd tid.',
+    insights:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, demo','Nätverka internt – vem behöver er om 3 mån?','Rätt tidrapportering = ärlighet, inte girighet'],
     extraNote:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
   },
   4:{title:'Del 4 · Många hattar – scenario',time:'Diskussion 10 min → Redovisning 5 min',
     questions:[
-      {h:'Scenario A',p:'Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Hur agerar du konsultmässigt?'},
-      {h:'Scenario B',p:'Kunden ifrågasätter er leverans och vill minska scopet – men problemet är deras egna processer, inte er lösning. Hur hanterar ni det utan att peka finger?'},
-      {h:'Scenario C',p:'Du hittar ett stort problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är formellt inte din uppgift. Vad gör du?'},
+      {h:'Scenario A',p:'Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Hur agerar du?'},
+      {h:'Scenario B',p:'Kunden ifrågasätter er leverans och vill minska scopet – men problemet är deras interna processer. Hur hanterar ni det?'},
+      {h:'Scenario C',p:'Du hittar ett stort problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – vad gör du?'},
     ],
     deliverable:'Välj <strong>ett scenario</strong> – beskriv er bästa approach och varför just den.',
-    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation > teknisk lösning','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen'],
-    extraNote:'Inget rätt svar – poängen är att konsultrollen alltid är mer än jobbtiteln.',
+    insights:['Psykologen i rummet är ofta viktigast','Transparent kommunikation > teknisk lösning','Flagga risker = extra värde','Kunden minns hur du hanterade krisen'],
+    extraNote:'Inget rätt svar – konsultrollen är alltid mer än jobbtiteln.',
   },
 };
 
 function insBlock(n,uid){
-  const d=DEFS[n],id=`${n}_${uid}`;
+  const id=`${n}_${uid}`;
   return `<div style="margin-top:.65rem">
-    <div class="insights-toggle" id="it_${id}" onclick="toggleInsights('${id}')">Seniora insikter</div>
-    <div class="insights-body" id="ib_${id}">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
+    <div class="ins-toggle" id="it_${id}" onclick="togIns('${id}')">Seniora insikter</div>
+    <div class="ins-body" id="ib_${id}">${DEFS[n].insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
   </div>`;
 }
 
 function renderDelGrp(n){
   const d=DEFS[n];
   const qBlocks=d.questions.map((q,qi)=>{
-    const key=qKey(n,qi,selectedGroup);
+    const key=qKey(n,qi,selGrp);
     const iid=`gi${n}${qi}`,bid=`gb${n}${qi}`,tid=`gt${n}${qi}`;
     return `<div class="qblock">
       <h4>${q.h}</h4><p>${q.p}</p>
@@ -579,22 +513,21 @@ function renderDelGrp(n){
       </div>
     </div>`;
   }).join('');
-  const lk=levKey(n,selectedGroup);
-  const liid=`lev${n}`,lbid=`levb${n}`,ltid=`levt${n}`;
+  const lk=levKey(n,selGrp);
   return `
     <div class="sync-banner"><span class="live-dot"></span>&nbsp;Synkad med facilitatorn – ${d.title}</div>
     ${phaseNav(false)}
     <div class="card">
-      <div class="ctitle">${d.title} <span style="font-size:11px;font-weight:400;color:#0F6E56">${selectedGroup}</span></div>
+      <div class="ctitle">${d.title} <span style="font-size:11px;font-weight:400;color:#0F6E56">${selGrp}</span></div>
       <div class="csub">${d.time}</div>
       ${qBlocks}
       <div class="delivblock">
         <h4>📌 Leverans – detta redovisar ni för hela rummet</h4>
         <p>${d.deliverable}</p>
-        <textarea id="${liid}" placeholder="Skriv er leverans här…">${ga(lk)}</textarea>
+        <textarea id="lev${n}" placeholder="Skriv er leverans här…">${ga(lk)}</textarea>
         <div class="send-row">
-          <button class="dbtn" id="${lbid}" onclick="sendAnswer('${lk}','${liid}','${lbid}','${ltid}')">Skicka leverans</button>
-          <span class="stag blue" id="${ltid}">✓ Skickat!</span>
+          <button class="dbtn" id="levb${n}" onclick="sendAnswer('${lk}','lev${n}','levb${n}','levt${n}')">Skicka leverans</button>
+          <span class="stag blue" id="levt${n}">✓ Skickat!</span>
         </div>
       </div>
       ${insBlock(n,'g')}
@@ -602,35 +535,45 @@ function renderDelGrp(n){
 }
 
 function renderFac(){
-  if(phase===0) return phaseNav(true)+renderIntroFac();
-  if(phase>=1&&phase<=4) return phaseNav(true)+renderDelFac(phase);
+  if(phase===0)return phaseNav(true)+renderIntroFac();
+  if(phase>=1&&phase<=4)return phaseNav(true)+renderDelFac(phase);
   return phaseNav(true)+renderAvsl();
 }
 
 function renderDelFac(n){
   const d=DEFS[n];
   const qBlocks=d.questions.map((q,qi)=>{
-    const rows=GROUPS.map(g=>{const v=ga(qKey(n,qi,g));return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}">${v||'inväntar…'}</div></div>`;}).join('');
     const has=GROUPS.some(g=>ga(qKey(n,qi,g)));
+    const rows=GROUPS.map(g=>{
+      const v=ga(qKey(n,qi,g));
+      return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}" id="gval_${n}_${qi}_${g}">${v||'inväntar…'}</div></div>`;
+    }).join('');
     return `<div class="q-ans-block">
-      <div class="q-ans-hdr"><span class="live-dot"></span>&nbsp;${q.h}${has?' <span style="color:#085041;font-size:10px;font-weight:400"> – svar inkomna</span>':''}</div>
+      <div class="q-ans-hdr" id="qhdr_${n}_${qi}"><span class="live-dot"></span>&nbsp;${q.h}
+        <span class="has-span" style="color:#085041;font-size:10px;font-weight:400;margin-left:4px;${has?'':'display:none'}"> – svar inkomna</span>
+      </div>
       <div class="q-ans-txt">${q.p}</div>
       <div class="q-ans-body">${rows}</div>
     </div>`;
   }).join('');
-  const levRows=GROUPS.map(g=>{const v=ga(levKey(n,g));return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}">${v||'inväntar…'}</div></div>`;}).join('');
   const levHas=GROUPS.some(g=>ga(levKey(n,g)));
+  const levRows=GROUPS.map(g=>{
+    const v=ga(levKey(n,g));
+    return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}" id="levval_${n}_${g}">${v||'inväntar…'}</div></div>`;
+  }).join('');
   return `<div class="card">
     <div class="ctitle">${d.title}</div>
     <div class="csub">${d.time} · Kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
     ${d.extraNote?`<div class="fnote">${d.extraNote}</div>`:''}
     ${qBlocks}
     <div class="q-ans-block" style="border-color:#185FA5;margin-top:.5rem">
-      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans${levHas?' <span style="color:#0e4070;font-size:10px;font-weight:400"> – svar inkomna</span>':''}</div>
+      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans
+        ${levHas?'<span style="color:#0e4070;font-size:10px;font-weight:400;margin-left:4px"> – svar inkomna</span>':''}
+      </div>
       <div class="q-ans-txt" style="color:#185FA5;font-weight:500">${d.deliverable}</div>
       <div class="q-ans-body">${levRows}</div>
     </div>
-    <div class="insights-body open" style="margin-top:.65rem">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
+    <div class="ins-body open" style="margin-top:.65rem">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
     <div style="margin-top:.85rem"><button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button></div>
   </div>`;
 }
@@ -638,10 +581,10 @@ function renderDelFac(n){
 function renderIntroFac(){
   const tot=PHASE_MINS.reduce((a,b)=>a+b,0);
   return `
-  <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min) · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${JOIN_CODE}</strong> · klicka <strong>📲 Visa kod</strong> för QR på projektor</div>
+  <div class="fnote">Facilitatorvy · Intro · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${JOIN_CODE}</strong> · klicka <strong>📲 Visa kod</strong> för QR</div>
   <div class="card">
     <div class="ctitle">Agenda – ${tot} min</div>
-    <table class="stbl">${PHASE_LABELS.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}</table>
+    <table class="stbl">${PL.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}</table>
     <button class="sbtn" onclick="go(1)" style="margin-top:.85rem">Starta Del 1 →</button>
   </div>
   <div class="card">
@@ -652,7 +595,6 @@ function renderIntroFac(){
     </div>
   </div>`;
 }
-
 function renderAvsl(){
   return `
   <div class="fnote">Avslut (${PHASE_MINS[5]} min) – Summera med kärnbudskapet nedan.</div>
@@ -674,11 +616,11 @@ function renderAvsl(){
 
 function renderSum(){
   let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:.65rem"><button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button></div>`;
-  let hasAny=false;
+  let any=false;
   for(let n=1;n<=4;n++){
     const d=DEFS[n];
-    const delHas=d.questions.some((q,qi)=>GROUPS.some(g=>ga(qKey(n,qi,g))))||GROUPS.some(g=>ga(levKey(n,g)));
-    if(!delHas)continue;hasAny=true;
+    if(!d.questions.some((q,qi)=>GROUPS.some(g=>ga(qKey(n,qi,g))))&&!GROUPS.some(g=>ga(levKey(n,g))))continue;
+    any=true;
     html+=`<div class="card"><div class="ctitle"><span class="live-dot"></span>&nbsp;${d.title}</div>`;
     d.questions.forEach((q,qi)=>{
       const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));if(!f.length)return;
@@ -694,7 +636,7 @@ function renderSum(){
     }
     html+=`</div>`;
   }
-  if(!hasAny)html+=`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
+  if(!any)html+=`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
   return html;
 }
 
@@ -703,17 +645,21 @@ function exportAnswers(){
   for(let n=1;n<=4;n++){
     const d=DEFS[n];txt+=d.title+'\n'+'-'.repeat(35)+'\n';
     d.questions.forEach((q,qi)=>{const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));if(!f.length)return;txt+='\n  '+q.h+':\n';f.forEach(g=>{txt+='    '+g+': '+ga(qKey(n,qi,g))+'\n';});});
-    const lf=GROUPS.filter(g=>ga(levKey(n,g)));if(lf.length){txt+='\n  LEVERANS:\n';lf.forEach(g=>{txt+='    '+g+': '+ga(levKey(n,g))+'\n';});}
-    txt+='\n';
+    const lf=GROUPS.filter(g=>ga(levKey(n,g)));if(lf.length){txt+='\n  LEVERANS:\n';lf.forEach(g=>{txt+='    '+g+': '+ga(levKey(n,g))+'\n';});}txt+='\n';
   }
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='grc-workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grc-workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
 }
 
-// Init
+// INIT
 upd();
-render();
+// Restore state if fac
+if(isAuth){
+  const st=window._fbState;
+  if(st&&typeof st.phase==='number'){phase=st.phase;secs=st.secs||secs;}
+}
+fullRender();
+setTimeout(()=>document.getElementById('c0')?.focus(),150);
 </script>
 </body>
 </html>
