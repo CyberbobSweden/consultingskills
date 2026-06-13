@@ -3,28 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Konsultrollen i praktiken – Enhetsträff</title>
+<title>Konsultrollen i praktiken – GRC Enhetsträff</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
-.header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;position:relative}
+.header-left{display:flex;align-items:center;gap:1rem}
+.grc-badge{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:10px;padding:5px 12px;text-align:center;flex-shrink:0}
+.grc-badge .grc-letters{font-size:18px;font-weight:800;color:white;letter-spacing:.05em;line-height:1}
+.grc-badge .grc-sub{font-size:8px;color:rgba(255,255,255,.75);letter-spacing:.04em;margin-top:1px;text-transform:uppercase}
 .header h1{font-size:19px;font-weight:500;color:white;margin:0}
-.header .sub{font-size:12px;opacity:.75;margin-top:2px;color:white}
+.header .sub{font-size:11px;opacity:.75;margin-top:2px;color:white}
 .mode-btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .mbtn{padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:transparent;color:white;font-size:12px;cursor:pointer;transition:all .15s}
 .mbtn.active{background:white;color:#0F6E56;font-weight:500}
-.qrbtn{padding:5px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:transparent;color:white;font-size:12px;cursor:pointer;display:none}
-.qrbtn.show{display:inline-block}
-.qrbtn:hover{background:rgba(255,255,255,.2)}
+.qrbtn{padding:5px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:rgba(255,255,255,.12);color:white;font-size:12px;cursor:pointer}
+.qrbtn:hover{background:rgba(255,255,255,.25)}
+
+/* GRC accent bar */
+.grc-bar{height:3px;background:linear-gradient(90deg,#1a3a5c,#4a7ab5,#8a9ab5,#4a7ab5,#1a3a5c)}
+
+/* TIMER BAR */
 .tbar{background:rgba(15,110,86,0.92);padding:.65rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .tdisp{font-size:26px;font-weight:700;color:white;min-width:68px;font-variant-numeric:tabular-nums}
 .tdisp.warn{color:#FFD166}
 .tdisp.crit{color:#FF6B6B;animation:blink .8s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
 .phase-time-row{display:flex;gap:6px;flex-wrap:wrap;flex:1}
-.ptime-chip{background:rgba(255,255,255,.15);border-radius:8px;padding:4px 9px;font-size:10px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:56px}
-.ptime-chip.active-phase{background:rgba(255,255,255,.35);font-weight:600}
+.ptime-chip{background:rgba(255,255,255,.15);border-radius:8px;padding:4px 9px;font-size:10px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:52px;cursor:default}
+.ptime-chip.active-phase{background:rgba(255,255,255,.38);font-weight:700}
 .ptime-chip span{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 .tctrl{display:flex;gap:5px;align-items:center}
 .tbtn{padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:12px;cursor:pointer}
@@ -32,14 +42,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tbtn.primary{background:rgba(255,255,255,.25)}
 .pbar{height:4px;background:#0a4a38}
 .pfill{height:100%;background:#5DCAA5;transition:width .5s}
+
+/* CONTENT */
 .content{padding:1.25rem 2rem;max-width:900px;margin:0 auto}
 .pnav{display:flex;gap:6px;margin-bottom:1.1rem;overflow-x:auto;padding-bottom:4px}
 .ppill{padding:5px 13px;border-radius:20px;border:1px solid #ddd;background:white;font-size:12px;cursor:pointer;white-space:nowrap;color:#666;transition:all .15s}
 .ppill.active{background:#0F6E56;color:white;border-color:#0F6E56}
 .ppill.done::after{content:" ✓"}
+
+/* CARDS */
 .card{background:white;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:.85rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .ctitle{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:.2rem;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .csub{font-size:12px;color:#888;margin-bottom:.85rem}
+
+/* QUESTION BLOCKS */
 .qblock{background:#f7f7f4;border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.7rem;border-left:3px solid #0F6E56}
 .qblock h4{font-size:12px;font-weight:600;color:#0F6E56;margin-bottom:.3rem}
 .qblock p{font-size:13px;color:#333;line-height:1.6;margin-bottom:.6rem}
@@ -60,9 +76,16 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .stag{font-size:12px;color:#0F6E56;opacity:0;transition:opacity .3s}
 .stag.show{opacity:1}
 .stag.blue{color:#185FA5}
-.fnote{background:#e8f2fb;border-radius:8px;padding:.6rem 1rem;font-size:12px;color:#0C447C;margin-bottom:.8rem;border-left:3px solid #185FA5;line-height:1.5}
-.ins{background:#e8f5ef;border-radius:8px;padding:.65rem 1rem;margin-bottom:.6rem}
+
+/* INSIGHTS (collapsible) */
+.insights-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#085041;cursor:pointer;padding:.5rem 0;user-select:none}
+.insights-toggle::before{content:'▶';font-size:10px;transition:transform .2s;display:inline-block}
+.insights-toggle.open::before{transform:rotate(90deg)}
+.insights-body{display:none;padding:.6rem .8rem;background:#e8f5ef;border-radius:8px;margin-bottom:.5rem}
+.insights-body.open{display:block}
 .ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:3px 9px;border-radius:10px;margin:.15rem;border:1px solid #9FE1CB}
+
+.fnote{background:#e8f2fb;border-radius:8px;padding:.6rem 1rem;font-size:12px;color:#0C447C;margin-bottom:.8rem;border-left:3px solid #185FA5;line-height:1.5}
 .slabel{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;margin-top:.5rem}
 .ansgrid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.4rem}
 .ansitem{background:#f7f7f4;border-radius:8px;padding:.55rem .85rem;font-size:13px;border:1px solid #e8e8e4}
@@ -75,9 +98,10 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .expbtn:hover{background:#e8f5ef}
 .nextbtn{padding:6px 14px;border:1px solid #ddd;border-radius:7px;background:white;color:#333;font-size:13px;cursor:pointer}
 .nextbtn:hover{background:#f5f5f2}
-/* modals */
+
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200}
-.modal{background:white;border-radius:16px;padding:2rem;width:360px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2);text-align:center}
+.modal{background:white;border-radius:16px;padding:2rem;width:380px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2);text-align:center}
 .modal h2{font-size:17px;font-weight:600;margin-bottom:.4rem}
 .modal p{font-size:13px;color:#666;margin-bottom:1rem;line-height:1.5}
 .modal input[type=password]{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:14px;text-align:center;margin-bottom:.5rem}
@@ -86,21 +110,23 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .lbtn{width:100%;padding:9px;background:#0F6E56;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:.5rem}
 .lbtn:hover{background:#085041}
 .cancel-link{font-size:12px;color:#aaa;cursor:pointer;text-decoration:underline}
-/* QR modal */
-.qr-modal-inner{text-align:center}
-.qr-modal-inner .big-code{font-size:48px;font-weight:800;letter-spacing:.2em;color:#0F6E56;margin:.5rem 0 1rem}
-/* join page */
+.big-code-display{font-size:52px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.75rem 0}
+
+/* JOIN PAGE */
 .join-wrap{max-width:440px;margin:0 auto;padding-top:.5rem}
 .join-card{background:white;border:1px solid #e8e8e4;border-radius:12px;padding:2rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .join-card h2{font-size:18px;font-weight:600;margin-bottom:.4rem}
-.join-card .sub{font-size:13px;color:#666;margin-bottom:1.5rem}
-.code-row{display:flex;gap:10px;justify-content:center;margin:1rem 0 .25rem}
-.code-row input{width:60px;height:64px;border:2px solid #ddd;border-radius:10px;font-size:30px;text-align:center;font-weight:700;color:#0F6E56;outline:none;transition:border-color .15s}
+.join-card .sub{font-size:13px;color:#666;margin-bottom:1.25rem}
+.code-row{display:flex;gap:10px;justify-content:center;margin:.75rem 0 .25rem}
+.code-row input{width:62px;height:66px;border:2px solid #ddd;border-radius:10px;font-size:30px;text-align:center;font-weight:700;color:#0F6E56;outline:none;transition:border-color .15s}
 .code-row input:focus{border-color:#0F6E56;background:#f7fdf9}
 .grp-select{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:.75rem 0}
 .grp-btn{padding:8px 18px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555;transition:all .15s}
 .grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
-/* fac live answers */
+.divider{display:flex;align-items:center;gap:.75rem;margin:1.1rem 0;color:#bbb;font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
+
+/* FAC LIVE ANSWERS */
 .q-ans-block{border:1px solid #e8e8e4;border-radius:10px;margin-bottom:.7rem;overflow:hidden}
 .q-ans-hdr{background:#f7f7f4;padding:.55rem 1rem;font-size:12px;font-weight:600;color:#0F6E56;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;gap:5px}
 .q-ans-hdr.blue{color:#185FA5;background:#f0f6ff}
@@ -113,12 +139,26 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .g-row .gv.empty{color:#ddd;font-style:italic}
 .live-dot{display:inline-block;width:7px;height:7px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-/* time editor */
+
+/* Sync indicator in group view */
+.sync-banner{background:#e8f5ef;border-radius:8px;padding:.5rem 1rem;font-size:12px;color:#085041;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;border:1px solid #9FE1CB}
+
+/* TIME EDITOR */
 .time-editor{display:flex;flex-direction:column;gap:.5rem;text-align:left}
 .time-row-e{display:flex;align-items:center;gap:.5rem}
 .time-row-e label{font-size:13px;flex:1}
 .time-row-e input{width:60px;border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:13px;text-align:center}
-@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:1rem}.header{padding:.85rem 1rem}.tdisp{font-size:20px}.code-row input{width:50px;height:54px;font-size:24px}}
+
+/* GRC footer accent */
+.grc-footer{background:linear-gradient(90deg,#1a3a5c,#2a5490,#3a6eb0);padding:.4rem 2rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.grc-footer span{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:.03em}
+.grc-footer strong{font-size:11px;color:white;letter-spacing:.05em}
+
+/* QR code */
+#qrcode{display:inline-block;padding:10px;background:white;border:1px solid #ddd;border-radius:10px}
+.qr-url{font-size:10px;color:#aaa;margin-top:.4rem;word-break:break-all}
+
+@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:1rem}.header{padding:.85rem 1rem}.tdisp{font-size:20px}.code-row input{width:52px;height:56px;font-size:24px}}
 </style>
 </head>
 <body>
@@ -135,17 +175,15 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
   </div>
 </div>
 
-<!-- QR / Code display modal -->
+<!-- QR modal -->
 <div class="overlay" id="qrOverlay" style="display:none">
   <div class="modal">
-    <div class="qr-modal-inner">
-      <h2>Visa för deltagarna</h2>
-      <p>Scanna QR-koden eller ange koden manuellt</p>
-      <div id="qrModalCode"></div>
-      <div class="big-code" id="qrModalDigits">1234</div>
-      <div style="font-size:11px;color:#aaa;word-break:break-all;margin-bottom:1rem" id="qrModalUrl"></div>
-      <button class="lbtn" onclick="closeModal('qrOverlay')">Stäng</button>
-    </div>
+    <h2>Visa för deltagarna</h2>
+    <p>Scanna QR-koden eller ange koden manuellt</p>
+    <div id="qrModalCode" style="margin:.5rem 0"></div>
+    <div class="big-code-display" id="qrModalDigits">1234</div>
+    <div class="qr-url" id="qrModalUrl"></div>
+    <button class="lbtn" style="margin-top:1rem" onclick="closeModal('qrOverlay')">Stäng</button>
   </div>
 </div>
 
@@ -162,17 +200,24 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 </div>
 
 <div class="header">
-  <div>
-    <h1>Konsultrollen i praktiken</h1>
-    <div class="sub">Enhetsträff · arbetspass</div>
+  <div class="header-left">
+    <div class="grc-badge">
+      <div class="grc-letters">GRC</div>
+      <div class="grc-sub">Governance · Risk · Compliance</div>
+    </div>
+    <div>
+      <h1>Konsultrollen i praktiken</h1>
+      <div class="sub">Enhetsträff · arbetspass</div>
+    </div>
   </div>
   <div class="mode-btns">
     <button class="mbtn" id="btnFac" onclick="tryFac()">🔒 Facilitator</button>
     <button class="mbtn active" id="btnGrp" onclick="setMode('grp')">Gruppvy</button>
     <button class="mbtn" id="btnSum" onclick="trySum()">Summering</button>
-    <button class="qrbtn show" id="btnQR" onclick="openQR()" title="Visa QR-kod">📲 Visa kod</button>
+    <button class="qrbtn" onclick="openQR()">📲 Visa kod</button>
   </div>
 </div>
+<div class="grc-bar"></div>
 
 <div class="tbar" id="tbar">
   <div id="tdisp" class="tdisp">—:——</div>
@@ -187,16 +232,48 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
 <div class="content" id="mc"></div>
 
+<div class="grc-footer">
+  <strong>GRC</strong>
+  <span>Governance · Risk &amp; Compliance</span>
+  <span>·</span>
+  <span>Combitech Enhetsträff</span>
+</div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getFirestore,doc,setDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import{getFirestore,doc,setDoc,getDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",authDomain:"consultingskills-938d9.firebaseapp.com",projectId:"consultingskills-938d9",storageBucket:"consultingskills-938d9.firebasestorage.app",messagingSenderId:"250530809846",appId:"1:250530809846:web:eacdb035347952c595e9d7"};
 const app=initializeApp(cfg);
 const db=getFirestore(app);
-const SESSION="enhetsträff-v3";
-window.fbSave=async(key,text)=>{try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}catch(e){console.error(e);}};
-window.fbListen=(cb)=>{onSnapshot(collection(db,SESSION),(snap)=>{const d={};snap.forEach(s=>{d[s.id]=s.data().text||'';});cb(d);});};
-window.fbReady=true;window.dispatchEvent(new Event('fbReady'));
+const SESSION="grc-enhetsträff-v1";
+const STATE_DOC="__state__";
+
+// Save answer
+window.fbSave=async(key,text)=>{
+  try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}
+  catch(e){console.error(e);}
+};
+
+// Save facilitator phase state
+window.fbSavePhase=async(p)=>{
+  try{await setDoc(doc(db,SESSION,STATE_DOC),{phase:p,ts:Date.now()},{merge:true});}
+  catch(e){console.error(e);}
+};
+
+// Listen to answers + state
+window.fbListen=(cb)=>{
+  onSnapshot(collection(db,SESSION),(snap)=>{
+    const d={};
+    snap.forEach(s=>{
+      if(s.id===STATE_DOC){d['__phase__']=s.data().phase;}
+      else{d[s.id]=s.data().text||'';}
+    });
+    cb(d);
+  });
+};
+
+window.fbReady=true;
+window.dispatchEvent(new Event('fbReady'));
 </script>
 
 <script>
@@ -209,21 +286,24 @@ const PHASE_LABELS=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 let secs,running=false,iv=null,mode='grp',phase=0,isAuth=false,done={},ans={};
 let selectedGroup=localStorage.getItem('sg')||'';
 let groupUnlocked=localStorage.getItem('gu')==='1';
-
-// Check URL for ?join=1 (from QR code scan)
-const urlParams=new URLSearchParams(window.location.search);
-const directJoin=urlParams.get('join')==='1';
-if(directJoin&&!groupUnlocked){
-  // Will show group picker directly, skipping code entry
-}
+const directJoin=new URLSearchParams(window.location.search).get('join')==='1';
 
 function totalSecs(){return PHASE_MINS.reduce((a,b)=>a+b,0)*60;}
 secs=totalSecs();
 
-window.addEventListener('fbReady',()=>window.fbListen(d=>{ans=d;render();}));
+window.addEventListener('fbReady',()=>{
+  window.fbListen(d=>{
+    // Sync phase for group view
+    if(d['__phase__']!==undefined&&mode==='grp'){
+      const remotePhase=d['__phase__'];
+      if(remotePhase!==phase){phase=remotePhase;}
+    }
+    ans=d;
+    render();
+  });
+});
 
 function closeModal(id){document.getElementById(id).style.display='none';}
-
 function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
 function trySum(){if(isAuth)setMode('sum');else tryFac();}
 function checkPw(){
@@ -239,8 +319,7 @@ function openQR(){
   const url=window.location.origin+window.location.pathname+'?join=1';
   document.getElementById('qrModalDigits').textContent=JOIN_CODE;
   document.getElementById('qrModalUrl').textContent=url;
-  const el=document.getElementById('qrModalCode');
-  el.innerHTML='';
+  const el=document.getElementById('qrModalCode');el.innerHTML='';
   try{new QRCode(el,{text:url,width:160,height:160,colorDark:'#0F6E56',colorLight:'#ffffff'});}
   catch(e){el.textContent=url;}
   document.getElementById('qrOverlay').style.display='flex';
@@ -286,12 +365,17 @@ function setMode(m){
   mode=m;
   ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
   document.getElementById('btnFac').textContent=isAuth?'✓ Facilitator':'🔒 Facilitator';
-  // Hide timer controls in group view
-  const tctrl=document.getElementById('tctrl');
-  if(tctrl)tctrl.style.display=m==='grp'?'none':'flex';
+  document.getElementById('tctrl').style.display=m==='grp'?'none':'flex';
   render();
 }
-function go(i){phase=Math.max(0,Math.min(i,PHASE_LABELS.length-1));renderChips();render();}
+
+function go(i){
+  phase=Math.max(0,Math.min(i,PHASE_LABELS.length-1));
+  renderChips();render();
+  // Save phase to Firebase so group views sync
+  if(isAuth) window.fbSavePhase(phase);
+}
+
 function ga(k){return ans[k]||'';}
 function qKey(del,qi,grp){return `d${del}_q${qi}_${grp}`;}
 function levKey(del,grp){return `d${del}_lev_${grp}`;}
@@ -304,7 +388,15 @@ async function sendAnswer(key,inputId,btnId,tagId){
   await window.fbSave(key,val);
   if(btn){btn.disabled=false;btn.textContent='Skickat ✓';}
   const tag=document.getElementById(tagId);
-  if(tag){tag.classList.add('show');setTimeout(()=>{tag.classList.remove('show');},2500);}
+  if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),2500);}
+}
+
+function toggleInsights(id){
+  const body=document.getElementById('ib_'+id);
+  const toggle=document.getElementById('it_'+id);
+  if(!body||!toggle)return;
+  const open=body.classList.toggle('open');
+  toggle.classList.toggle('open',open);
 }
 
 function render(){
@@ -315,18 +407,18 @@ function render(){
   renderChips();
 }
 
-function phaseNav(){
-  return `<div class="pnav">${PHASE_LABELS.map((l,i)=>
-    `<div class="ppill${i===phase?' active':done[i]?' done':''}" onclick="go(${i})">${l} <span style="opacity:.5;font-size:11px">${PHASE_MINS[i]}m</span></div>`
-  ).join('')}</div>`;
+function phaseNav(clickable=true){
+  return `<div class="pnav">${PHASE_LABELS.map((l,i)=>`
+    <div class="ppill${i===phase?' active':done[i]?' done':''}" ${clickable?`onclick="go(${i})"`:''} style="${!clickable?'cursor:default':''}">
+      ${l} <span style="opacity:.5;font-size:11px">${PHASE_MINS[i]}m</span>
+    </div>`).join('')}</div>`;
 }
 
 // ===== GROUP VIEW =====
 function renderGrp(){
-  // If came via QR or already unlocked, show group picker or content
   if(directJoin&&!groupUnlocked) return renderGroupPicker();
   if(!groupUnlocked) return renderCodeEntry();
-  if(phase===0) return renderGroupPicker(); // allow reselect on intro
+  if(phase===0) return renderGroupPicker();
   if(phase>=1&&phase<=4) return renderDelGrp(phase);
   return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
 }
@@ -342,6 +434,8 @@ function renderCodeEntry(){
       <input type="tel" maxlength="1" id="c3" oninput="ci(3)" onkeydown="cb(event,3)">
     </div>
     <div class="merr" id="cErr"></div>
+    <div class="divider">eller</div>
+    <p style="font-size:12px;color:#aaa">Scanna QR-koden från projektorduken</p>
   </div></div>`;
 }
 function ci(i){
@@ -351,7 +445,7 @@ function ci(i){
   const code=['c0','c1','c2','c3'].map(id=>document.getElementById(id)?.value||'').join('');
   if(code.length===4){
     if(code===JOIN_CODE){groupUnlocked=true;localStorage.setItem('gu','1');render();}
-    else{document.getElementById('cErr').textContent='Fel kod';['c0','c1','c2','c3'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('c0')?.focus();}
+    else{const e=document.getElementById('cErr');if(e)e.textContent='Fel kod – försök igen';['c0','c1','c2','c3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('c0')?.focus();}
   }
 }
 function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&&i>0)document.getElementById('c'+(i-1)).focus();}
@@ -359,21 +453,22 @@ function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&
 function renderGroupPicker(){
   return `<div class="join-wrap"><div class="join-card">
     <h2>Välj din grupp</h2>
-    <div class="sub">${selectedGroup?`Du är nu i <strong>${selectedGroup}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
+    <div class="sub">${selectedGroup?`Du är i <strong>${selectedGroup}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
     <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn${selectedGroup===g?' sel':''}" onclick="pickGrp('${g}')">${g}</button>`).join('')}</div>
     <button class="lbtn" onclick="confirmGrp()">Gå in →</button>
-    ${selectedGroup?`<div class="cancel-link" style="margin-top:.75rem" onclick="groupUnlocked=true;render()">Fortsätt som ${selectedGroup}</div>`:''}
+    ${selectedGroup?`<div class="cancel-link" style="margin-top:.75rem" onclick="skipToContent()">Fortsätt som ${selectedGroup}</div>`:''}
   </div></div>`;
 }
-function pickGrp(g){
-  selectedGroup=g;localStorage.setItem('sg',g);
-  document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));
-}
+function pickGrp(g){selectedGroup=g;localStorage.setItem('sg',g);document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));}
 function confirmGrp(){
-  if(!selectedGroup){return;}
+  if(!selectedGroup)return;
   groupUnlocked=true;localStorage.setItem('gu','1');
-  // If phase is 0 (intro), move to phase 1 so they see content
-  if(phase===0)phase=1;
+  skipToContent();
+}
+function skipToContent(){
+  // Go to whatever phase facilitator is on (from firebase), default 1
+  const fp=ans['__phase__'];
+  phase=(fp&&fp>0)?fp:1;
   render();
 }
 
@@ -381,21 +476,21 @@ function confirmGrp(){
 const DEFS={
   1:{title:'Del 1 · Core Consulting Skills i praktiken',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
-      {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – och varför? Ge ett konkret exempel.<br><span style="font-size:12px;opacity:.7;font-style:italic">Kundförståelse & problemlösning · Effektiv kommunikation · Professionalism & ansvar · Värdeskapande</span>'},
-      {h:'Diskutera 2',p:'Berätta om ett uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet. Vad hände?'},
+      {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – och varför? Ge ett konkret exempel.<br><span style="font-size:12px;opacity:.7;font-style:italic">Kundförståelse & problemlösning · Kommunikation & anpassning · Professionalism & ansvar · Värdeskapande</span>'},
+      {h:'Diskutera 2',p:'Berätta om ett uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet. Vad hände och vad lärde ni er?'},
       {h:'Diskutera 3',p:'Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt – och varför?'},
     ],
     deliverable:'Välj <strong>1 skill</strong> ni är starka på som grupp + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
-    insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
+    insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"','Kundförståelse = förstå bakomliggande behov, inte bara kravet'],
   },
   2:{title:'Del 2 · Konsultmässighet – eget varumärke',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
-      {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden?'},
+      {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden? Vilket beteende eller vilken attityd?'},
       {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'},
-      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'},
+      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest med konsultrollen?'},
     ],
     deliverable:'Dela <strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet i praktiken.',
-    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – styrketecken','Du ÄR Combitech hos kunden'],
+    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – det är ett styrketecken','Du ÄR Combitech hos kunden'],
   },
   3:{title:'Del 3 · Värdeskapande på obelagd tid',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
@@ -404,8 +499,8 @@ const DEFS={
       {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på ett aktivt uppdrag? Brainstorma konkreta exempel.'},
     ],
     deliverable:'<strong>1 konkret sak</strong> ni faktiskt kan göra nästa gång ni har obelagd tid.',
-    insights:['Obelagd tid ≠ ledig tid – investeringstid','One-pagers, LinkedIn-inlägg, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er om 3 mån','"Rätt tidrapportering är ärlighet, inte girighet"','Underrapportering döljer verkliga kostnader'],
-    extraNote:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
+    insights:['Obelagd tid ≠ ledig tid – det är investeringstid','One-pagers, LinkedIn-inlägg, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er om 3 mån','"Rätt tidrapportering är ärlighet, inte girighet"','Underrapportering döljer verkliga kostnader och snedvrider prissättning'],
+    extraNote:'Värdeskapande-exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
   },
   4:{title:'Del 4 · Många hattar – scenario',time:'Diskussion 10 min → Redovisning 5 min',
     questions:[
@@ -414,11 +509,21 @@ const DEFS={
       {h:'Scenario C',p:'Du hittar ett stort problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är formellt inte din uppgift. Vad gör du?'},
     ],
     deliverable:'Välj <strong>ett scenario</strong> – beskriv er bästa approach och varför just den.',
-    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation löser mer än teknik','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen'],
+    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation löser mer än teknik','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen','Konsultrollen = alltid fler hattar än jobbtiteln'],
     extraNote:'Inget rätt svar – poängen är att konsultrollen alltid är mer än jobbtiteln.',
   },
 };
 
+function insightsBlock(n,showInGroup){
+  const d=DEFS[n];
+  const id=`ins_${n}_${showInGroup?'g':'f'}`;
+  return `<div style="margin-top:.75rem">
+    <div class="insights-toggle" id="it_${id}" onclick="toggleInsights('${id}')">Seniora insikter</div>
+    <div class="insights-body" id="ib_${id}">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
+  </div>`;
+}
+
+// ===== GROUP DEL VIEW =====
 function renderDelGrp(n){
   const d=DEFS[n];
   const qBlocks=d.questions.map((q,qi)=>{
@@ -435,67 +540,69 @@ function renderDelGrp(n){
   }).join('');
   const lk=levKey(n,selectedGroup);
   const liid=`lev${n}`,lbid=`levb${n}`,ltid=`levt${n}`;
-  return `<div class="card">
-    <div class="ctitle">${d.title} <span style="font-size:12px;font-weight:400;color:#0F6E56">${selectedGroup}</span></div>
-    <div class="csub">${d.time}</div>
-    ${qBlocks}
-    <div class="delivblock">
-      <h4>📌 Leverans – detta redovisar ni för hela gruppen</h4>
-      <p>${d.deliverable}</p>
-      <textarea id="${liid}" placeholder="Skriv er leverans här…">${ga(lk)}</textarea>
-      <div class="send-row">
-        <button class="dbtn" id="${lbid}" onclick="sendAnswer('${lk}','${liid}','${lbid}','${ltid}')">Skicka leverans</button>
-        <span class="stag blue" id="${ltid}">✓ Skickat!</span>
+  return `
+    <div class="sync-banner"><span class="live-dot"></span> Synkad med facilitatorn – du är på rätt del</div>
+    ${phaseNav(false)}
+    <div class="card">
+      <div class="ctitle">${d.title} <span style="font-size:12px;font-weight:400;color:#0F6E56">${selectedGroup}</span></div>
+      <div class="csub">${d.time}</div>
+      ${qBlocks}
+      <div class="delivblock">
+        <h4>📌 Leverans – detta redovisar ni för hela rummet</h4>
+        <p>${d.deliverable}</p>
+        <textarea id="${liid}" placeholder="Skriv er leverans här…">${ga(lk)}</textarea>
+        <div class="send-row">
+          <button class="dbtn" id="${lbid}" onclick="sendAnswer('${lk}','${liid}','${lbid}','${ltid}')">Skicka leverans</button>
+          <span class="stag blue" id="${ltid}">✓ Skickat!</span>
+        </div>
       </div>
-    </div>
-  </div>`;
+      ${insightsBlock(n,true)}
+    </div>`;
 }
 
-// ===== FACILITATOR VIEW =====
-function renderFac(){
-  if(phase===0)return phaseNav()+renderIntroFac();
-  if(phase>=1&&phase<=4)return phaseNav()+renderDelFac(phase);
-  return phaseNav()+renderAvsl();
-}
-
+// ===== FAC DEL VIEW =====
 function renderDelFac(n){
   const d=DEFS[n];
   const qBlocks=d.questions.map((q,qi)=>{
     const rows=GROUPS.map(g=>{const v=ga(qKey(n,qi,g));return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}">${v||'inväntar…'}</div></div>`;}).join('');
     const has=GROUPS.some(g=>ga(qKey(n,qi,g)));
     return `<div class="q-ans-block">
-      <div class="q-ans-hdr"><span class="live-dot"></span>&nbsp;${q.h}${has?' <span style="color:#085041;font-weight:400;font-size:11px">– svar inkomna</span>':''}</div>
+      <div class="q-ans-hdr"><span class="live-dot"></span>&nbsp;${q.h}${has?' <span style="color:#085041;font-size:11px;font-weight:400"> – svar inkomna</span>':''}</div>
       <div class="q-ans-txt">${q.p}</div>
       <div class="q-ans-body">${rows}</div>
     </div>`;
   }).join('');
   const levRows=GROUPS.map(g=>{const v=ga(levKey(n,g));return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}">${v||'inväntar…'}</div></div>`;}).join('');
   const levHas=GROUPS.some(g=>ga(levKey(n,g)));
-  return `<div class="card">
+  return `${phaseNav()}
+  <div class="card">
     <div class="ctitle">${d.title}</div>
-    <div class="csub">${d.time}</div>
+    <div class="csub">${d.time} &nbsp;·&nbsp; Deltagarnas kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
     ${d.extraNote?`<div class="fnote">${d.extraNote}</div>`:''}
     ${qBlocks}
     <div class="q-ans-block" style="border-color:#185FA5;margin-top:.5rem">
-      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans${levHas?' <span style="color:#0e4070;font-weight:400;font-size:11px">– svar inkomna</span>':''}</div>
+      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans${levHas?' <span style="color:#0e4070;font-size:11px;font-weight:400"> – svar inkomna</span>':''}</div>
       <div class="q-ans-txt" style="color:#185FA5;font-weight:500">${d.deliverable}</div>
       <div class="q-ans-body">${levRows}</div>
     </div>
-    <div style="margin-top:1rem;display:flex;gap:.5rem;align-items:center">
+    <div class="ins" style="margin-top:.75rem">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
+    <div style="margin-top:1rem">
       <button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button>
     </div>
-  </div>
-  <div class="card">
-    <div class="ctitle">Seniora insikter – lyft vid behov</div>
-    <div class="ins">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
   </div>`;
+}
+
+function renderFac(){
+  if(phase===0)return phaseNav()+renderIntroFac();
+  if(phase>=1&&phase<=4)return renderDelFac(phase);
+  return phaseNav()+renderAvsl();
 }
 
 function renderIntroFac(){
   const tot=PHASE_MINS.reduce((a,b)=>a+b,0);
   return `
   <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min)<br>
-  Deltagarnas kod: <strong style="font-size:20px;letter-spacing:.15em">${JOIN_CODE}</strong> &nbsp;–&nbsp; eller klicka <strong>📲 Visa kod</strong> för att visa QR på projektor</div>
+  Deltagarnas kod: <strong style="font-size:20px;letter-spacing:.15em">${JOIN_CODE}</strong> &nbsp;–&nbsp; klicka <strong>📲 Visa kod</strong> för att visa QR på projektor</div>
   <div class="card">
     <div class="ctitle">Agenda – ${tot} min</div>
     <table class="stbl">${PHASE_LABELS.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}</table>
@@ -512,7 +619,7 @@ function renderIntroFac(){
 }
 
 function renderAvsl(){
-  return `
+  return `${phaseNav()}
   <div class="fnote">Avslut (${PHASE_MINS[5]} min) – Summera med kärnbudskapet nedan.</div>
   <div class="card">
     <div class="ctitle">Kärnbudskap</div>
@@ -560,7 +667,7 @@ function renderSum(){
 }
 
 function exportAnswers(){
-  let txt='WORKSHOP – Konsultrollen i praktiken\nEnhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
+  let txt='WORKSHOP – Konsultrollen i praktiken\nGRC Enhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
   for(let n=1;n<=4;n++){
     const d=DEFS[n];txt+=d.title+'\n'+'-'.repeat(35)+'\n';
     d.questions.forEach((q,qi)=>{const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));if(!f.length)return;txt+='\n  '+q.h+':\n';f.forEach(g=>{txt+='    '+g+': '+ga(qKey(n,qi,g))+'\n';});});
@@ -568,12 +675,10 @@ function exportAnswers(){
     txt+='\n';
   }
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grc-workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
 }
 
-// Init
 upd();render();
-// Focus code input if on code entry
 setTimeout(()=>document.getElementById('c0')?.focus(),200);
 </script>
 </body>
