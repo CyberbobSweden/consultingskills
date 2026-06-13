@@ -3,662 +3,614 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Konsultrollen i praktiken – GRC Enhetsträff</title>
+<title>Konsultrollen i praktiken – GRC</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh;display:flex;flex-direction:column}
-.header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
-.header-left{display:flex;align-items:center;gap:.85rem}
-.grc-badge{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:4px 10px;text-align:center;flex-shrink:0}
-.grc-badge .gl{font-size:16px;font-weight:800;color:white;letter-spacing:.05em;line-height:1}
-.grc-badge .gs{font-size:7px;color:rgba(255,255,255,.75);letter-spacing:.04em;margin-top:1px;text-transform:uppercase}
-.header h1{font-size:17px;font-weight:500;color:white;margin:0}
-.header .sub{font-size:11px;opacity:.7;margin-top:1px;color:white}
-.mode-btns{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.mbtn{padding:4px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:transparent;color:white;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.mbtn.active{background:white;color:#0F6E56;font-weight:600}
-.qrbtn{padding:4px 10px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:white;font-size:11px;cursor:pointer;white-space:nowrap}
-.qrbtn:hover{background:rgba(255,255,255,.25)}
-.grc-bar{height:3px;background:linear-gradient(90deg,#1a3a5c,#4a7ab5,#8a9ab5,#4a7ab5,#1a3a5c)}
-.tbar{background:rgba(15,110,86,0.92);padding:.55rem 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
-.tdisp{font-size:24px;font-weight:700;color:white;min-width:62px;font-variant-numeric:tabular-nums;flex-shrink:0}
-.tdisp.warn{color:#FFD166}
-.tdisp.crit{color:#FF6B6B;animation:blink .8s infinite}
+.hdr{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+.hl{display:flex;align-items:center;gap:.85rem}
+.badge{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:4px 10px;text-align:center}
+.badge b{font-size:16px;color:white;display:block;letter-spacing:.05em}
+.badge small{font-size:7px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.04em}
+.hdr h1{font-size:17px;font-weight:500;color:white;margin:0}
+.hdr .sub{font-size:11px;opacity:.7;color:white}
+.mbtns{display:flex;gap:5px;flex-wrap:wrap}
+.mb{padding:4px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:transparent;color:white;font-size:11px;cursor:pointer}
+.mb.on{background:white;color:#0F6E56;font-weight:600}
+.qb{padding:4px 10px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:white;font-size:11px;cursor:pointer}
+.gbar{height:3px;background:linear-gradient(90deg,#1a3a5c,#4a7ab5,#8a9ab5,#4a7ab5,#1a3a5c)}
+.tbar{background:rgba(15,110,86,.92);padding:.5rem 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.tnum{font-size:24px;font-weight:700;color:white;min-width:62px;font-variant-numeric:tabular-nums}
+.tnum.w{color:#FFD166}.tnum.r{color:#FF6B6B;animation:blink .8s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
-.phase-time-row{display:flex;gap:5px;flex-wrap:wrap;flex:1}
-.ptime-chip{background:rgba(255,255,255,.15);border-radius:6px;padding:3px 7px;font-size:9px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:46px}
-.ptime-chip.ap{background:rgba(255,255,255,.38);font-weight:700}
-.ptime-chip span{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
-/* Timer controls: hidden by default, only shown when .fac-mode class on body */
-#tctrl{display:none}
-body.fac-mode #tctrl{display:flex}
-.tbtn{padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.35);background:transparent;color:white;font-size:11px;cursor:pointer}
-.tbtn:hover{background:rgba(255,255,255,.2)}
-.tbtn.primary{background:rgba(255,255,255,.25)}
-.pbar{height:4px;background:#0a4a38}
-.pfill{height:100%;background:#5DCAA5;transition:width .5s}
-.content{padding:1rem 1.5rem;max-width:900px;margin:0 auto;width:100%;flex:1}
-.pnav{display:flex;gap:4px;margin-bottom:.9rem;overflow-x:auto;padding-bottom:3px}
-.ppill{padding:4px 10px;border-radius:16px;border:1px solid #ddd;background:white;font-size:11px;white-space:nowrap;color:#666;flex-shrink:0}
-.ppill.active{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:600}
-.ppill.clickable{cursor:pointer}
-.ppill.done::after{content:" ✓"}
+.chips{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.chip{background:rgba(255,255,255,.15);border-radius:6px;padding:3px 7px;font-size:9px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:44px}
+.chip.on{background:rgba(255,255,255,.4);font-weight:700}
+.chip span{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.tc{display:flex;gap:4px}
+.tb{padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.35);background:transparent;color:white;font-size:11px;cursor:pointer}
+.tb:hover{background:rgba(255,255,255,.2)}
+.tb.p{background:rgba(255,255,255,.25)}
+/* timer controls hidden in grp mode */
+.grp-mode .tc{display:none}
+.pb{height:4px;background:#0a4a38}
+.pf{height:100%;background:#5DCAA5;transition:width .5s}
+main{padding:1rem 1.5rem;max-width:900px;margin:0 auto;width:100%;flex:1}
+.nav{display:flex;gap:4px;margin-bottom:.9rem;overflow-x:auto;padding-bottom:3px}
+.np{padding:4px 10px;border-radius:16px;border:1px solid #ddd;background:white;font-size:11px;white-space:nowrap;color:#666;flex-shrink:0}
+.np.on{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:600}
+.np.cl{cursor:pointer}
+.np.done::after{content:" ✓"}
 .card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:.95rem 1.2rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.ctitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:.15rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.csub{font-size:11px;color:#888;margin-bottom:.75rem}
-.qblock{background:#f7f7f4;border-radius:8px;padding:.75rem 1rem;margin-bottom:.6rem;border-left:3px solid #0F6E56}
-.qblock h4{font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:.25rem}
-.qblock p{font-size:13px;color:#333;line-height:1.55;margin-bottom:.5rem}
-.delivblock{background:#EBF4FF;border-radius:8px;padding:.75rem 1rem;margin-top:.9rem;border:2px solid #185FA5}
-.delivblock h4{font-size:12px;font-weight:700;color:#185FA5;margin-bottom:.25rem}
-.delivblock p{font-size:13px;color:#333;line-height:1.55;margin-bottom:.5rem}
+.ct{font-size:14px;font-weight:600;margin-bottom:.15rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cs{font-size:11px;color:#888;margin-bottom:.75rem}
+.qb2{background:#f7f7f4;border-radius:8px;padding:.75rem 1rem;margin-bottom:.6rem;border-left:3px solid #0F6E56}
+.qb2 h4{font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:.25rem}
+.qb2 p{font-size:13px;color:#333;line-height:1.55;margin-bottom:.5rem}
+.db{background:#EBF4FF;border-radius:8px;padding:.75rem 1rem;margin-top:.9rem;border:2px solid #185FA5}
+.db h4{font-size:12px;font-weight:700;color:#185FA5;margin-bottom:.25rem}
+.db p{font-size:13px;color:#333;line-height:1.55;margin-bottom:.5rem}
 textarea{width:100%;border:1px solid #ddd;border-radius:7px;padding:.55rem;font-size:13px;min-height:62px;resize:vertical;background:white;color:#1a1a1a;font-family:inherit}
-textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,110,86,.1)}
-.delivblock textarea{border-color:#185FA5}
-.delivblock textarea:focus{box-shadow:0 0 0 2px rgba(24,95,165,.15)}
-.send-row{display:flex;align-items:center;gap:.6rem;margin-top:.4rem}
-.sbtn{padding:5px 14px;background:#0F6E56;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
-.sbtn:hover{background:#085041}
-.sbtn:disabled{background:#aaa;cursor:default}
-.dbtn{padding:5px 14px;background:#185FA5;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
-.dbtn:hover{background:#0e4070}
-.dbtn:disabled{background:#aaa;cursor:default}
+textarea:focus{outline:none;border-color:#0F6E56}
+.db textarea{border-color:#185FA5}
+.sr{display:flex;align-items:center;gap:.6rem;margin-top:.4rem}
+.btn-g{padding:5px 14px;background:#0F6E56;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
+.btn-g:hover{background:#085041}
+.btn-g:disabled{background:#aaa}
+.btn-b{padding:5px 14px;background:#185FA5;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
+.btn-b:hover{background:#0e4070}
+.btn-b:disabled{background:#aaa}
 .stag{font-size:11px;color:#0F6E56;opacity:0;transition:opacity .3s}
-.stag.show{opacity:1}
-.stag.blue{color:#185FA5}
-.ins-toggle{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#085041;cursor:pointer;padding:.4rem 0;user-select:none}
-.ins-toggle::before{content:'▶';font-size:9px;transition:transform .2s;display:inline-block}
-.ins-toggle.open::before{transform:rotate(90deg)}
-.ins-body{display:none;padding:.5rem .7rem;background:#e8f5ef;border-radius:7px}
-.ins-body.open{display:block}
-.ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:2px 8px;border-radius:8px;margin:.1rem;border:1px solid #9FE1CB}
+.stag.s{opacity:1}
+.stag.b{color:#185FA5}
+.ins-t{font-size:11px;font-weight:600;color:#085041;cursor:pointer;padding:.35rem 0;user-select:none}
+.ins-t::before{content:'▶ ';font-size:9px}
+.ins-t.open::before{content:'▼ '}
+.ins-b{display:none;padding:.5rem .7rem;background:#e8f5ef;border-radius:7px;margin-top:.25rem}
+.ins-b.open{display:block}
+.ib{display:inline-block;background:white;color:#085041;font-size:11px;padding:2px 8px;border-radius:8px;margin:.1rem;border:1px solid #9FE1CB}
 .fnote{background:#e8f2fb;border-radius:7px;padding:.55rem .9rem;font-size:11px;color:#0C447C;margin-bottom:.7rem;border-left:3px solid #185FA5;line-height:1.5}
-.slabel{font-size:10px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;margin-top:.5rem}
-.ansgrid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.35rem}
-.ansitem{background:#f7f7f4;border-radius:7px;padding:.5rem .75rem;font-size:12px;border:1px solid #e8e8e4}
-.ansgrp{font-size:10px;color:#999;margin-bottom:.1rem;font-weight:600}
+.sl{font-size:10px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;margin-top:.5rem}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.35rem}
+.ai{background:#f7f7f4;border-radius:7px;padding:.5rem .75rem;font-size:12px;border:1px solid #e8e8e4}
+.ag2{font-size:10px;color:#999;margin-bottom:.1rem;font-weight:600}
 .empty{text-align:center;padding:1.5rem;color:#aaa;font-size:13px}
 .stbl{width:100%;border-collapse:collapse;font-size:12px}
 .stbl td{padding:.35rem .6rem;border-bottom:1px solid #f0f0ec;vertical-align:top}
 .stbl td:first-child{color:#888;width:90px;font-weight:500}
-.expbtn{padding:5px 13px;border:1px solid #0F6E56;border-radius:6px;background:white;color:#0F6E56;font-size:12px;cursor:pointer;font-weight:500}
-.expbtn:hover{background:#e8f5ef}
-.nextbtn{padding:5px 13px;border:1px solid #ddd;border-radius:6px;background:white;color:#333;font-size:12px;cursor:pointer}
-.nextbtn:hover{background:#f5f5f2}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200}
-.modal{background:white;border-radius:14px;padding:1.75rem;width:360px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2);text-align:center}
-.modal h2{font-size:16px;font-weight:600;margin-bottom:.35rem}
-.modal p{font-size:13px;color:#666;margin-bottom:.85rem;line-height:1.5}
-.modal input[type=password]{width:100%;border:1px solid #ddd;border-radius:7px;padding:.6rem;font-size:14px;text-align:center;margin-bottom:.45rem}
-.modal input[type=password]:focus{outline:none;border-color:#0F6E56}
-.merr{font-size:11px;color:#c0392b;min-height:15px;margin-bottom:.3rem}
-.lbtn{width:100%;padding:8px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:.4rem}
-.lbtn:hover{background:#085041}
-.cancel-link{font-size:11px;color:#aaa;cursor:pointer;text-decoration:underline}
-.big-code{font-size:50px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.6rem 0}
-.join-wrap{max-width:420px;margin:0 auto;padding-top:.5rem}
-.join-card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:1.75rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.join-card h2{font-size:17px;font-weight:600;margin-bottom:.35rem}
-.join-card .sub{font-size:13px;color:#666;margin-bottom:1.1rem}
-.code-row{display:flex;gap:9px;justify-content:center;margin:.65rem 0 .2rem}
-.code-row input{width:58px;height:62px;border:2px solid #ddd;border-radius:9px;font-size:28px;text-align:center;font-weight:700;color:#0F6E56;outline:none}
-.code-row input:focus{border-color:#0F6E56;background:#f7fdf9}
-.grp-select{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:.65rem 0}
-.grp-btn{padding:7px 15px;border-radius:18px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555}
-.grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
-.divider{display:flex;align-items:center;gap:.65rem;margin:.9rem 0;color:#bbb;font-size:11px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
-.q-ans-block{border:1px solid #e8e8e4;border-radius:9px;margin-bottom:.6rem;overflow:hidden}
-.q-ans-hdr{background:#f7f7f4;padding:.5rem .9rem;font-size:11px;font-weight:600;color:#0F6E56;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;gap:4px}
-.q-ans-hdr.blue{color:#185FA5;background:#f0f6ff}
-.q-ans-txt{padding:.5rem .9rem;font-size:11px;color:#555;line-height:1.5;background:#fafafa;border-bottom:1px solid #f0f0ec}
-.q-ans-body{padding:.25rem .45rem}
-.g-row{display:flex;gap:.45rem;align-items:flex-start;padding:.28rem .35rem;border-bottom:.5px solid #f5f5f5}
-.g-row:last-child{border-bottom:none}
-.g-row .gn{font-size:10px;font-weight:600;color:#aaa;min-width:62px;padding-top:2px}
-.g-row .gv{font-size:12px;color:#1a1a1a;flex:1;line-height:1.45}
-.g-row .gv.empty{color:#ddd;font-style:italic}
-.live-dot{display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0}
+.eb{padding:5px 13px;border:1px solid #0F6E56;border-radius:6px;background:white;color:#0F6E56;font-size:12px;cursor:pointer;font-weight:500}
+.eb:hover{background:#e8f5ef}
+.nb{padding:5px 13px;border:1px solid #ddd;border-radius:6px;background:white;color:#333;font-size:12px;cursor:pointer}
+.nb:hover{background:#f5f5f2}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200}
+.mo{background:white;border-radius:14px;padding:1.75rem;width:360px;max-width:95vw;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.mo h2{font-size:16px;font-weight:600;margin-bottom:.35rem}
+.mo p{font-size:13px;color:#666;margin-bottom:.85rem;line-height:1.5}
+.mo input[type=password]{width:100%;border:1px solid #ddd;border-radius:7px;padding:.6rem;font-size:14px;text-align:center;margin-bottom:.45rem}
+.mo input[type=password]:focus{outline:none;border-color:#0F6E56}
+.me{font-size:11px;color:#c0392b;min-height:15px;margin-bottom:.3rem}
+.lb{width:100%;padding:8px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:.4rem}
+.lb:hover{background:#085041}
+.cl-link{font-size:11px;color:#aaa;cursor:pointer;text-decoration:underline}
+.bc{font-size:50px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.6rem 0}
+.jw{max-width:420px;margin:0 auto;padding-top:.5rem}
+.jc{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:1.75rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.jc h2{font-size:17px;font-weight:600;margin-bottom:.35rem}
+.jc .sub{font-size:13px;color:#666;margin-bottom:1.1rem}
+.cr{display:flex;gap:9px;justify-content:center;margin:.65rem 0 .2rem}
+.cr input{width:58px;height:62px;border:2px solid #ddd;border-radius:9px;font-size:28px;text-align:center;font-weight:700;color:#0F6E56;outline:none}
+.cr input:focus{border-color:#0F6E56;background:#f7fdf9}
+.gs{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:.65rem 0}
+.gb{padding:7px 15px;border-radius:18px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555}
+.gb.on{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
+.div{display:flex;align-items:center;gap:.65rem;margin:.9rem 0;color:#bbb;font-size:11px}
+.div::before,.div::after{content:'';flex:1;height:1px;background:#eee}
+.qa{border:1px solid #e8e8e4;border-radius:9px;margin-bottom:.6rem;overflow:hidden}
+.qah{background:#f7f7f4;padding:.5rem .9rem;font-size:11px;font-weight:600;color:#0F6E56;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;gap:4px}
+.qah.bl{color:#185FA5;background:#f0f6ff}
+.qat{padding:.5rem .9rem;font-size:11px;color:#555;line-height:1.5;background:#fafafa;border-bottom:1px solid #f0f0ec}
+.qab{padding:.25rem .45rem}
+.gr{display:flex;gap:.45rem;align-items:flex-start;padding:.28rem .35rem;border-bottom:.5px solid #f5f5f5}
+.gr:last-child{border-bottom:none}
+.gr .gn{font-size:10px;font-weight:600;color:#aaa;min-width:62px;padding-top:2px}
+.gr .gv{font-size:12px;color:#1a1a1a;flex:1;line-height:1.45}
+.gr .gv.e{color:#ddd;font-style:italic}
+.ld{display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.sync-banner{background:#e8f5ef;border-radius:7px;padding:.4rem .85rem;font-size:11px;color:#085041;margin-bottom:.7rem;display:flex;align-items:center;gap:5px;border:1px solid #9FE1CB}
-.time-editor{display:flex;flex-direction:column;gap:.45rem;text-align:left}
-.time-row-e{display:flex;align-items:center;gap:.5rem}
-.time-row-e label{font-size:13px;flex:1}
-.time-row-e input{width:58px;border:1px solid #ddd;border-radius:5px;padding:3px 7px;font-size:13px;text-align:center}
-.grc-footer{background:linear-gradient(90deg,#1a3a5c,#2a5490,#3a6eb0);padding:.35rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.grc-footer span{font-size:10px;color:rgba(255,255,255,.7)}
-.grc-footer strong{font-size:10px;color:white;letter-spacing:.05em}
-#qrcode{display:inline-block;padding:8px;background:white;border:1px solid #ddd;border-radius:8px}
-.qr-url{font-size:10px;color:#aaa;margin-top:.35rem;word-break:break-all}
-@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:.85rem 1rem}.header{padding:.75rem 1rem}.tdisp{font-size:20px}.code-row input{width:50px;height:54px;font-size:24px}}
+.sb{background:#e8f5ef;border-radius:7px;padding:.4rem .85rem;font-size:11px;color:#085041;margin-bottom:.7rem;display:flex;align-items:center;gap:5px;border:1px solid #9FE1CB}
+.te-ed{display:flex;flex-direction:column;gap:.45rem;text-align:left}
+.te-row{display:flex;align-items:center;gap:.5rem}
+.te-row label{font-size:13px;flex:1}
+.te-row input{width:58px;border:1px solid #ddd;border-radius:5px;padding:3px 7px;font-size:13px;text-align:center}
+footer{background:linear-gradient(90deg,#1a3a5c,#2a5490,#3a6eb0);padding:.35rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+footer span{font-size:10px;color:rgba(255,255,255,.7)}
+footer strong{font-size:10px;color:white;letter-spacing:.05em}
+#qrc{display:inline-block;padding:8px;background:white;border:1px solid #ddd;border-radius:8px}
+.qu{font-size:10px;color:#aaa;margin-top:.35rem;word-break:break-all}
+@media(max-width:600px){.ag{grid-template-columns:1fr}main{padding:.85rem 1rem}.hdr{padding:.75rem 1rem}.tnum{font-size:20px}.cr input{width:50px;height:54px;font-size:24px}}
 </style>
 </head>
-<body><!-- NO fac-mode class by default = timer hidden -->
-
-<div class="overlay" id="loginOverlay" style="display:none">
-  <div class="modal">
+<body>
+<div class="ov" id="ov-login" style="display:none">
+  <div class="mo">
     <h2>Facilitatorvy</h2><p>Ange lösenord</p>
-    <input type="password" id="pwInput" placeholder="Lösenord" onkeydown="if(event.key==='Enter')checkPw()">
-    <div class="merr" id="pwErr"></div>
-    <button class="lbtn" onclick="checkPw()">Logga in</button>
-    <div class="cancel-link" onclick="closeModal('loginOverlay')">Avbryt</div>
+    <input type="password" id="pw" placeholder="Lösenord" onkeydown="if(event.key==='Enter')login()">
+    <div class="me" id="pwe"></div>
+    <button class="lb" onclick="login()">Logga in</button>
+    <div class="cl-link" onclick="hide('ov-login')">Avbryt</div>
   </div>
 </div>
-<div class="overlay" id="qrOverlay" style="display:none">
-  <div class="modal">
+<div class="ov" id="ov-qr" style="display:none">
+  <div class="mo">
     <h2>Visa för deltagarna</h2><p>Scanna QR-koden eller ange koden manuellt</p>
-    <div id="qrModalCode" style="margin:.4rem 0"></div>
-    <div class="big-code">1234</div>
-    <div class="qr-url" id="qrModalUrl"></div>
-    <button class="lbtn" style="margin-top:.85rem" onclick="closeModal('qrOverlay')">Stäng</button>
+    <div id="qrc" style="margin:.4rem auto;display:inline-block"></div>
+    <div class="bc">1234</div>
+    <div class="qu" id="qru"></div>
+    <button class="lb" style="margin-top:.85rem" onclick="hide('ov-qr')">Stäng</button>
   </div>
 </div>
-<div class="overlay" id="timeOverlay" style="display:none">
-  <div class="modal">
+<div class="ov" id="ov-time" style="display:none">
+  <div class="mo">
     <h2>⏱ Justera tider</h2><p>Minuter per del</p>
-    <div class="time-editor" id="timeEditor"></div>
-    <div style="margin-top:.5rem;font-size:12px;text-align:left">Totalt: <strong id="totalMins">0</strong> min</div>
-    <button class="lbtn" style="margin-top:.65rem" onclick="applyTimes()">Spara &amp; stäng</button>
-    <div class="cancel-link" onclick="closeModal('timeOverlay')">Avbryt</div>
+    <div class="te-ed" id="te-ed"></div>
+    <div style="margin-top:.5rem;font-size:12px;text-align:left">Totalt: <strong id="te-tot">0</strong> min</div>
+    <button class="lb" style="margin-top:.65rem" onclick="applyT()">Spara &amp; stäng</button>
+    <div class="cl-link" onclick="hide('ov-time')">Avbryt</div>
   </div>
 </div>
 
-<div class="header">
-  <div class="header-left">
-    <div class="grc-badge"><div class="gl">GRC</div><div class="gs">Gov · Risk · Compliance</div></div>
+<div class="hdr">
+  <div class="hl">
+    <div class="badge"><b>GRC</b><small>Gov · Risk · Compliance</small></div>
     <div><h1>Konsultrollen i praktiken</h1><div class="sub">Enhetsträff · arbetspass</div></div>
   </div>
-  <div class="mode-btns">
-    <button class="mbtn" id="btnFac" onclick="tryFac()">🔒 Facilitator</button>
-    <button class="mbtn active" id="btnGrp" onclick="setMode('grp')">Gruppvy</button>
-    <button class="mbtn" id="btnSum" onclick="trySum()">Summering</button>
-    <button class="qrbtn" onclick="openQR()">📲 Visa kod</button>
+  <div class="mbtns">
+    <button class="mb" id="b-fac" onclick="tryFac()">🔒 Facilitator</button>
+    <button class="mb on" id="b-grp" onclick="setMode('grp')">Gruppvy</button>
+    <button class="mb" id="b-sum" onclick="trySum()">Summering</button>
+    <button class="qb" onclick="showQR()">📲 Visa kod</button>
   </div>
 </div>
-<div class="grc-bar"></div>
+<div class="gbar"></div>
 <div class="tbar">
-  <div id="tdisp" class="tdisp">—:——</div>
-  <div class="phase-time-row" id="ptrow"></div>
-  <div id="tctrl"><!-- hidden unless fac-mode -->
-    <button class="tbtn primary" onclick="startT()">▶</button>
-    <button class="tbtn" onclick="pauseT()">⏸</button>
-    <button class="tbtn" onclick="resetT()">↺</button>
-    <button class="tbtn" onclick="openTimeEditor()">⚙️</button>
+  <div class="tnum" id="tnum">—:——</div>
+  <div class="chips" id="chips"></div>
+  <div class="tc" id="tc">
+    <button class="tb p" onclick="startT()">▶</button>
+    <button class="tb" onclick="pauseT()">⏸</button>
+    <button class="tb" onclick="resetT()">↺</button>
+    <button class="tb" onclick="showTimeEd()">⚙️</button>
   </div>
 </div>
-<div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
-<div class="content" id="mc"></div>
-<div class="grc-footer">
-  <strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span>
-</div>
+<div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
+<main id="main"></main>
+<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span></footer>
 
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getFirestore,doc,setDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",authDomain:"consultingskills-938d9.firebaseapp.com",projectId:"consultingskills-938d9",storageBucket:"consultingskills-938d9.firebasestorage.app",messagingSenderId:"250530809846",appId:"1:250530809846:web:eacdb035347952c595e9d7"};
-const app=initializeApp(cfg);
-const db=getFirestore(app);
-const SESSION="grc-v6";
-
-window.fbSave=async(key,text)=>{
-  try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}
-  catch(e){console.error('fbSave',e);}
-};
-window.fbSaveState=async(ph,sc)=>{
-  try{await setDoc(doc(db,SESSION,'__state__'),{phase:ph,secs:sc,ts:Date.now()});}
-  catch(e){console.error('fbSaveState',e);}
-};
-// Start ONE permanent listener
-onSnapshot(collection(db,SESSION),(snap)=>{
-  const a={};let st=null;
-  snap.forEach(d=>{if(d.id==='__state__')st=d.data();else a[d.id]=d.data().text||'';});
-  window._fbAnswers=a;
-  window._fbState=st;
-  window._onFbUpdate(a,st);
-});
-</script>
-
+<!-- Firebase via CDN (non-module, using compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-const PASS='cyberbob';
-const JOIN_CODE='1234';
+// ── FIREBASE INIT ──
+const fb = firebase.initializeApp({
+  apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",
+  authDomain:"consultingskills-938d9.firebaseapp.com",
+  projectId:"consultingskills-938d9"
+});
+const db = firebase.firestore();
+const COL = db.collection("grc-v7");
+
+function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true}).catch(e=>console.error(e)); }
+function fbSaveState(ph, sc){ COL.doc("__st__").set({phase:ph, secs:sc, ts:Date.now()}).catch(e=>console.error(e)); }
+
+// Single persistent listener
+COL.onSnapshot(snap => {
+  const a = {}, state = {phase:null, secs:null};
+  snap.forEach(d => {
+    if(d.id==='__st__'){ const x=d.data(); state.phase=x.phase; state.secs=x.secs; }
+    else a[d.id] = d.data().text||'';
+  });
+  ANS = a;
+  onUpdate(state);
+});
+
+// ── APP STATE ──
+const PASS='cyberbob', CODE='1234';
 const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
-let PHASE_MINS=[10,20,20,20,15,5];
+let PM=[10,20,20,20,15,5]; // phase minutes
 const PL=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 
-let secs,running=false,iv=null,bcastIv=null;
-let mode='grp',phase=0,isAuth=false,done={};
-let ans={};
-let codeOK=localStorage.getItem('ce')==='1';
-let groupOK=localStorage.getItem('gc')==='1';
-let selGrp=localStorage.getItem('sg')||'';
+let secs, run=false, iv=null, biv=null;
+let MODE='grp', PHASE=0, AUTH=false, DONE={};
+let ANS={};
+let codeOK = localStorage.getItem('ce')==='1';
+let grpOK  = localStorage.getItem('gc')==='1';
+let SEL    = localStorage.getItem('sg')||'';
 
-// Restore fac auth across reload
-if(sessionStorage.getItem('fa')==='1'){
-  isAuth=true;
-  document.body.classList.add('fac-mode');
-  mode='fac';
-}
+// Restore fac auth
+if(sessionStorage.getItem('fa')==='1'){ AUTH=true; }
 
-function totalSecs(){return PHASE_MINS.reduce((a,b)=>a+b,0)*60;}
-secs=totalSecs();
+function totS(){ return PM.reduce((a,b)=>a+b,0)*60; }
+secs = totS();
 
-// THE single update handler called by Firebase
-window._onFbUpdate=function(a,st){
-  ans=a;
-  if(mode==='grp'&&st){
-    let changed=false;
-    if(typeof st.phase==='number'&&st.phase!==phase){
-      phase=st.phase;changed=true;
-    }
-    if(typeof st.secs==='number'&&Math.abs(secs-st.secs)>8){
-      secs=st.secs;upd();
-    }
-    if(changed)fullRender();
-    else softUpdate(); // just update answer displays without rebuilding inputs
+// Called every time Firestore updates
+function onUpdate(state){
+  if(MODE==='grp' && state.phase !== null){
+    let changed = false;
+    if(state.phase !== PHASE){ PHASE=state.phase; changed=true; }
+    if(state.secs !== null && Math.abs(secs-state.secs)>8){ secs=state.secs; updTimer(); }
+    if(changed) render(); else patchFacAnswers();
   } else {
-    softUpdate();
-  }
-};
-// _onFbUpdate before firebase loads: no-op
-window._fbAnswers={};window._fbState=null;
-
-// softUpdate: update fac answer rows without full re-render (preserves textarea focus)
-function softUpdate(){
-  if(mode==='fac'&&phase>=1&&phase<=4){
-    // update each group answer row in place
-    for(let n=1;n<=4;n++){
-      if(n!==phase)continue;
-      const d=DEFS[n];
-      d.questions.forEach((q,qi)=>{
-        GROUPS.forEach(g=>{
-          const el=document.getElementById(`gval_${n}_${qi}_${g}`);
-          if(el){const v=ga(qKey(n,qi,g));el.textContent=v||'inväntar…';el.className='gv'+(v?'':' empty');}
-        });
-        const hdr=document.getElementById(`qhdr_${n}_${qi}`);
-        if(hdr){const has=GROUPS.some(g=>ga(qKey(n,qi,g)));const span=hdr.querySelector('.has-span');if(span)span.style.display=has?'':'none';}
-      });
-      GROUPS.forEach(g=>{
-        const el=document.getElementById(`levval_${n}_${g}`);
-        if(el){const v=ga(levKey(n,g));el.textContent=v||'inväntar…';el.className='gv'+(v?'':' empty');}
-      });
-    }
-  } else if(mode==='sum'){
-    fullRender();
+    patchFacAnswers();
   }
 }
 
-// TIMER
+// Patch answer values in FAC view without full re-render
+function patchFacAnswers(){
+  if(MODE!=='fac'||PHASE<1||PHASE>4) return;
+  const n=PHASE, d=DEFS[n];
+  d.qs.forEach((q,qi)=>{
+    GROUPS.forEach(g=>{
+      const el=document.getElementById(`v_${n}_${qi}_${g}`);
+      if(el){ const v=ga(qk(n,qi,g)); el.textContent=v||'inväntar…'; el.className='gv'+(v?'':' e'); }
+    });
+  });
+  GROUPS.forEach(g=>{
+    const el=document.getElementById(`lv_${n}_${g}`);
+    if(el){ const v=ga(lk(n,g)); el.textContent=v||'inväntar…'; el.className='gv'+(v?'':' e'); }
+  });
+}
+
+// ── TIMER ──
 function startT(){
-  if(running)return;running=true;
-  iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);
-  if(bcastIv)clearInterval(bcastIv);
-  bcastIv=setInterval(()=>{if(isAuth&&running)window.fbSaveState(phase,secs);},5000);
-  if(isAuth)window.fbSaveState(phase,secs);
+  if(run)return; run=true;
+  iv=setInterval(()=>{ if(secs>0){secs--;updTimer();}else{clearInterval(iv);run=false;} },1000);
+  if(biv)clearInterval(biv);
+  biv=setInterval(()=>{ if(AUTH&&run) fbSaveState(PHASE,secs); },5000);
+  if(AUTH) fbSaveState(PHASE,secs);
 }
-function pauseT(){clearInterval(iv);running=false;if(isAuth)window.fbSaveState(phase,secs);}
-function resetT(){clearInterval(iv);running=false;secs=totalSecs();upd();if(isAuth)window.fbSaveState(phase,secs);}
-function upd(){
-  const tot=totalSecs(),m=Math.floor(secs/60),s=secs%60;
-  const el=document.getElementById('tdisp');if(!el)return;
+function pauseT(){ clearInterval(iv); run=false; if(AUTH) fbSaveState(PHASE,secs); }
+function resetT(){ clearInterval(iv); run=false; secs=totS(); updTimer(); if(AUTH) fbSaveState(PHASE,secs); }
+function updTimer(){
+  const tot=totS(), m=Math.floor(secs/60), s=secs%60;
+  const el=document.getElementById('tnum'); if(!el)return;
   el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
-  el.className='tdisp'+(secs<300?' crit':secs<600?' warn':'');
-  document.getElementById('pfill').style.width=`${((tot-secs)/tot*100).toFixed(1)}%`;
-  renderChips();
+  el.className='tnum'+(secs<300?' r':secs<600?' w':'');
+  document.getElementById('pf').style.width=`${((tot-secs)/tot*100).toFixed(1)}%`;
+  updChips();
 }
-function renderChips(){
-  const tot=totalSecs(),elapsed=tot-secs;let cum=0;
-  const row=document.getElementById('ptrow');if(!row)return;
+function updChips(){
+  const tot=totS(), el=tot-secs; let c=0;
+  const row=document.getElementById('chips'); if(!row)return;
   row.innerHTML=PL.map((l,i)=>{
-    const s0=cum*60;cum+=PHASE_MINS[i];const e=cum*60;
-    const active=elapsed>=s0&&elapsed<e;
-    const rem=Math.max(0,e-elapsed),rm=Math.floor(rem/60),rs=rem%60;
-    return `<div class="ptime-chip${active?' ap':''}"><span>${active?rm+':'+rs.toString().padStart(2,'0'):PHASE_MINS[i]+'m'}</span><span>${l}</span></div>`;
+    const s0=c*60; c+=PM[i]; const e=c*60;
+    const act=el>=s0&&el<e, rem=Math.max(0,e-el), rm=Math.floor(rem/60), rs=rem%60;
+    return `<div class="chip${act?' on':''}"><span>${act?rm+':'+rs.toString().padStart(2,'0'):PM[i]+'m'}</span><span>${l}</span></div>`;
   }).join('');
 }
 
-// MODALS
-function closeModal(id){document.getElementById(id).style.display='none';}
-function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
-function trySum(){if(isAuth)setMode('sum');else tryFac();}
-function checkPw(){
-  if(document.getElementById('pwInput').value===PASS){
-    isAuth=true;sessionStorage.setItem('fa','1');
-    closeModal('loginOverlay');document.getElementById('pwInput').value='';setMode('fac');
-  }else{document.getElementById('pwErr').textContent='Fel lösenord';document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();}
+// ── MODALS ──
+function hide(id){ document.getElementById(id).style.display='none'; }
+function show(id){ document.getElementById(id).style.display='flex'; }
+function tryFac(){ show('ov-login'); setTimeout(()=>document.getElementById('pw').focus(),100); }
+function trySum(){ if(AUTH) setMode('sum'); else tryFac(); }
+function login(){
+  if(document.getElementById('pw').value===PASS){
+    AUTH=true; sessionStorage.setItem('fa','1');
+    hide('ov-login'); document.getElementById('pw').value=''; setMode('fac');
+  } else {
+    document.getElementById('pwe').textContent='Fel lösenord';
+    document.getElementById('pw').value=''; document.getElementById('pw').focus();
+  }
 }
-function openQR(){
+function showQR(){
   const url=window.location.href.split('?')[0];
-  document.getElementById('qrModalUrl').textContent=url;
-  const el=document.getElementById('qrModalCode');el.innerHTML='';
-  try{new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'});}catch(e){el.textContent=url;}
-  document.getElementById('qrOverlay').style.display='flex';
+  document.getElementById('qru').textContent=url;
+  const el=document.getElementById('qrc'); el.innerHTML='';
+  try{ new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'}); }
+  catch(e){ el.textContent=url; }
+  show('ov-qr');
 }
-function openTimeEditor(){
-  document.getElementById('timeEditor').innerHTML=PL.map((l,i)=>
-    `<div class="time-row-e"><label>${l}</label><input type="number" id="te${i}" min="1" max="90" value="${PHASE_MINS[i]}"> min</div>`).join('');
-  updTotal();
-  PL.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updTotal));
-  document.getElementById('timeOverlay').style.display='flex';
+function showTimeEd(){
+  document.getElementById('te-ed').innerHTML=PL.map((l,i)=>
+    `<div class="te-row"><label>${l}</label><input type="number" id="te${i}" min="1" max="90" value="${PM[i]}"> min</div>`).join('');
+  updTot();
+  PL.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updTot));
+  show('ov-time');
 }
-function updTotal(){let t=0;PL.forEach((_,i)=>{t+=parseInt(document.getElementById('te'+i).value)||0;});document.getElementById('totalMins').textContent=t;}
-function applyTimes(){
-  PL.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
-  secs=totalSecs();running=false;clearInterval(iv);upd();closeModal('timeOverlay');
-  if(isAuth)window.fbSaveState(phase,secs);
+function updTot(){ let t=0; PL.forEach((_,i)=>{ t+=parseInt(document.getElementById('te'+i).value)||0; }); document.getElementById('te-tot').textContent=t; }
+function applyT(){
+  PL.forEach((_,i)=>{ PM[i]=parseInt(document.getElementById('te'+i).value)||PM[i]; });
+  secs=totS(); run=false; clearInterval(iv); updTimer(); hide('ov-time');
+  if(AUTH) fbSaveState(PHASE,secs);
 }
 
-// MODE
+// ── MODE ──
 function setMode(m){
-  mode=m;
-  ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
-  document.getElementById('btnFac').textContent=isAuth?'✓ Facilitator':'🔒 Facilitator';
-  // CSS class controls timer visibility
-  document.body.classList.toggle('fac-mode',m==='fac');
-  fullRender();
+  MODE=m;
+  ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['b-fac','b-grp','b-sum'][i]).classList.toggle('on',v===m));
+  document.getElementById('b-fac').textContent=AUTH?'✓ Facilitator':'🔒 Facilitator';
+  // Show/hide timer controls via body class
+  document.body.classList.toggle('grp-mode', m==='grp');
+  render();
 }
 
 function go(i){
-  phase=Math.max(0,Math.min(i,PL.length-1));
-  renderChips();fullRender();
-  if(isAuth)window.fbSaveState(phase,secs);
+  PHASE=Math.max(0,Math.min(i,PL.length-1));
+  updChips(); render();
+  if(AUTH) fbSaveState(PHASE,secs);
 }
 
-function ga(k){return ans[k]||'';}
-function qKey(n,qi,g){return `d${n}_q${qi}_${g}`;}
-function levKey(n,g){return `d${n}_lev_${g}`;}
+function ga(k){ return ANS[k]||''; }
+function qk(n,qi,g){ return `d${n}q${qi}${g.replace(/ /g,'_')}`; }
+function lk(n,g){ return `d${n}lev${g.replace(/ /g,'_')}`; }
 
-async function sendAnswer(key,inputId,btnId,tagId){
-  const val=document.getElementById(inputId)?.value||'';if(!val.trim())return;
-  const btn=document.getElementById(btnId);if(btn){btn.disabled=true;btn.textContent='Sparar…';}
-  await window.fbSave(key,val);
-  if(btn){btn.disabled=false;btn.textContent='Skickat ✓';}
-  const tag=document.getElementById(tagId);if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),2500);}
+async function send(key,iid,bid,tid){
+  const val=document.getElementById(iid)?.value||''; if(!val.trim())return;
+  const btn=document.getElementById(bid); if(btn){btn.disabled=true;btn.textContent='Sparar…';}
+  fbSave(key,val);
+  setTimeout(()=>{
+    if(btn){btn.disabled=false;btn.textContent='Skickat ✓';}
+    const tag=document.getElementById(tid); if(tag){tag.classList.add('s');setTimeout(()=>tag.classList.remove('s'),2500);}
+  },600);
 }
+
 function togIns(id){
-  const b=document.getElementById('ib_'+id),t=document.getElementById('it_'+id);
-  if(!b||!t)return;const o=b.classList.toggle('open');t.classList.toggle('open',o);
+  document.getElementById('ib'+id).classList.toggle('open');
+  document.getElementById('it'+id).classList.toggle('open');
 }
 
-// RENDER
-function fullRender(){
-  const c=document.getElementById('mc');if(!c)return;
-  if(mode==='fac')c.innerHTML=renderFac();
-  else if(mode==='grp')c.innerHTML=renderGrp();
-  else c.innerHTML=renderSum();
-  renderChips();
+// ── RENDER ──
+function render(){
+  const el=document.getElementById('main'); if(!el)return;
+  if(MODE==='fac') el.innerHTML=rFac();
+  else if(MODE==='grp') el.innerHTML=rGrp();
+  else el.innerHTML=rSum();
+  updChips();
 }
 
-function phaseNav(clickable){
-  return `<div class="pnav">${PL.map((l,i)=>
-    `<div class="ppill${i===phase?' active':done[i]?' done':''}${clickable?' clickable':''}" ${clickable?`onclick="go(${i})"`:''}>
-      ${l}<span style="opacity:.4;font-size:10px;margin-left:3px">${PHASE_MINS[i]}m</span>
+function nav(click){
+  return `<div class="nav">${PL.map((l,i)=>
+    `<div class="np${i===PHASE?' on':DONE[i]?' done':''}${click?' cl':''}" ${click?`onclick="go(${i})"`:''}>
+      ${l}<span style="opacity:.4;font-size:10px;margin-left:3px">${PM[i]}m</span>
     </div>`).join('')}</div>`;
 }
 
-// GROUP FLOW
-function renderGrp(){
-  if(!codeOK)return renderCodeEntry();
-  if(!groupOK)return renderGroupPicker();
-  if(phase===0)return renderWaiting();
-  if(phase>=1&&phase<=4)return renderDelGrp(phase);
+// ── GROUP ──
+function rGrp(){
+  if(!codeOK) return rCode();
+  if(!grpOK)  return rGrpPick();
+  if(PHASE===0) return rWait();
+  if(PHASE>=1&&PHASE<=4) return rDelGrp(PHASE);
   return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
 }
-function renderCodeEntry(){
-  return `<div class="join-wrap"><div class="join-card">
+function rCode(){
+  return `<div class="jw"><div class="jc">
     <h2>Välkommen!</h2><div class="sub">Ange koden för att komma in</div>
-    <div class="code-row">
+    <div class="cr">
       <input type="tel" maxlength="1" id="c0" oninput="ci(0)" onkeydown="cb(event,0)" autocomplete="off">
       <input type="tel" maxlength="1" id="c1" oninput="ci(1)" onkeydown="cb(event,1)" autocomplete="off">
       <input type="tel" maxlength="1" id="c2" oninput="ci(2)" onkeydown="cb(event,2)" autocomplete="off">
       <input type="tel" maxlength="1" id="c3" oninput="ci(3)" onkeydown="cb(event,3)" autocomplete="off">
     </div>
-    <div class="merr" id="cErr"></div>
-    <div class="divider">eller scanna QR-koden från projektorduken</div>
+    <div class="me" id="ce"></div>
+    <div class="div">eller scanna QR-koden</div>
   </div></div>`;
 }
 function ci(i){
   const el=document.getElementById('c'+i);
   el.value=el.value.replace(/\D/,'').slice(-1);
-  if(el.value&&i<3)document.getElementById('c'+(i+1)).focus();
+  if(el.value&&i<3) document.getElementById('c'+(i+1)).focus();
   const code=['c0','c1','c2','c3'].map(id=>document.getElementById(id)?.value||'').join('');
   if(code.length===4){
-    if(code===JOIN_CODE){codeOK=true;localStorage.setItem('ce','1');fullRender();}
-    else{const e=document.getElementById('cErr');if(e)e.textContent='Fel kod';['c0','c1','c2','c3'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';});document.getElementById('c0')?.focus();}
+    if(code===CODE){ codeOK=true; localStorage.setItem('ce','1'); render(); }
+    else{ const e=document.getElementById('ce'); if(e)e.textContent='Fel kod – försök igen'; ['c0','c1','c2','c3'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';}); document.getElementById('c0')?.focus(); }
   }
 }
-function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&&i>0)document.getElementById('c'+(i-1)).focus();}
-
-function renderGroupPicker(){
-  return `<div class="join-wrap"><div class="join-card">
+function cb(e,i){ if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&&i>0) document.getElementById('c'+(i-1)).focus(); }
+function rGrpPick(){
+  return `<div class="jw"><div class="jc">
     <h2>Välj din grupp</h2>
-    <div class="sub">${selGrp?`Du är i <strong>${selGrp}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
-    <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn${selGrp===g?' sel':''}" onclick="pickGrp('${g}')">${g}</button>`).join('')}</div>
-    <button class="lbtn" onclick="confirmGrp()" style="margin-top:.5rem">Gå in →</button>
+    <div class="sub">${SEL?`Du är i <strong>${SEL}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
+    <div class="gs">${GROUPS.map(g=>`<button class="gb${SEL===g?' on':''}" onclick="pickG('${g}')">${g}</button>`).join('')}</div>
+    <button class="lb" onclick="confG()" style="margin-top:.5rem">Gå in →</button>
   </div></div>`;
 }
-function pickGrp(g){selGrp=g;localStorage.setItem('sg',g);document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));}
-function confirmGrp(){if(!selGrp)return;groupOK=true;localStorage.setItem('gc','1');fullRender();}
-function renderWaiting(){
-  return `<div class="join-wrap"><div class="join-card">
+function pickG(g){ SEL=g; localStorage.setItem('sg',g); document.querySelectorAll('.gb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===g)); }
+function confG(){ if(!SEL)return; grpOK=true; localStorage.setItem('gc','1'); render(); }
+function rWait(){
+  return `<div class="jw"><div class="jc">
     <h2>Du är inne!</h2>
-    <div class="sub">Du är i <strong>${selGrp}</strong>.<br>Väntar på att facilitatorn startar…</div>
-    <div style="margin-top:1rem;font-size:13px;color:#aaa"><span class="live-dot" style="vertical-align:middle"></span> Ansluten – synkar automatiskt</div>
-    <div style="margin-top:1rem"><span class="cancel-link" onclick="resetGrp()">Byt grupp</span></div>
+    <div class="sub">Du är i <strong>${SEL}</strong>.<br>Väntar på att facilitatorn startar…</div>
+    <div style="margin-top:1rem;font-size:13px;color:#aaa"><span class="ld"></span> Ansluten – synkar automatiskt</div>
+    <div style="margin-top:1rem"><span class="cl-link" onclick="resetG()">Byt grupp</span></div>
   </div></div>`;
 }
-function resetGrp(){groupOK=false;selGrp='';localStorage.removeItem('gc');localStorage.removeItem('sg');fullRender();}
+function resetG(){ grpOK=false; SEL=''; localStorage.removeItem('gc'); localStorage.removeItem('sg'); render(); }
 
-// DEFS
+// ── DEFS ──
 const DEFS={
-  1:{title:'Del 1 · Core Consulting Skills i praktiken',time:'Diskussion 12 min → Redovisning 8 min',
-    questions:[
+  1:{t:'Del 1 · Core Consulting Skills i praktiken',ti:'Diskussion 12 min → Redovisning 8 min',
+    qs:[
       {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – varför? Ge ett konkret exempel.<br><span style="font-size:11px;opacity:.65;font-style:italic">Kundförståelse & problemlösning · Kommunikation & anpassning · Professionalism & ansvar · Värdeskapande</span>'},
       {h:'Diskutera 2',p:'Berätta om ett uppdrag där en soft skill – inte teknisk kompetens – avgjorde utfallet.'},
       {h:'Diskutera 3',p:'Hur kopplar ni Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket glömmer man?'},
     ],
-    deliverable:'<strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
-    insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
+    del:'<strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
+    ins:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar'],
   },
-  2:{title:'Del 2 · Konsultmässighet – eget varumärke',time:'Diskussion 12 min → Redovisning 8 min',
-    questions:[
+  2:{t:'Del 2 · Konsultmässighet – eget varumärke',ti:'Diskussion 12 min → Redovisning 8 min',
+    qs:[
       {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden?'},
       {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – coacha kund, hantera konflikter, sälja in nästa fas?'},
       {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'},
     ],
-    deliverable:'<strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
-    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Du ÄR Combitech hos kunden'],
+    del:'<strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
+    ins:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','Du ÄR Combitech hos kunden'],
   },
-  3:{title:'Del 3 · Värdeskapande på obelagd tid',time:'Diskussion 12 min → Redovisning 8 min',
-    questions:[
+  3:{t:'Del 3 · Värdeskapande på obelagd tid',ti:'Diskussion 12 min → Redovisning 8 min',
+    qs:[
       {h:'Diskutera 1',p:'Vad gör ni faktiskt med obelagd tid? Vad borde man göra – och vad hindrar er?'},
       {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Vad kostar det?'},
-      {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på aktivt uppdrag? Brainstorma.'},
+      {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på aktivt uppdrag?'},
     ],
-    deliverable:'<strong>1 konkret sak</strong> ni kan göra nästa gång ni har obelagd tid.',
-    insights:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, demo','Nätverka internt – vem behöver er om 3 mån?','Rätt tidrapportering = ärlighet, inte girighet'],
-    extraNote:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
+    del:'<strong>1 konkret sak</strong> ni kan göra nästa gång ni har obelagd tid.',
+    ins:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, demo','Rätt tidrapportering = ärlighet, inte girighet'],
+    extra:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
   },
-  4:{title:'Del 4 · Många hattar – scenario',time:'Diskussion 10 min → Redovisning 5 min',
-    questions:[
+  4:{t:'Del 4 · Många hattar – scenario',ti:'Diskussion 10 min → Redovisning 5 min',
+    qs:[
       {h:'Scenario A',p:'Du är inhyrd som IT-projektledare. Kunden ringer 10 min innan ett viktigt möte och vill "prata av sig". Hur agerar du?'},
       {h:'Scenario B',p:'Kunden ifrågasätter er leverans och vill minska scopet – men problemet är deras interna processer. Hur hanterar ni det?'},
       {h:'Scenario C',p:'Du hittar ett stort problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – vad gör du?'},
     ],
-    deliverable:'Välj <strong>ett scenario</strong> – beskriv er bästa approach och varför just den.',
-    insights:['Psykologen i rummet är ofta viktigast','Transparent kommunikation > teknisk lösning','Flagga risker = extra värde','Kunden minns hur du hanterade krisen'],
-    extraNote:'Inget rätt svar – konsultrollen är alltid mer än jobbtiteln.',
+    del:'Välj <strong>ett scenario</strong> – beskriv er bästa approach och varför just den.',
+    ins:['Psykologen i rummet är ofta viktigast','Transparent kommunikation > teknisk lösning','Flagga risker = extra värde','Kunden minns hur du hanterade krisen'],
+    extra:'Inget rätt svar – konsultrollen är alltid mer än jobbtiteln.',
   },
 };
 
-function insBlock(n,uid){
-  const id=`${n}_${uid}`;
-  return `<div style="margin-top:.65rem">
-    <div class="ins-toggle" id="it_${id}" onclick="togIns('${id}')">Seniora insikter</div>
-    <div class="ins-body" id="ib_${id}">${DEFS[n].insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
-  </div>`;
-}
-
-function renderDelGrp(n){
+function rDelGrp(n){
   const d=DEFS[n];
-  const qBlocks=d.questions.map((q,qi)=>{
-    const key=qKey(n,qi,selGrp);
-    const iid=`gi${n}${qi}`,bid=`gb${n}${qi}`,tid=`gt${n}${qi}`;
-    return `<div class="qblock">
-      <h4>${q.h}</h4><p>${q.p}</p>
+  const qs=d.qs.map((q,qi)=>{
+    const key=qk(n,qi,SEL), iid=`i${n}${qi}`, bid=`b${n}${qi}`, tid=`t${n}${qi}`;
+    return `<div class="qb2"><h4>${q.h}</h4><p>${q.p}</p>
       <textarea id="${iid}" placeholder="Anteckna gruppens tankar…">${ga(key)}</textarea>
-      <div class="send-row">
-        <button class="sbtn" id="${bid}" onclick="sendAnswer('${key}','${iid}','${bid}','${tid}')">Skicka svar</button>
-        <span class="stag" id="${tid}">✓ Sparat!</span>
-      </div>
-    </div>`;
+      <div class="sr"><button class="btn-g" id="${bid}" onclick="send('${key}','${iid}','${bid}','${tid}')">Skicka svar</button>
+      <span class="stag" id="${tid}">✓ Sparat!</span></div></div>`;
   }).join('');
-  const lk=levKey(n,selGrp);
-  return `
-    <div class="sync-banner"><span class="live-dot"></span>&nbsp;Synkad med facilitatorn – ${d.title}</div>
-    ${phaseNav(false)}
+  const lkey=lk(n,SEL), liid=`lv${n}`, lbid=`lb${n}`, ltid=`lt${n}`;
+  const uid=`${n}g`;
+  return `<div class="sb"><span class="ld"></span>&nbsp;Synkad – ${d.t}</div>
+    ${nav(false)}
     <div class="card">
-      <div class="ctitle">${d.title} <span style="font-size:11px;font-weight:400;color:#0F6E56">${selGrp}</span></div>
-      <div class="csub">${d.time}</div>
-      ${qBlocks}
-      <div class="delivblock">
+      <div class="ct">${d.t} <span style="font-size:11px;font-weight:400;color:#0F6E56">${SEL}</span></div>
+      <div class="cs">${d.ti}</div>
+      ${qs}
+      <div class="db">
         <h4>📌 Leverans – detta redovisar ni för hela rummet</h4>
-        <p>${d.deliverable}</p>
-        <textarea id="lev${n}" placeholder="Skriv er leverans här…">${ga(lk)}</textarea>
-        <div class="send-row">
-          <button class="dbtn" id="levb${n}" onclick="sendAnswer('${lk}','lev${n}','levb${n}','levt${n}')">Skicka leverans</button>
-          <span class="stag blue" id="levt${n}">✓ Skickat!</span>
-        </div>
+        <p>${d.del}</p>
+        <textarea id="${liid}" placeholder="Skriv er leverans här…">${ga(lkey)}</textarea>
+        <div class="sr"><button class="btn-b" id="${lbid}" onclick="send('${lkey}','${liid}','${lbid}','${ltid}')">Skicka leverans</button>
+        <span class="stag b" id="${ltid}">✓ Skickat!</span></div>
       </div>
-      ${insBlock(n,'g')}
+      <div style="margin-top:.65rem">
+        <div class="ins-t" id="it${uid}" onclick="togIns('${uid}')">Seniora insikter</div>
+        <div class="ins-b" id="ib${uid}">${d.ins.map(i=>`<span class="ib">${i}</span>`).join('')}</div>
+      </div>
     </div>`;
 }
 
-function renderFac(){
-  if(phase===0)return phaseNav(true)+renderIntroFac();
-  if(phase>=1&&phase<=4)return phaseNav(true)+renderDelFac(phase);
-  return phaseNav(true)+renderAvsl();
+// ── FAC ──
+function rFac(){
+  if(PHASE===0) return nav(true)+rIntro();
+  if(PHASE>=1&&PHASE<=4) return nav(true)+rDelFac(PHASE);
+  return nav(true)+rAvsl();
 }
-
-function renderDelFac(n){
+function rDelFac(n){
   const d=DEFS[n];
-  const qBlocks=d.questions.map((q,qi)=>{
-    const has=GROUPS.some(g=>ga(qKey(n,qi,g)));
+  const qs=d.qs.map((q,qi)=>{
+    const has=GROUPS.some(g=>ga(qk(n,qi,g)));
     const rows=GROUPS.map(g=>{
-      const v=ga(qKey(n,qi,g));
-      return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}" id="gval_${n}_${qi}_${g}">${v||'inväntar…'}</div></div>`;
+      const v=ga(qk(n,qi,g));
+      return `<div class="gr"><div class="gn">${g}</div><div class="gv${v?'':' e'}" id="v_${n}_${qi}_${g}">${v||'inväntar…'}</div></div>`;
     }).join('');
-    return `<div class="q-ans-block">
-      <div class="q-ans-hdr" id="qhdr_${n}_${qi}"><span class="live-dot"></span>&nbsp;${q.h}
-        <span class="has-span" style="color:#085041;font-size:10px;font-weight:400;margin-left:4px;${has?'':'display:none'}"> – svar inkomna</span>
-      </div>
-      <div class="q-ans-txt">${q.p}</div>
-      <div class="q-ans-body">${rows}</div>
-    </div>`;
+    return `<div class="qa"><div class="qah"><span class="ld"></span>&nbsp;${q.h}${has?' <span style="color:#085041;font-size:10px;font-weight:400"> – svar inkomna</span>':''}</div>
+      <div class="qat">${q.p}</div><div class="qab">${rows}</div></div>`;
   }).join('');
-  const levHas=GROUPS.some(g=>ga(levKey(n,g)));
+  const levHas=GROUPS.some(g=>ga(lk(n,g)));
   const levRows=GROUPS.map(g=>{
-    const v=ga(levKey(n,g));
-    return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}" id="levval_${n}_${g}">${v||'inväntar…'}</div></div>`;
+    const v=ga(lk(n,g));
+    return `<div class="gr"><div class="gn">${g}</div><div class="gv${v?'':' e'}" id="lv_${n}_${g}">${v||'inväntar…'}</div></div>`;
   }).join('');
   return `<div class="card">
-    <div class="ctitle">${d.title}</div>
-    <div class="csub">${d.time} · Kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
-    ${d.extraNote?`<div class="fnote">${d.extraNote}</div>`:''}
-    ${qBlocks}
-    <div class="q-ans-block" style="border-color:#185FA5;margin-top:.5rem">
-      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans
-        ${levHas?'<span style="color:#0e4070;font-size:10px;font-weight:400;margin-left:4px"> – svar inkomna</span>':''}
-      </div>
-      <div class="q-ans-txt" style="color:#185FA5;font-weight:500">${d.deliverable}</div>
-      <div class="q-ans-body">${levRows}</div>
+    <div class="ct">${d.t}</div>
+    <div class="cs">${d.ti} · Kod: <strong style="letter-spacing:.1em">${CODE}</strong></div>
+    ${d.extra?`<div class="fnote">${d.extra}</div>`:''}
+    ${qs}
+    <div class="qa" style="border-color:#185FA5;margin-top:.5rem">
+      <div class="qah bl"><span class="ld"></span>&nbsp;📌 Leverans${levHas?' <span style="color:#0e4070;font-size:10px;font-weight:400"> – svar inkomna</span>':''}</div>
+      <div class="qat" style="color:#185FA5;font-weight:500">${d.del}</div>
+      <div class="qab">${levRows}</div>
     </div>
-    <div class="ins-body open" style="margin-top:.65rem">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
-    <div style="margin-top:.85rem"><button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button></div>
+    <div class="ins-b open" style="margin-top:.65rem">${d.ins.map(i=>`<span class="ib">${i}</span>`).join('')}</div>
+    <div style="margin-top:.85rem"><button class="btn-g" onclick="DONE[${n}]=true;go(${n+1})">Gå vidare →</button></div>
   </div>`;
 }
-
-function renderIntroFac(){
-  const tot=PHASE_MINS.reduce((a,b)=>a+b,0);
-  return `
-  <div class="fnote">Facilitatorvy · Intro · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${JOIN_CODE}</strong> · klicka <strong>📲 Visa kod</strong> för QR</div>
+function rIntro(){
+  const tot=PM.reduce((a,b)=>a+b,0);
+  return `<div class="fnote">Facilitatorvy · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${CODE}</strong> · klicka 📲 Visa kod för QR på projektor</div>
   <div class="card">
-    <div class="ctitle">Agenda – ${tot} min</div>
-    <table class="stbl">${PL.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}</table>
-    <button class="sbtn" onclick="go(1)" style="margin-top:.85rem">Starta Del 1 →</button>
+    <div class="ct">Agenda – ${tot} min</div>
+    <table class="stbl">${PL.map((l,i)=>`<tr><td>${PM[i]} min</td><td>${l}</td></tr>`).join('')}</table>
+    <button class="btn-g" onclick="go(1)" style="margin-top:.85rem">Starta Del 1 →</button>
   </div>
-  <div class="card">
-    <div class="ctitle">Icebreaker-runda (5 min)</div>
-    <div class="qblock"><h4>Fråga till alla</h4>
+  <div class="card"><div class="ct">Icebreaker-runda (5 min)</div>
+    <div class="qb2"><h4>Fråga till alla</h4>
       <p>"Vilken roll hade du inte förväntade dig att ta i din konsultroll – men som du ändå tagit?"</p>
       <p style="font-size:11px;color:#888;margin-top:.35rem">Ex: psykolog, projektledare, konfliktlösare, säljare, terapeut, mentor…</p>
     </div>
   </div>`;
 }
-function renderAvsl(){
-  return `
-  <div class="fnote">Avslut (${PHASE_MINS[5]} min) – Summera med kärnbudskapet nedan.</div>
-  <div class="card">
-    <div class="ctitle">Kärnbudskap</div>
-    <div class="qblock"><p>Konsultrollen är alltid fler hattar än jobbtiteln – det är det som skapar verkligt värde.</p></div>
-    <div class="qblock"><p>Att rapportera rätt är ärlighet mot sig själv och Combitech. Obelagd tid är investeringstid.</p></div>
-    <div class="qblock"><p>De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
+function rAvsl(){
+  return `<div class="fnote">Avslut (${PM[5]} min) – Summera med kärnbudskapet nedan.</div>
+  <div class="card"><div class="ct">Kärnbudskap</div>
+    <div class="qb2"><p>Konsultrollen är alltid fler hattar än jobbtiteln – det är det som skapar verkligt värde.</p></div>
+    <div class="qb2"><p>Att rapportera rätt är ärlighet mot sig själv och Combitech. Obelagd tid är investeringstid.</p></div>
+    <div class="qb2"><p>De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
   </div>
-  <div class="card">
-    <div class="ctitle">Uppföljning</div>
+  <div class="card"><div class="ct">Uppföljning</div>
     <textarea placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" style="min-height:75px"></textarea>
     <div style="margin-top:.65rem;display:flex;gap:.5rem;flex-wrap:wrap">
-      <button class="nextbtn" onclick="setMode('sum')">Visa summering →</button>
-      <button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button>
+      <button class="nb" onclick="setMode('sum')">Visa summering →</button>
+      <button class="eb" onclick="exportA()">⬇ Exportera (.txt)</button>
     </div>
   </div>`;
 }
-
-function renderSum(){
-  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:.65rem"><button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button></div>`;
+function rSum(){
+  let h=`<div style="display:flex;justify-content:flex-end;margin-bottom:.65rem"><button class="eb" onclick="exportA()">⬇ Exportera (.txt)</button></div>`;
   let any=false;
   for(let n=1;n<=4;n++){
     const d=DEFS[n];
-    if(!d.questions.some((q,qi)=>GROUPS.some(g=>ga(qKey(n,qi,g))))&&!GROUPS.some(g=>ga(levKey(n,g))))continue;
+    if(!d.qs.some((q,qi)=>GROUPS.some(g=>ga(qk(n,qi,g))))&&!GROUPS.some(g=>ga(lk(n,g))))continue;
     any=true;
-    html+=`<div class="card"><div class="ctitle"><span class="live-dot"></span>&nbsp;${d.title}</div>`;
-    d.questions.forEach((q,qi)=>{
-      const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));if(!f.length)return;
-      html+=`<div style="margin-bottom:.75rem"><div class="slabel">${q.h}</div><div class="ansgrid">`;
-      f.forEach(g=>{html+=`<div class="ansitem"><div class="ansgrp">${g}</div>${ga(qKey(n,qi,g))}</div>`;});
-      html+=`</div></div>`;
+    h+=`<div class="card"><div class="ct"><span class="ld"></span>&nbsp;${d.t}</div>`;
+    d.qs.forEach((q,qi)=>{
+      const f=GROUPS.filter(g=>ga(qk(n,qi,g)));if(!f.length)return;
+      h+=`<div style="margin-bottom:.75rem"><div class="sl">${q.h}</div><div class="ag">`;
+      f.forEach(g=>{h+=`<div class="ai"><div class="ag2">${g}</div>${ga(qk(n,qi,g))}</div>`;});
+      h+=`</div></div>`;
     });
-    const lf=GROUPS.filter(g=>ga(levKey(n,g)));
+    const lf=GROUPS.filter(g=>ga(lk(n,g)));
     if(lf.length){
-      html+=`<div style="border-top:1px solid #eee;padding-top:.65rem;margin-bottom:.4rem"><div class="slabel" style="color:#185FA5">📌 Leverans</div><div class="ansgrid">`;
-      lf.forEach(g=>{html+=`<div class="ansitem" style="border-color:#b8d4f0"><div class="ansgrp">${g}</div>${ga(levKey(n,g))}</div>`;});
-      html+=`</div></div>`;
+      h+=`<div style="border-top:1px solid #eee;padding-top:.65rem"><div class="sl" style="color:#185FA5">📌 Leverans</div><div class="ag">`;
+      lf.forEach(g=>{h+=`<div class="ai" style="border-color:#b8d4f0"><div class="ag2">${g}</div>${ga(lk(n,g))}</div>`;});
+      h+=`</div></div>`;
     }
-    html+=`</div>`;
+    h+=`</div>`;
   }
-  if(!any)html+=`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
-  return html;
+  if(!any)h+=`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
+  return h;
 }
-
-function exportAnswers(){
-  let txt='WORKSHOP – Konsultrollen i praktiken\nGRC Enhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
+function exportA(){
+  let t='WORKSHOP – Konsultrollen i praktiken\nGRC Enhetsträff · '+new Date().toLocaleDateString('sv-SE')+'\n'+'='.repeat(40)+'\n\n';
   for(let n=1;n<=4;n++){
-    const d=DEFS[n];txt+=d.title+'\n'+'-'.repeat(35)+'\n';
-    d.questions.forEach((q,qi)=>{const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));if(!f.length)return;txt+='\n  '+q.h+':\n';f.forEach(g=>{txt+='    '+g+': '+ga(qKey(n,qi,g))+'\n';});});
-    const lf=GROUPS.filter(g=>ga(levKey(n,g)));if(lf.length){txt+='\n  LEVERANS:\n';lf.forEach(g=>{txt+='    '+g+': '+ga(levKey(n,g))+'\n';});}txt+='\n';
+    const d=DEFS[n]; t+=d.t+'\n'+'-'.repeat(35)+'\n';
+    d.qs.forEach((q,qi)=>{ const f=GROUPS.filter(g=>ga(qk(n,qi,g)));if(!f.length)return;t+='\n  '+q.h+':\n';f.forEach(g=>{t+='    '+g+': '+ga(qk(n,qi,g))+'\n';}); });
+    const lf=GROUPS.filter(g=>ga(lk(n,g)));if(lf.length){t+='\n  LEVERANS:\n';lf.forEach(g=>{t+='    '+g+': '+ga(lk(n,g))+'\n';});}
+    t+='\n';
   }
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grc-workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
+  const blob=new Blob([t],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grc-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
 }
 
-// INIT
-upd();
-// Restore state if fac
-if(isAuth){
-  const st=window._fbState;
-  if(st&&typeof st.phase==='number'){phase=st.phase;secs=st.secs||secs;}
-}
-fullRender();
+// ── INIT ──
+if(AUTH){ document.body.classList.add('fac-mode'); MODE='fac'; }
+document.body.classList.toggle('grp-mode', MODE==='grp');
+['b-fac','b-grp','b-sum'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',['fac','grp','sum'][i]===MODE));
+document.getElementById('b-fac').textContent=AUTH?'✓ Facilitator':'🔒 Facilitator';
+updTimer();
+render();
 setTimeout(()=>document.getElementById('c0')?.focus(),150);
 </script>
 </body>
