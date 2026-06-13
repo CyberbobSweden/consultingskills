@@ -8,166 +8,153 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
-
-/* HEADER */
-.header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;position:relative}
-.header-left{display:flex;align-items:center;gap:1rem}
-.grc-badge{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:10px;padding:5px 12px;text-align:center;flex-shrink:0}
-.grc-badge .grc-letters{font-size:18px;font-weight:800;color:white;letter-spacing:.05em;line-height:1}
-.grc-badge .grc-sub{font-size:8px;color:rgba(255,255,255,.75);letter-spacing:.04em;margin-top:1px;text-transform:uppercase}
-.header h1{font-size:19px;font-weight:500;color:white;margin:0}
-.header .sub{font-size:11px;opacity:.75;margin-top:2px;color:white}
-.mode-btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.mbtn{padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:transparent;color:white;font-size:12px;cursor:pointer;transition:all .15s}
-.mbtn.active{background:white;color:#0F6E56;font-weight:500}
-.qrbtn{padding:5px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.45);background:rgba(255,255,255,.12);color:white;font-size:12px;cursor:pointer}
+.header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+.header-left{display:flex;align-items:center;gap:.85rem}
+.grc-badge{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:4px 10px;text-align:center;flex-shrink:0}
+.grc-badge .gl{font-size:16px;font-weight:800;color:white;letter-spacing:.05em;line-height:1}
+.grc-badge .gs{font-size:7.5px;color:rgba(255,255,255,.75);letter-spacing:.04em;margin-top:1px;text-transform:uppercase}
+.header h1{font-size:17px;font-weight:500;color:white;margin:0}
+.header .sub{font-size:11px;opacity:.7;margin-top:1px;color:white}
+.mode-btns{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.mbtn{padding:4px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.4);background:transparent;color:white;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.mbtn.active{background:white;color:#0F6E56;font-weight:600}
+.qrbtn{padding:4px 10px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.4);background:rgba(255,255,255,.12);color:white;font-size:11px;cursor:pointer;white-space:nowrap}
 .qrbtn:hover{background:rgba(255,255,255,.25)}
-
-/* GRC accent bar */
 .grc-bar{height:3px;background:linear-gradient(90deg,#1a3a5c,#4a7ab5,#8a9ab5,#4a7ab5,#1a3a5c)}
-
-/* TIMER BAR */
-.tbar{background:rgba(15,110,86,0.92);padding:.65rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.tdisp{font-size:26px;font-weight:700;color:white;min-width:68px;font-variant-numeric:tabular-nums}
+/* TIMER */
+.tbar{background:rgba(15,110,86,0.92);padding:.55rem 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.tdisp{font-size:24px;font-weight:700;color:white;min-width:62px;font-variant-numeric:tabular-nums;flex-shrink:0}
 .tdisp.warn{color:#FFD166}
 .tdisp.crit{color:#FF6B6B;animation:blink .8s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
-.phase-time-row{display:flex;gap:6px;flex-wrap:wrap;flex:1}
-.ptime-chip{background:rgba(255,255,255,.15);border-radius:8px;padding:4px 9px;font-size:10px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:52px;cursor:default}
+.phase-time-row{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.ptime-chip{background:rgba(255,255,255,.15);border-radius:6px;padding:3px 7px;font-size:9px;color:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;min-width:46px}
 .ptime-chip.active-phase{background:rgba(255,255,255,.38);font-weight:700}
-.ptime-chip span{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
-.tctrl{display:flex;gap:5px;align-items:center}
-.tbtn{padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:12px;cursor:pointer}
+.ptime-chip span{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.tctrl{display:flex;gap:4px;align-items:center}
+.tbtn{padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:11px;cursor:pointer}
 .tbtn:hover{background:rgba(255,255,255,.2)}
 .tbtn.primary{background:rgba(255,255,255,.25)}
+/* Hide timer controls in grp view on mobile, show on desktop */
+.tctrl-grp{display:none}
+@media(min-width:800px){.tctrl-grp{display:flex}}
 .pbar{height:4px;background:#0a4a38}
 .pfill{height:100%;background:#5DCAA5;transition:width .5s}
-
 /* CONTENT */
-.content{padding:1.25rem 2rem;max-width:900px;margin:0 auto}
-.pnav{display:flex;gap:6px;margin-bottom:1.1rem;overflow-x:auto;padding-bottom:4px}
-.ppill{padding:5px 13px;border-radius:20px;border:1px solid #ddd;background:white;font-size:12px;cursor:pointer;white-space:nowrap;color:#666;transition:all .15s}
-.ppill.active{background:#0F6E56;color:white;border-color:#0F6E56}
+.content{padding:1rem 1.5rem;max-width:900px;margin:0 auto}
+/* Phase nav - compact on mobile */
+.pnav{display:flex;gap:4px;margin-bottom:.9rem;overflow-x:auto;padding-bottom:3px;-webkit-overflow-scrolling:touch}
+.ppill{padding:4px 10px;border-radius:16px;border:1px solid #ddd;background:white;font-size:11px;cursor:pointer;white-space:nowrap;color:#666;transition:all .15s;flex-shrink:0}
+.ppill.active{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:600}
 .ppill.done::after{content:" ✓"}
-
+.ppill.nocursor{cursor:default}
 /* CARDS */
-.card{background:white;border:1px solid #e8e8e4;border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:.85rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.ctitle{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:.2rem;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.csub{font-size:12px;color:#888;margin-bottom:.85rem}
-
-/* QUESTION BLOCKS */
-.qblock{background:#f7f7f4;border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.7rem;border-left:3px solid #0F6E56}
-.qblock h4{font-size:12px;font-weight:600;color:#0F6E56;margin-bottom:.3rem}
-.qblock p{font-size:13px;color:#333;line-height:1.6;margin-bottom:.6rem}
-.delivblock{background:#EBF4FF;border-radius:10px;padding:.85rem 1.1rem;margin-top:1.1rem;border:2px solid #185FA5}
-.delivblock h4{font-size:13px;font-weight:700;color:#185FA5;margin-bottom:.3rem}
-.delivblock p{font-size:13px;color:#333;line-height:1.6;margin-bottom:.6rem}
-textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:.6rem;font-size:13px;min-height:68px;resize:vertical;background:white;color:#1a1a1a;font-family:inherit}
+.card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:.95rem 1.2rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.ctitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:.15rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.csub{font-size:11px;color:#888;margin-bottom:.75rem}
+.qblock{background:#f7f7f4;border-radius:8px;padding:.75rem 1rem;margin-bottom:.6rem;border-left:3px solid #0F6E56}
+.qblock h4{font-size:11px;font-weight:600;color:#0F6E56;margin-bottom:.25rem}
+.qblock p{font-size:13px;color:#333;line-height:1.55;margin-bottom:.5rem}
+.delivblock{background:#EBF4FF;border-radius:8px;padding:.75rem 1rem;margin-top:.9rem;border:2px solid #185FA5}
+.delivblock h4{font-size:12px;font-weight:700;color:#185FA5;margin-bottom:.25rem}
+.delivblock p{font-size:13px;color:#333;line-height:1.55;margin-bottom:.5rem}
+textarea{width:100%;border:1px solid #ddd;border-radius:7px;padding:.55rem;font-size:13px;min-height:62px;resize:vertical;background:white;color:#1a1a1a;font-family:inherit}
 textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,110,86,.1)}
 .delivblock textarea{border-color:#185FA5}
 .delivblock textarea:focus{box-shadow:0 0 0 2px rgba(24,95,165,.15)}
-.send-row{display:flex;align-items:center;gap:.75rem;margin-top:.5rem}
-.sbtn{padding:6px 16px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;cursor:pointer;font-weight:500}
+.send-row{display:flex;align-items:center;gap:.6rem;margin-top:.4rem}
+.sbtn{padding:5px 14px;background:#0F6E56;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
 .sbtn:hover{background:#085041}
 .sbtn:disabled{background:#aaa;cursor:default}
-.dbtn{padding:6px 16px;background:#185FA5;color:white;border:none;border-radius:7px;font-size:13px;cursor:pointer;font-weight:500}
+.dbtn{padding:5px 14px;background:#185FA5;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500}
 .dbtn:hover{background:#0e4070}
 .dbtn:disabled{background:#aaa;cursor:default}
-.stag{font-size:12px;color:#0F6E56;opacity:0;transition:opacity .3s}
+.stag{font-size:11px;color:#0F6E56;opacity:0;transition:opacity .3s}
 .stag.show{opacity:1}
 .stag.blue{color:#185FA5}
-
-/* INSIGHTS (collapsible) */
-.insights-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#085041;cursor:pointer;padding:.5rem 0;user-select:none}
-.insights-toggle::before{content:'▶';font-size:10px;transition:transform .2s;display:inline-block}
+/* INSIGHTS */
+.insights-toggle{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#085041;cursor:pointer;padding:.4rem 0;user-select:none}
+.insights-toggle::before{content:'▶';font-size:9px;transition:transform .2s;display:inline-block}
 .insights-toggle.open::before{transform:rotate(90deg)}
-.insights-body{display:none;padding:.6rem .8rem;background:#e8f5ef;border-radius:8px;margin-bottom:.5rem}
+.insights-body{display:none;padding:.5rem .7rem;background:#e8f5ef;border-radius:7px;margin-bottom:.4rem}
 .insights-body.open{display:block}
-.ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:3px 9px;border-radius:10px;margin:.15rem;border:1px solid #9FE1CB}
-
-.fnote{background:#e8f2fb;border-radius:8px;padding:.6rem 1rem;font-size:12px;color:#0C447C;margin-bottom:.8rem;border-left:3px solid #185FA5;line-height:1.5}
-.slabel{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;margin-top:.5rem}
-.ansgrid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.4rem}
-.ansitem{background:#f7f7f4;border-radius:8px;padding:.55rem .85rem;font-size:13px;border:1px solid #e8e8e4}
-.ansgrp{font-size:11px;color:#999;margin-bottom:.15rem;font-weight:600}
-.empty{text-align:center;padding:2rem;color:#aaa;font-size:13px}
-.stbl{width:100%;border-collapse:collapse;font-size:13px}
-.stbl td{padding:.4rem .65rem;border-bottom:1px solid #f0f0ec;vertical-align:top}
-.stbl td:first-child{color:#888;width:110px;font-weight:500}
-.expbtn{padding:6px 14px;border:1px solid #0F6E56;border-radius:7px;background:white;color:#0F6E56;font-size:13px;cursor:pointer;font-weight:500}
+.ibadge{display:inline-block;background:white;color:#085041;font-size:11px;padding:2px 8px;border-radius:8px;margin:.1rem;border:1px solid #9FE1CB}
+.fnote{background:#e8f2fb;border-radius:7px;padding:.55rem .9rem;font-size:11px;color:#0C447C;margin-bottom:.7rem;border-left:3px solid #185FA5;line-height:1.5}
+.slabel{font-size:10px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;margin-top:.5rem}
+.ansgrid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.35rem}
+.ansitem{background:#f7f7f4;border-radius:7px;padding:.5rem .75rem;font-size:12px;border:1px solid #e8e8e4}
+.ansgrp{font-size:10px;color:#999;margin-bottom:.1rem;font-weight:600}
+.empty{text-align:center;padding:1.5rem;color:#aaa;font-size:13px}
+.stbl{width:100%;border-collapse:collapse;font-size:12px}
+.stbl td{padding:.35rem .6rem;border-bottom:1px solid #f0f0ec;vertical-align:top}
+.stbl td:first-child{color:#888;width:90px;font-weight:500}
+.expbtn{padding:5px 13px;border:1px solid #0F6E56;border-radius:6px;background:white;color:#0F6E56;font-size:12px;cursor:pointer;font-weight:500}
 .expbtn:hover{background:#e8f5ef}
-.nextbtn{padding:6px 14px;border:1px solid #ddd;border-radius:7px;background:white;color:#333;font-size:13px;cursor:pointer}
+.nextbtn{padding:5px 13px;border:1px solid #ddd;border-radius:6px;background:white;color:#333;font-size:12px;cursor:pointer}
 .nextbtn:hover{background:#f5f5f2}
-
 /* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200}
-.modal{background:white;border-radius:16px;padding:2rem;width:380px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2);text-align:center}
-.modal h2{font-size:17px;font-weight:600;margin-bottom:.4rem}
-.modal p{font-size:13px;color:#666;margin-bottom:1rem;line-height:1.5}
-.modal input[type=password]{width:100%;border:1px solid #ddd;border-radius:8px;padding:.65rem;font-size:14px;text-align:center;margin-bottom:.5rem}
+.modal{background:white;border-radius:14px;padding:1.75rem;width:360px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2);text-align:center}
+.modal h2{font-size:16px;font-weight:600;margin-bottom:.35rem}
+.modal p{font-size:13px;color:#666;margin-bottom:.85rem;line-height:1.5}
+.modal input[type=password]{width:100%;border:1px solid #ddd;border-radius:7px;padding:.6rem;font-size:14px;text-align:center;margin-bottom:.45rem}
 .modal input[type=password]:focus{outline:none;border-color:#0F6E56}
-.merr{font-size:12px;color:#c0392b;min-height:16px;margin-bottom:.3rem}
-.lbtn{width:100%;padding:9px;background:#0F6E56;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:.5rem}
+.merr{font-size:11px;color:#c0392b;min-height:15px;margin-bottom:.3rem}
+.lbtn{width:100%;padding:8px;background:#0F6E56;color:white;border:none;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:.4rem}
 .lbtn:hover{background:#085041}
-.cancel-link{font-size:12px;color:#aaa;cursor:pointer;text-decoration:underline}
-.big-code-display{font-size:52px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.75rem 0}
-
-/* JOIN PAGE */
-.join-wrap{max-width:440px;margin:0 auto;padding-top:.5rem}
-.join-card{background:white;border:1px solid #e8e8e4;border-radius:12px;padding:2rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.join-card h2{font-size:18px;font-weight:600;margin-bottom:.4rem}
-.join-card .sub{font-size:13px;color:#666;margin-bottom:1.25rem}
-.code-row{display:flex;gap:10px;justify-content:center;margin:.75rem 0 .25rem}
-.code-row input{width:62px;height:66px;border:2px solid #ddd;border-radius:10px;font-size:30px;text-align:center;font-weight:700;color:#0F6E56;outline:none;transition:border-color .15s}
+.cancel-link{font-size:11px;color:#aaa;cursor:pointer;text-decoration:underline}
+.big-code-display{font-size:50px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.6rem 0}
+/* JOIN */
+.join-wrap{max-width:420px;margin:0 auto;padding-top:.5rem}
+.join-card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:1.75rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.join-card h2{font-size:17px;font-weight:600;margin-bottom:.35rem}
+.join-card .sub{font-size:13px;color:#666;margin-bottom:1.1rem}
+.code-row{display:flex;gap:9px;justify-content:center;margin:.65rem 0 .2rem}
+.code-row input{width:58px;height:62px;border:2px solid #ddd;border-radius:9px;font-size:28px;text-align:center;font-weight:700;color:#0F6E56;outline:none;transition:border-color .15s}
 .code-row input:focus{border-color:#0F6E56;background:#f7fdf9}
-.grp-select{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:.75rem 0}
-.grp-btn{padding:8px 18px;border-radius:20px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555;transition:all .15s}
+.grp-select{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:.65rem 0}
+.grp-btn{padding:7px 15px;border-radius:18px;border:1.5px solid #ddd;background:white;font-size:13px;cursor:pointer;color:#555;transition:all .15s}
 .grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
-.divider{display:flex;align-items:center;gap:.75rem;margin:1.1rem 0;color:#bbb;font-size:12px}
+.divider{display:flex;align-items:center;gap:.65rem;margin:.9rem 0;color:#bbb;font-size:11px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
-
-/* FAC LIVE ANSWERS */
-.q-ans-block{border:1px solid #e8e8e4;border-radius:10px;margin-bottom:.7rem;overflow:hidden}
-.q-ans-hdr{background:#f7f7f4;padding:.55rem 1rem;font-size:12px;font-weight:600;color:#0F6E56;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;gap:5px}
+/* FAC LIVE */
+.q-ans-block{border:1px solid #e8e8e4;border-radius:9px;margin-bottom:.6rem;overflow:hidden}
+.q-ans-hdr{background:#f7f7f4;padding:.5rem .9rem;font-size:11px;font-weight:600;color:#0F6E56;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;gap:4px}
 .q-ans-hdr.blue{color:#185FA5;background:#f0f6ff}
-.q-ans-txt{padding:.55rem 1rem;font-size:12px;color:#555;line-height:1.5;background:#fafafa;border-bottom:1px solid #f0f0ec}
-.q-ans-body{padding:.3rem .5rem}
-.g-row{display:flex;gap:.5rem;align-items:flex-start;padding:.3rem .4rem;border-bottom:.5px solid #f5f5f5}
+.q-ans-txt{padding:.5rem .9rem;font-size:11px;color:#555;line-height:1.5;background:#fafafa;border-bottom:1px solid #f0f0ec}
+.q-ans-body{padding:.25rem .45rem}
+.g-row{display:flex;gap:.45rem;align-items:flex-start;padding:.28rem .35rem;border-bottom:.5px solid #f5f5f5}
 .g-row:last-child{border-bottom:none}
-.g-row .gn{font-size:11px;font-weight:600;color:#aaa;min-width:68px;padding-top:2px}
-.g-row .gv{font-size:13px;color:#1a1a1a;flex:1;line-height:1.5}
+.g-row .gn{font-size:10px;font-weight:600;color:#aaa;min-width:62px;padding-top:2px}
+.g-row .gv{font-size:12px;color:#1a1a1a;flex:1;line-height:1.45}
 .g-row .gv.empty{color:#ddd;font-style:italic}
-.live-dot{display:inline-block;width:7px;height:7px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0}
+.live-dot{display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-/* Sync indicator in group view */
-.sync-banner{background:#e8f5ef;border-radius:8px;padding:.5rem 1rem;font-size:12px;color:#085041;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;border:1px solid #9FE1CB}
-
+.sync-banner{background:#e8f5ef;border-radius:7px;padding:.4rem .85rem;font-size:11px;color:#085041;margin-bottom:.7rem;display:flex;align-items:center;gap:5px;border:1px solid #9FE1CB}
 /* TIME EDITOR */
-.time-editor{display:flex;flex-direction:column;gap:.5rem;text-align:left}
+.time-editor{display:flex;flex-direction:column;gap:.45rem;text-align:left}
 .time-row-e{display:flex;align-items:center;gap:.5rem}
 .time-row-e label{font-size:13px;flex:1}
-.time-row-e input{width:60px;border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:13px;text-align:center}
-
-/* GRC footer accent */
-.grc-footer{background:linear-gradient(90deg,#1a3a5c,#2a5490,#3a6eb0);padding:.4rem 2rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.grc-footer span{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:.03em}
-.grc-footer strong{font-size:11px;color:white;letter-spacing:.05em}
-
-/* QR code */
-#qrcode{display:inline-block;padding:10px;background:white;border:1px solid #ddd;border-radius:10px}
-.qr-url{font-size:10px;color:#aaa;margin-top:.4rem;word-break:break-all}
-
-@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:1rem}.header{padding:.85rem 1rem}.tdisp{font-size:20px}.code-row input{width:52px;height:56px;font-size:24px}}
+.time-row-e input{width:58px;border:1px solid #ddd;border-radius:5px;padding:3px 7px;font-size:13px;text-align:center}
+.grc-footer{background:linear-gradient(90deg,#1a3a5c,#2a5490,#3a6eb0);padding:.35rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.grc-footer span{font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.03em}
+.grc-footer strong{font-size:10px;color:white;letter-spacing:.05em}
+#qrcode{display:inline-block;padding:8px;background:white;border:1px solid #ddd;border-radius:8px}
+.qr-url{font-size:10px;color:#aaa;margin-top:.35rem;word-break:break-all}
+@media(max-width:600px){
+  .ansgrid{grid-template-columns:1fr}
+  .content{padding:.85rem 1rem}
+  .header{padding:.75rem 1rem}
+  .tdisp{font-size:20px}
+  .code-row input{width:50px;height:54px;font-size:24px}
+}
 </style>
 </head>
 <body>
 
-<!-- Facilitator login -->
 <div class="overlay" id="loginOverlay" style="display:none">
   <div class="modal">
-    <h2>Facilitatorvy</h2>
-    <p>Ange lösenord</p>
+    <h2>Facilitatorvy</h2><p>Ange lösenord</p>
     <input type="password" id="pwInput" placeholder="Lösenord" onkeydown="if(event.key==='Enter')checkPw()">
     <div class="merr" id="pwErr"></div>
     <button class="lbtn" onclick="checkPw()">Logga in</button>
@@ -175,40 +162,30 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
   </div>
 </div>
 
-<!-- QR modal -->
 <div class="overlay" id="qrOverlay" style="display:none">
   <div class="modal">
-    <h2>Visa för deltagarna</h2>
-    <p>Scanna QR-koden eller ange koden manuellt</p>
-    <div id="qrModalCode" style="margin:.5rem 0"></div>
+    <h2>Visa för deltagarna</h2><p>Scanna QR-koden eller ange koden manuellt</p>
+    <div id="qrModalCode" style="margin:.4rem 0"></div>
     <div class="big-code-display" id="qrModalDigits">1234</div>
     <div class="qr-url" id="qrModalUrl"></div>
-    <button class="lbtn" style="margin-top:1rem" onclick="closeModal('qrOverlay')">Stäng</button>
+    <button class="lbtn" style="margin-top:.85rem" onclick="closeModal('qrOverlay')">Stäng</button>
   </div>
 </div>
 
-<!-- Time editor -->
 <div class="overlay" id="timeOverlay" style="display:none">
   <div class="modal">
-    <h2>⏱ Justera tider</h2>
-    <p>Minuter per del</p>
+    <h2>⏱ Justera tider</h2><p>Minuter per del</p>
     <div class="time-editor" id="timeEditor"></div>
-    <div style="margin-top:.6rem;font-size:13px;text-align:left">Totalt: <strong id="totalMins">0</strong> min</div>
-    <button class="lbtn" style="margin-top:.75rem" onclick="applyTimes()">Spara &amp; stäng</button>
+    <div style="margin-top:.5rem;font-size:12px;text-align:left">Totalt: <strong id="totalMins">0</strong> min</div>
+    <button class="lbtn" style="margin-top:.65rem" onclick="applyTimes()">Spara &amp; stäng</button>
     <div class="cancel-link" onclick="closeModal('timeOverlay')">Avbryt</div>
   </div>
 </div>
 
 <div class="header">
   <div class="header-left">
-    <div class="grc-badge">
-      <div class="grc-letters">GRC</div>
-      <div class="grc-sub">Governance · Risk · Compliance</div>
-    </div>
-    <div>
-      <h1>Konsultrollen i praktiken</h1>
-      <div class="sub">Enhetsträff · arbetspass</div>
-    </div>
+    <div class="grc-badge"><div class="gl">GRC</div><div class="gs">Gov · Risk · Compliance</div></div>
+    <div><h1>Konsultrollen i praktiken</h1><div class="sub">Enhetsträff · arbetspass</div></div>
   </div>
   <div class="mode-btns">
     <button class="mbtn" id="btnFac" onclick="tryFac()">🔒 Facilitator</button>
@@ -219,54 +196,53 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 </div>
 <div class="grc-bar"></div>
 
-<div class="tbar" id="tbar">
+<div class="tbar">
   <div id="tdisp" class="tdisp">—:——</div>
   <div class="phase-time-row" id="phaseTimeRow"></div>
-  <div class="tctrl" id="tctrl">
+  <!-- Fac controls always visible -->
+  <div class="tctrl" id="tctrlFac">
     <button class="tbtn primary" onclick="startT()">▶</button>
     <button class="tbtn" onclick="pauseT()">⏸</button>
     <button class="tbtn" onclick="resetT()">↺</button>
     <button class="tbtn" onclick="openTimeEditor()">⚙️</button>
   </div>
+  <!-- Group controls: only on large screens -->
+  <div class="tctrl tctrl-grp" id="tctrlGrp" style="display:none">
+    <button class="tbtn primary" onclick="startT()">▶</button>
+    <button class="tbtn" onclick="pauseT()">⏸</button>
+    <button class="tbtn" onclick="resetT()">↺</button>
+  </div>
 </div>
 <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
 <div class="content" id="mc"></div>
-
 <div class="grc-footer">
-  <strong>GRC</strong>
-  <span>Governance · Risk &amp; Compliance</span>
-  <span>·</span>
-  <span>Combitech Enhetsträff</span>
+  <strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span>·</span><span>Combitech Enhetsträff</span>
 </div>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getFirestore,doc,setDoc,getDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import{getFirestore,doc,setDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",authDomain:"consultingskills-938d9.firebaseapp.com",projectId:"consultingskills-938d9",storageBucket:"consultingskills-938d9.firebasestorage.app",messagingSenderId:"250530809846",appId:"1:250530809846:web:eacdb035347952c595e9d7"};
 const app=initializeApp(cfg);
 const db=getFirestore(app);
-const SESSION="grc-enhetsträff-v1";
-const STATE_DOC="__state__";
+const SESSION="grc-v4";
 
-// Save answer
 window.fbSave=async(key,text)=>{
-  try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}
-  catch(e){console.error(e);}
+  try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}catch(e){console.error(e);}
 };
 
-// Save facilitator phase state
-window.fbSavePhase=async(p)=>{
-  try{await setDoc(doc(db,SESSION,STATE_DOC),{phase:p,ts:Date.now()},{merge:true});}
-  catch(e){console.error(e);}
+// Save facilitator state (phase + secs)
+window.fbSaveState=async(p,s)=>{
+  try{await setDoc(doc(db,SESSION,'__state__'),{phase:p,secs:s,ts:Date.now()},{merge:true});}catch(e){console.error(e);}
 };
 
-// Listen to answers + state
 window.fbListen=(cb)=>{
   onSnapshot(collection(db,SESSION),(snap)=>{
     const d={};
     snap.forEach(s=>{
-      if(s.id===STATE_DOC){d['__phase__']=s.data().phase;}
-      else{d[s.id]=s.data().text||'';}
+      const data=s.data();
+      if(s.id==='__state__'){d['__state__']=data;}
+      else{d[s.id]=data.text||'';}
     });
     cb(d);
   });
@@ -283,25 +259,46 @@ const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
 let PHASE_MINS=[10,20,20,20,15,5];
 const PHASE_LABELS=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 
-let secs,running=false,iv=null,mode='grp',phase=0,isAuth=false,done={},ans={};
+let secs,running=false,iv=null,stateIv=null;
+let mode='grp',phase=0,isAuth=false,done={},ans={};
 let selectedGroup=localStorage.getItem('sg')||'';
 let groupUnlocked=localStorage.getItem('gu')==='1';
 const directJoin=new URLSearchParams(window.location.search).get('join')==='1';
+let lastRemotePhase=-1; // track last synced phase
 
 function totalSecs(){return PHASE_MINS.reduce((a,b)=>a+b,0)*60;}
 secs=totalSecs();
 
 window.addEventListener('fbReady',()=>{
   window.fbListen(d=>{
-    // Sync phase for group view
-    if(d['__phase__']!==undefined&&mode==='grp'){
-      const remotePhase=d['__phase__'];
-      if(remotePhase!==phase){phase=remotePhase;}
-    }
     ans=d;
-    render();
+    // Sync phase & timer for GROUP view
+    if(mode==='grp'&&d['__state__']){
+      const st=d['__state__'];
+      const remotePhase=st.phase;
+      const remoteSecs=st.secs;
+      // Update phase
+      if(typeof remotePhase==='number'&&remotePhase!==lastRemotePhase){
+        lastRemotePhase=remotePhase;
+        phase=remotePhase;
+        render();
+      }
+      // Sync timer (allow small drift, only sync if >5s difference)
+      if(typeof remoteSecs==='number'&&!isAuth){
+        const diff=Math.abs(secs-remoteSecs);
+        if(diff>5){secs=remoteSecs;upd();}
+      }
+    } else {
+      render();
+    }
   });
 });
+
+// Fac: broadcast state every 10 seconds while running
+function startStateBroadcast(){
+  if(stateIv)clearInterval(stateIv);
+  stateIv=setInterval(()=>{if(isAuth)window.fbSaveState(phase,secs);},10000);
+}
 
 function closeModal(id){document.getElementById(id).style.display='none';}
 function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
@@ -320,7 +317,7 @@ function openQR(){
   document.getElementById('qrModalDigits').textContent=JOIN_CODE;
   document.getElementById('qrModalUrl').textContent=url;
   const el=document.getElementById('qrModalCode');el.innerHTML='';
-  try{new QRCode(el,{text:url,width:160,height:160,colorDark:'#0F6E56',colorLight:'#ffffff'});}
+  try{new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'});}
   catch(e){el.textContent=url;}
   document.getElementById('qrOverlay').style.display='flex';
 }
@@ -337,11 +334,18 @@ function updateTotalMins(){let t=0;PHASE_LABELS.forEach((_,i)=>{t+=parseInt(docu
 function applyTimes(){
   PHASE_LABELS.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
   secs=totalSecs();running=false;clearInterval(iv);upd();renderChips();closeModal('timeOverlay');
+  if(isAuth)window.fbSaveState(phase,secs);
 }
 
-function startT(){if(running)return;running=true;iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);}
-function pauseT(){clearInterval(iv);running=false;}
-function resetT(){clearInterval(iv);running=false;secs=totalSecs();upd();}
+function startT(){
+  if(running)return;running=true;
+  iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);
+  startStateBroadcast();
+  if(isAuth)window.fbSaveState(phase,secs);
+}
+function pauseT(){clearInterval(iv);running=false;if(isAuth)window.fbSaveState(phase,secs);}
+function resetT(){clearInterval(iv);running=false;secs=totalSecs();upd();if(isAuth)window.fbSaveState(phase,secs);}
+
 function upd(){
   const tot=totalSecs(),m=Math.floor(secs/60),s=secs%60;
   const el=document.getElementById('tdisp');
@@ -365,15 +369,26 @@ function setMode(m){
   mode=m;
   ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
   document.getElementById('btnFac').textContent=isAuth?'✓ Facilitator':'🔒 Facilitator';
-  document.getElementById('tctrl').style.display=m==='grp'?'none':'flex';
+  // Show/hide timer controls
+  const facCtrl=document.getElementById('tctrlFac');
+  const grpCtrl=document.getElementById('tctrlGrp');
+  if(m==='fac'||m==='sum'){
+    facCtrl.style.display='flex';grpCtrl.style.display='none';
+  } else {
+    facCtrl.style.display='none';
+    // grpCtrl shown by CSS media query on large screens
+    grpCtrl.style.display=''; // let CSS decide
+  }
   render();
 }
 
 function go(i){
   phase=Math.max(0,Math.min(i,PHASE_LABELS.length-1));
   renderChips();render();
-  // Save phase to Firebase so group views sync
-  if(isAuth) window.fbSavePhase(phase);
+  if(isAuth){
+    window.fbSaveState(phase,secs);
+    lastRemotePhase=phase;
+  }
 }
 
 function ga(k){return ans[k]||'';}
@@ -393,10 +408,10 @@ async function sendAnswer(key,inputId,btnId,tagId){
 
 function toggleInsights(id){
   const body=document.getElementById('ib_'+id);
-  const toggle=document.getElementById('it_'+id);
-  if(!body||!toggle)return;
+  const tog=document.getElementById('it_'+id);
+  if(!body||!tog)return;
   const open=body.classList.toggle('open');
-  toggle.classList.toggle('open',open);
+  tog.classList.toggle('open',open);
 }
 
 function render(){
@@ -408,9 +423,9 @@ function render(){
 }
 
 function phaseNav(clickable=true){
-  return `<div class="pnav">${PHASE_LABELS.map((l,i)=>`
-    <div class="ppill${i===phase?' active':done[i]?' done':''}" ${clickable?`onclick="go(${i})"`:''} style="${!clickable?'cursor:default':''}">
-      ${l} <span style="opacity:.5;font-size:11px">${PHASE_MINS[i]}m</span>
+  return `<div class="pnav">${PHASE_LABELS.map((l,i)=>
+    `<div class="ppill${i===phase?' active':done[i]?' done':''}${!clickable?' nocursor':''}" ${clickable?`onclick="go(${i})"`:''}>
+      ${l}<span style="opacity:.45;font-size:10px;margin-left:3px">${PHASE_MINS[i]}m</span>
     </div>`).join('')}</div>`;
 }
 
@@ -418,9 +433,10 @@ function phaseNav(clickable=true){
 function renderGrp(){
   if(directJoin&&!groupUnlocked) return renderGroupPicker();
   if(!groupUnlocked) return renderCodeEntry();
-  if(phase===0) return renderGroupPicker();
+  if(phase===0||!groupUnlocked) return renderGroupPicker();
   if(phase>=1&&phase<=4) return renderDelGrp(phase);
-  return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
+  if(phase>=5) return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
+  return renderGroupPicker();
 }
 
 function renderCodeEntry(){
@@ -434,8 +450,7 @@ function renderCodeEntry(){
       <input type="tel" maxlength="1" id="c3" oninput="ci(3)" onkeydown="cb(event,3)">
     </div>
     <div class="merr" id="cErr"></div>
-    <div class="divider">eller</div>
-    <p style="font-size:12px;color:#aaa">Scanna QR-koden från projektorduken</p>
+    <div class="divider">eller scanna QR-koden från projektorduken</div>
   </div></div>`;
 }
 function ci(i){
@@ -451,33 +466,37 @@ function ci(i){
 function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&&i>0)document.getElementById('c'+(i-1)).focus();}
 
 function renderGroupPicker(){
+  const st=ans['__state__'];
+  const facPhase=st&&typeof st.phase==='number'?st.phase:0;
   return `<div class="join-wrap"><div class="join-card">
     <h2>Välj din grupp</h2>
     <div class="sub">${selectedGroup?`Du är i <strong>${selectedGroup}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
     <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn${selectedGroup===g?' sel':''}" onclick="pickGrp('${g}')">${g}</button>`).join('')}</div>
     <button class="lbtn" onclick="confirmGrp()">Gå in →</button>
-    ${selectedGroup?`<div class="cancel-link" style="margin-top:.75rem" onclick="skipToContent()">Fortsätt som ${selectedGroup}</div>`:''}
+    ${selectedGroup?`<div class="cancel-link" style="margin-top:.65rem" onclick="skipToFacPhase()">Fortsätt som ${selectedGroup}</div>`:''}
   </div></div>`;
 }
 function pickGrp(g){selectedGroup=g;localStorage.setItem('sg',g);document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));}
 function confirmGrp(){
   if(!selectedGroup)return;
   groupUnlocked=true;localStorage.setItem('gu','1');
-  skipToContent();
+  skipToFacPhase();
 }
-function skipToContent(){
-  // Go to whatever phase facilitator is on (from firebase), default 1
-  const fp=ans['__phase__'];
-  phase=(fp&&fp>0)?fp:1;
+function skipToFacPhase(){
+  // Always go to whatever phase facilitator is on
+  const st=ans['__state__'];
+  const fp=st&&typeof st.phase==='number'?st.phase:1;
+  phase=fp>0?fp:1;
+  lastRemotePhase=phase;
   render();
 }
 
-// ===== DEL DEFINITIONS =====
+// ===== DEL DEFS =====
 const DEFS={
   1:{title:'Del 1 · Core Consulting Skills i praktiken',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
-      {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – och varför? Ge ett konkret exempel.<br><span style="font-size:12px;opacity:.7;font-style:italic">Kundförståelse & problemlösning · Kommunikation & anpassning · Professionalism & ansvar · Värdeskapande</span>'},
-      {h:'Diskutera 2',p:'Berätta om ett uppdrag där en <em>soft skill</em> – inte teknisk kompetens – avgjorde utfallet. Vad hände och vad lärde ni er?'},
+      {h:'Diskutera 1',p:'Vilket av dessa känns svårast i ert dagliga arbete – och varför? Ge ett konkret exempel.<br><span style="font-size:11px;opacity:.65;font-style:italic">Kundförståelse & problemlösning · Kommunikation & anpassning · Professionalism & ansvar · Värdeskapande</span>'},
+      {h:'Diskutera 2',p:'Berätta om ett uppdrag där en soft skill – inte teknisk kompetens – avgjorde utfallet. Vad hände och vad lärde ni er?'},
       {h:'Diskutera 3',p:'Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt – och varför?'},
     ],
     deliverable:'Välj <strong>1 skill</strong> ni är starka på som grupp + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
@@ -485,22 +504,22 @@ const DEFS={
   },
   2:{title:'Del 2 · Konsultmässighet – eget varumärke',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
-      {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden? Vilket beteende eller vilken attityd?'},
+      {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden?'},
       {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'},
-      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest med konsultrollen?'},
+      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'},
     ],
     deliverable:'Dela <strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet i praktiken.',
-    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – det är ett styrketecken','Du ÄR Combitech hos kunden'],
+    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – styrketecken','Du ÄR Combitech hos kunden'],
   },
   3:{title:'Del 3 · Värdeskapande på obelagd tid',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
       {h:'Diskutera 1',p:'Vad gör ni faktiskt med obelagd tid? Vad borde man göra – och vad hindrar er i praktiken?'},
-      {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Varför underrapporterar konsulter ibland, och vad kostar det för er och Combitech?'},
+      {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Varför underrapporterar konsulter, och vad kostar det för er och Combitech?'},
       {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på ett aktivt uppdrag? Brainstorma konkreta exempel.'},
     ],
     deliverable:'<strong>1 konkret sak</strong> ni faktiskt kan göra nästa gång ni har obelagd tid.',
-    insights:['Obelagd tid ≠ ledig tid – det är investeringstid','One-pagers, LinkedIn-inlägg, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er om 3 mån','"Rätt tidrapportering är ärlighet, inte girighet"','Underrapportering döljer verkliga kostnader och snedvrider prissättning'],
-    extraNote:'Värdeskapande-exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
+    insights:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er','Rätt tidrapportering = ärlighet, inte girighet','Underrapportering döljer verkliga kostnader'],
+    extraNote:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
   },
   4:{title:'Del 4 · Många hattar – scenario',time:'Diskussion 10 min → Redovisning 5 min',
     questions:[
@@ -509,21 +528,19 @@ const DEFS={
       {h:'Scenario C',p:'Du hittar ett stort problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är formellt inte din uppgift. Vad gör du?'},
     ],
     deliverable:'Välj <strong>ett scenario</strong> – beskriv er bästa approach och varför just den.',
-    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation löser mer än teknik','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen','Konsultrollen = alltid fler hattar än jobbtiteln'],
+    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation > teknisk lösning','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen','Konsultrollen = fler hattar än jobbtiteln'],
     extraNote:'Inget rätt svar – poängen är att konsultrollen alltid är mer än jobbtiteln.',
   },
 };
 
-function insightsBlock(n,showInGroup){
-  const d=DEFS[n];
-  const id=`ins_${n}_${showInGroup?'g':'f'}`;
-  return `<div style="margin-top:.75rem">
+function insBlock(n,gid){
+  const d=DEFS[n],id=`${n}_${gid}`;
+  return `<div style="margin-top:.65rem">
     <div class="insights-toggle" id="it_${id}" onclick="toggleInsights('${id}')">Seniora insikter</div>
     <div class="insights-body" id="ib_${id}">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
   </div>`;
 }
 
-// ===== GROUP DEL VIEW =====
 function renderDelGrp(n){
   const d=DEFS[n];
   const qBlocks=d.questions.map((q,qi)=>{
@@ -541,10 +558,10 @@ function renderDelGrp(n){
   const lk=levKey(n,selectedGroup);
   const liid=`lev${n}`,lbid=`levb${n}`,ltid=`levt${n}`;
   return `
-    <div class="sync-banner"><span class="live-dot"></span> Synkad med facilitatorn – du är på rätt del</div>
+    <div class="sync-banner"><span class="live-dot"></span>&nbsp;Synkad med facilitatorn – ${d.title}</div>
     ${phaseNav(false)}
     <div class="card">
-      <div class="ctitle">${d.title} <span style="font-size:12px;font-weight:400;color:#0F6E56">${selectedGroup}</span></div>
+      <div class="ctitle">${d.title} <span style="font-size:11px;font-weight:400;color:#0F6E56">${selectedGroup}</span></div>
       <div class="csub">${d.time}</div>
       ${qBlocks}
       <div class="delivblock">
@@ -556,107 +573,99 @@ function renderDelGrp(n){
           <span class="stag blue" id="${ltid}">✓ Skickat!</span>
         </div>
       </div>
-      ${insightsBlock(n,true)}
+      ${insBlock(n,'g')}
     </div>`;
 }
 
-// ===== FAC DEL VIEW =====
+function renderFac(){
+  if(phase===0)return phaseNav()+renderIntroFac();
+  if(phase>=1&&phase<=4)return phaseNav()+renderDelFac(phase);
+  return phaseNav()+renderAvsl();
+}
+
 function renderDelFac(n){
   const d=DEFS[n];
   const qBlocks=d.questions.map((q,qi)=>{
     const rows=GROUPS.map(g=>{const v=ga(qKey(n,qi,g));return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}">${v||'inväntar…'}</div></div>`;}).join('');
     const has=GROUPS.some(g=>ga(qKey(n,qi,g)));
     return `<div class="q-ans-block">
-      <div class="q-ans-hdr"><span class="live-dot"></span>&nbsp;${q.h}${has?' <span style="color:#085041;font-size:11px;font-weight:400"> – svar inkomna</span>':''}</div>
+      <div class="q-ans-hdr"><span class="live-dot"></span>&nbsp;${q.h}${has?' <span style="color:#085041;font-size:10px;font-weight:400"> – svar inkomna</span>':''}</div>
       <div class="q-ans-txt">${q.p}</div>
       <div class="q-ans-body">${rows}</div>
     </div>`;
   }).join('');
   const levRows=GROUPS.map(g=>{const v=ga(levKey(n,g));return `<div class="g-row"><div class="gn">${g}</div><div class="gv${v?'':' empty'}">${v||'inväntar…'}</div></div>`;}).join('');
   const levHas=GROUPS.some(g=>ga(levKey(n,g)));
-  return `${phaseNav()}
-  <div class="card">
+  return `<div class="card">
     <div class="ctitle">${d.title}</div>
-    <div class="csub">${d.time} &nbsp;·&nbsp; Deltagarnas kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
+    <div class="csub">${d.time} &nbsp;·&nbsp; Kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
     ${d.extraNote?`<div class="fnote">${d.extraNote}</div>`:''}
     ${qBlocks}
     <div class="q-ans-block" style="border-color:#185FA5;margin-top:.5rem">
-      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans${levHas?' <span style="color:#0e4070;font-size:11px;font-weight:400"> – svar inkomna</span>':''}</div>
+      <div class="q-ans-hdr blue"><span class="live-dot"></span>&nbsp;📌 Leverans${levHas?' <span style="color:#0e4070;font-size:10px;font-weight:400"> – svar inkomna</span>':''}</div>
       <div class="q-ans-txt" style="color:#185FA5;font-weight:500">${d.deliverable}</div>
       <div class="q-ans-body">${levRows}</div>
     </div>
-    <div class="ins" style="margin-top:.75rem">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
-    <div style="margin-top:1rem">
-      <button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button>
-    </div>
+    <div class="insights-body open" style="margin-top:.65rem">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
+    <div style="margin-top:.85rem"><button class="sbtn" onclick="done[${n}]=true;go(${n+1})">Gå vidare →</button></div>
   </div>`;
-}
-
-function renderFac(){
-  if(phase===0)return phaseNav()+renderIntroFac();
-  if(phase>=1&&phase<=4)return renderDelFac(phase);
-  return phaseNav()+renderAvsl();
 }
 
 function renderIntroFac(){
   const tot=PHASE_MINS.reduce((a,b)=>a+b,0);
   return `
-  <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min)<br>
-  Deltagarnas kod: <strong style="font-size:20px;letter-spacing:.15em">${JOIN_CODE}</strong> &nbsp;–&nbsp; klicka <strong>📲 Visa kod</strong> för att visa QR på projektor</div>
+  <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min) &nbsp;·&nbsp;
+  Deltagarnas kod: <strong style="font-size:18px;letter-spacing:.15em">${JOIN_CODE}</strong> &nbsp;–&nbsp; klicka <strong>📲 Visa kod</strong> för QR på projektor</div>
   <div class="card">
     <div class="ctitle">Agenda – ${tot} min</div>
     <table class="stbl">${PHASE_LABELS.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}</table>
-    <button class="sbtn" onclick="go(1)" style="margin-top:1rem">Starta Del 1 →</button>
+    <button class="sbtn" onclick="go(1)" style="margin-top:.85rem">Starta Del 1 →</button>
   </div>
   <div class="card">
     <div class="ctitle">Icebreaker-runda (5 min)</div>
-    <div class="qblock">
-      <h4>Fråga till alla</h4>
+    <div class="qblock"><h4>Fråga till alla</h4>
       <p>"Vilken roll hade du inte förväntade dig att ta i din konsultroll – men som du ändå tagit?"</p>
-      <p style="font-size:12px;color:#888;margin-top:.4rem">Ex: psykolog, projektledare, konfliktlösare, säljare, terapeut, mentor…</p>
+      <p style="font-size:11px;color:#888;margin-top:.35rem">Ex: psykolog, projektledare, konfliktlösare, säljare, terapeut, mentor…</p>
     </div>
   </div>`;
 }
 
 function renderAvsl(){
-  return `${phaseNav()}
+  return `
   <div class="fnote">Avslut (${PHASE_MINS[5]} min) – Summera med kärnbudskapet nedan.</div>
   <div class="card">
     <div class="ctitle">Kärnbudskap</div>
-    <div class="qblock"><p>Konsultrollen är alltid <em>fler hattar än jobbtiteln</em>. Det är inte en nackdel – det är det som skapar verkligt värde.</p></div>
+    <div class="qblock"><p>Konsultrollen är alltid fler hattar än jobbtiteln. Det är inte en nackdel – det är det som skapar verkligt värde.</p></div>
     <div class="qblock"><p>Att rapportera rätt är ärlighet mot sig själv och Combitech. Obelagd tid är investeringstid.</p></div>
     <div class="qblock"><p>De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
   </div>
   <div class="card">
     <div class="ctitle">Uppföljning</div>
-    <textarea placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" style="min-height:80px"></textarea>
-    <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+    <textarea placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" style="min-height:75px"></textarea>
+    <div style="margin-top:.65rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="nextbtn" onclick="setMode('sum')">Visa summering →</button>
       <button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button>
     </div>
   </div>`;
 }
 
-// ===== SUMMARY =====
 function renderSum(){
-  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:.75rem"><button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button></div>`;
+  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:.65rem"><button class="expbtn" onclick="exportAnswers()">⬇ Exportera (.txt)</button></div>`;
   let hasAny=false;
   for(let n=1;n<=4;n++){
     const d=DEFS[n];
     const delHas=d.questions.some((q,qi)=>GROUPS.some(g=>ga(qKey(n,qi,g))))||GROUPS.some(g=>ga(levKey(n,g)));
-    if(!delHas)continue;
-    hasAny=true;
+    if(!delHas)continue;hasAny=true;
     html+=`<div class="card"><div class="ctitle"><span class="live-dot"></span>&nbsp;${d.title}</div>`;
     d.questions.forEach((q,qi)=>{
-      const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));
-      if(!f.length)return;
-      html+=`<div style="margin-bottom:.85rem"><div class="slabel">${q.h}</div><div class="ansgrid">`;
+      const f=GROUPS.filter(g=>ga(qKey(n,qi,g)));if(!f.length)return;
+      html+=`<div style="margin-bottom:.75rem"><div class="slabel">${q.h}</div><div class="ansgrid">`;
       f.forEach(g=>{html+=`<div class="ansitem"><div class="ansgrp">${g}</div>${ga(qKey(n,qi,g))}</div>`;});
       html+=`</div></div>`;
     });
     const lf=GROUPS.filter(g=>ga(levKey(n,g)));
     if(lf.length){
-      html+=`<div style="border-top:1px solid #eee;padding-top:.75rem;margin-bottom:.5rem"><div class="slabel" style="color:#185FA5">📌 Leverans</div><div class="ansgrid">`;
+      html+=`<div style="border-top:1px solid #eee;padding-top:.65rem;margin-bottom:.4rem"><div class="slabel" style="color:#185FA5">📌 Leverans</div><div class="ansgrid">`;
       lf.forEach(g=>{html+=`<div class="ansitem" style="border-color:#b8d4f0"><div class="ansgrp">${g}</div>${ga(levKey(n,g))}</div>`;});
       html+=`</div></div>`;
     }
