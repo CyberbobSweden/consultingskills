@@ -7,21 +7,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh;display:flex;flex-direction:column}
 .header{background:linear-gradient(135deg,#0F6E56,#185FA5);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
 .header-left{display:flex;align-items:center;gap:.85rem}
 .grc-badge{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:4px 10px;text-align:center;flex-shrink:0}
 .grc-badge .gl{font-size:16px;font-weight:800;color:white;letter-spacing:.05em;line-height:1}
-.grc-badge .gs{font-size:7.5px;color:rgba(255,255,255,.75);letter-spacing:.04em;margin-top:1px;text-transform:uppercase}
+.grc-badge .gs{font-size:7px;color:rgba(255,255,255,.75);letter-spacing:.04em;margin-top:1px;text-transform:uppercase}
 .header h1{font-size:17px;font-weight:500;color:white;margin:0}
 .header .sub{font-size:11px;opacity:.7;margin-top:1px;color:white}
 .mode-btns{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.mbtn{padding:4px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.4);background:transparent;color:white;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.mbtn{padding:4px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:transparent;color:white;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .mbtn.active{background:white;color:#0F6E56;font-weight:600}
-.qrbtn{padding:4px 10px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.4);background:rgba(255,255,255,.12);color:white;font-size:11px;cursor:pointer;white-space:nowrap}
+.qrbtn{padding:4px 10px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:white;font-size:11px;cursor:pointer;white-space:nowrap}
 .qrbtn:hover{background:rgba(255,255,255,.25)}
 .grc-bar{height:3px;background:linear-gradient(90deg,#1a3a5c,#4a7ab5,#8a9ab5,#4a7ab5,#1a3a5c)}
-/* TIMER */
 .tbar{background:rgba(15,110,86,0.92);padding:.55rem 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
 .tdisp{font-size:24px;font-weight:700;color:white;min-width:62px;font-variant-numeric:tabular-nums;flex-shrink:0}
 .tdisp.warn{color:#FFD166}
@@ -32,23 +31,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ptime-chip.active-phase{background:rgba(255,255,255,.38);font-weight:700}
 .ptime-chip span{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
 .tctrl{display:flex;gap:4px;align-items:center}
-.tbtn{padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,0.35);background:transparent;color:white;font-size:11px;cursor:pointer}
+.tbtn{padding:4px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.35);background:transparent;color:white;font-size:11px;cursor:pointer}
 .tbtn:hover{background:rgba(255,255,255,.2)}
 .tbtn.primary{background:rgba(255,255,255,.25)}
-/* Hide timer controls in grp view on mobile, show on desktop */
-.tctrl-grp{display:none}
-@media(min-width:800px){.tctrl-grp{display:flex}}
 .pbar{height:4px;background:#0a4a38}
 .pfill{height:100%;background:#5DCAA5;transition:width .5s}
-/* CONTENT */
-.content{padding:1rem 1.5rem;max-width:900px;margin:0 auto}
-/* Phase nav - compact on mobile */
+.content{padding:1rem 1.5rem;max-width:900px;margin:0 auto;width:100%;flex:1}
 .pnav{display:flex;gap:4px;margin-bottom:.9rem;overflow-x:auto;padding-bottom:3px;-webkit-overflow-scrolling:touch}
 .ppill{padding:4px 10px;border-radius:16px;border:1px solid #ddd;background:white;font-size:11px;cursor:pointer;white-space:nowrap;color:#666;transition:all .15s;flex-shrink:0}
 .ppill.active{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:600}
 .ppill.done::after{content:" ✓"}
 .ppill.nocursor{cursor:default}
-/* CARDS */
 .card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:.95rem 1.2rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .ctitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:.15rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .csub{font-size:11px;color:#888;margin-bottom:.75rem}
@@ -72,7 +65,6 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .stag{font-size:11px;color:#0F6E56;opacity:0;transition:opacity .3s}
 .stag.show{opacity:1}
 .stag.blue{color:#185FA5}
-/* INSIGHTS */
 .insights-toggle{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#085041;cursor:pointer;padding:.4rem 0;user-select:none}
 .insights-toggle::before{content:'▶';font-size:9px;transition:transform .2s;display:inline-block}
 .insights-toggle.open::before{transform:rotate(90deg)}
@@ -92,8 +84,7 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .expbtn:hover{background:#e8f5ef}
 .nextbtn{padding:5px 13px;border:1px solid #ddd;border-radius:6px;background:white;color:#333;font-size:12px;cursor:pointer}
 .nextbtn:hover{background:#f5f5f2}
-/* MODALS */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:200}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200}
 .modal{background:white;border-radius:14px;padding:1.75rem;width:360px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2);text-align:center}
 .modal h2{font-size:16px;font-weight:600;margin-bottom:.35rem}
 .modal p{font-size:13px;color:#666;margin-bottom:.85rem;line-height:1.5}
@@ -104,7 +95,6 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .lbtn:hover{background:#085041}
 .cancel-link{font-size:11px;color:#aaa;cursor:pointer;text-decoration:underline}
 .big-code-display{font-size:50px;font-weight:900;letter-spacing:.2em;color:#0F6E56;margin:.6rem 0}
-/* JOIN */
 .join-wrap{max-width:420px;margin:0 auto;padding-top:.5rem}
 .join-card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:1.75rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .join-card h2{font-size:17px;font-weight:600;margin-bottom:.35rem}
@@ -117,7 +107,6 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .grp-btn.sel{background:#0F6E56;color:white;border-color:#0F6E56;font-weight:500}
 .divider{display:flex;align-items:center;gap:.65rem;margin:.9rem 0;color:#bbb;font-size:11px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
-/* FAC LIVE */
 .q-ans-block{border:1px solid #e8e8e4;border-radius:9px;margin-bottom:.6rem;overflow:hidden}
 .q-ans-hdr{background:#f7f7f4;padding:.5rem .9rem;font-size:11px;font-weight:600;color:#0F6E56;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;gap:4px}
 .q-ans-hdr.blue{color:#185FA5;background:#f0f6ff}
@@ -131,23 +120,16 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 .live-dot{display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .sync-banner{background:#e8f5ef;border-radius:7px;padding:.4rem .85rem;font-size:11px;color:#085041;margin-bottom:.7rem;display:flex;align-items:center;gap:5px;border:1px solid #9FE1CB}
-/* TIME EDITOR */
 .time-editor{display:flex;flex-direction:column;gap:.45rem;text-align:left}
 .time-row-e{display:flex;align-items:center;gap:.5rem}
 .time-row-e label{font-size:13px;flex:1}
 .time-row-e input{width:58px;border:1px solid #ddd;border-radius:5px;padding:3px 7px;font-size:13px;text-align:center}
 .grc-footer{background:linear-gradient(90deg,#1a3a5c,#2a5490,#3a6eb0);padding:.35rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.grc-footer span{font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.03em}
+.grc-footer span{font-size:10px;color:rgba(255,255,255,.7)}
 .grc-footer strong{font-size:10px;color:white;letter-spacing:.05em}
 #qrcode{display:inline-block;padding:8px;background:white;border:1px solid #ddd;border-radius:8px}
 .qr-url{font-size:10px;color:#aaa;margin-top:.35rem;word-break:break-all}
-@media(max-width:600px){
-  .ansgrid{grid-template-columns:1fr}
-  .content{padding:.85rem 1rem}
-  .header{padding:.75rem 1rem}
-  .tdisp{font-size:20px}
-  .code-row input{width:50px;height:54px;font-size:24px}
-}
+@media(max-width:600px){.ansgrid{grid-template-columns:1fr}.content{padding:.85rem 1rem}.header{padding:.75rem 1rem}.tdisp{font-size:20px}.code-row input{width:50px;height:54px;font-size:24px}}
 </style>
 </head>
 <body>
@@ -166,7 +148,7 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
   <div class="modal">
     <h2>Visa för deltagarna</h2><p>Scanna QR-koden eller ange koden manuellt</p>
     <div id="qrModalCode" style="margin:.4rem 0"></div>
-    <div class="big-code-display" id="qrModalDigits">1234</div>
+    <div class="big-code-display">1234</div>
     <div class="qr-url" id="qrModalUrl"></div>
     <button class="lbtn" style="margin-top:.85rem" onclick="closeModal('qrOverlay')">Stäng</button>
   </div>
@@ -199,52 +181,58 @@ textarea:focus{outline:none;border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,11
 <div class="tbar">
   <div id="tdisp" class="tdisp">—:——</div>
   <div class="phase-time-row" id="phaseTimeRow"></div>
-  <!-- Fac controls always visible -->
-  <div class="tctrl" id="tctrlFac">
+  <div class="tctrl" id="tctrl">
     <button class="tbtn primary" onclick="startT()">▶</button>
     <button class="tbtn" onclick="pauseT()">⏸</button>
     <button class="tbtn" onclick="resetT()">↺</button>
     <button class="tbtn" onclick="openTimeEditor()">⚙️</button>
   </div>
-  <!-- Group controls: only on large screens -->
-  <div class="tctrl tctrl-grp" id="tctrlGrp" style="display:none">
-    <button class="tbtn primary" onclick="startT()">▶</button>
-    <button class="tbtn" onclick="pauseT()">⏸</button>
-    <button class="tbtn" onclick="resetT()">↺</button>
-  </div>
 </div>
 <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
 <div class="content" id="mc"></div>
 <div class="grc-footer">
-  <strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span>·</span><span>Combitech Enhetsträff</span>
+  <strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span>
 </div>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getFirestore,doc,setDoc,collection,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const cfg={apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",authDomain:"consultingskills-938d9.firebaseapp.com",projectId:"consultingskills-938d9",storageBucket:"consultingskills-938d9.firebasestorage.app",messagingSenderId:"250530809846",appId:"1:250530809846:web:eacdb035347952c595e9d7"};
+
+const cfg={
+  apiKey:"AIzaSyAo_k0g2ee6utvUYxi8p5xp_HWidXTei8A",
+  authDomain:"consultingskills-938d9.firebaseapp.com",
+  projectId:"consultingskills-938d9",
+  storageBucket:"consultingskills-938d9.firebasestorage.app",
+  messagingSenderId:"250530809846",
+  appId:"1:250530809846:web:eacdb035347952c595e9d7"
+};
 const app=initializeApp(cfg);
 const db=getFirestore(app);
-const SESSION="grc-v4";
+const SESSION="grc-v5";
 
 window.fbSave=async(key,text)=>{
-  try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}catch(e){console.error(e);}
+  try{await setDoc(doc(db,SESSION,key),{text,ts:Date.now()},{merge:true});}
+  catch(e){console.error('fbSave error',e);}
 };
 
-// Save facilitator state (phase + secs)
-window.fbSaveState=async(p,s)=>{
-  try{await setDoc(doc(db,SESSION,'__state__'),{phase:p,secs:s,ts:Date.now()},{merge:true});}catch(e){console.error(e);}
+window.fbSaveState=async(phase,secs)=>{
+  try{
+    await setDoc(doc(db,SESSION,'__state__'),{phase,secs,ts:Date.now()});
+    console.log('State saved: phase='+phase+' secs='+secs);
+  }
+  catch(e){console.error('fbSaveState error',e);}
 };
 
-window.fbListen=(cb)=>{
+// Single persistent listener – never recreated
+window.fbStartListening=()=>{
   onSnapshot(collection(db,SESSION),(snap)=>{
-    const d={};
-    snap.forEach(s=>{
-      const data=s.data();
-      if(s.id==='__state__'){d['__state__']=data;}
-      else{d[s.id]=data.text||'';}
+    const answers={};
+    let state=null;
+    snap.forEach(d=>{
+      if(d.id==='__state__') state=d.data();
+      else answers[d.id]=d.data().text||'';
     });
-    cb(d);
+    window.onFirebaseUpdate(answers,state);
   });
 };
 
@@ -259,96 +247,81 @@ const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
 let PHASE_MINS=[10,20,20,20,15,5];
 const PHASE_LABELS=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 
-let secs,running=false,iv=null,stateIv=null;
-let mode='grp',phase=0,isAuth=false,done={},ans={};
+// App state
+let secs, running=false, iv=null, broadcastIv=null;
+let mode='grp', phase=0, isAuth=false, done={};
+let ans={};  // answers from firebase
 let selectedGroup=localStorage.getItem('sg')||'';
-let groupUnlocked=localStorage.getItem('gu')==='1';
-const directJoin=new URLSearchParams(window.location.search).get('join')==='1';
-let lastRemotePhase=-1; // track last synced phase
+let codeEntered=localStorage.getItem('ce')==='1';
+let groupChosen=localStorage.getItem('gc')==='1';
 
 function totalSecs(){return PHASE_MINS.reduce((a,b)=>a+b,0)*60;}
 secs=totalSecs();
 
-window.addEventListener('fbReady',()=>{
-  window.fbListen(d=>{
-    ans=d;
-    // Sync phase & timer for GROUP view
-    if(mode==='grp'&&d['__state__']){
-      const st=d['__state__'];
-      const remotePhase=st.phase;
-      const remoteSecs=st.secs;
-      // Update phase
-      if(typeof remotePhase==='number'&&remotePhase!==lastRemotePhase){
-        lastRemotePhase=remotePhase;
-        phase=remotePhase;
-        render();
-      }
-      // Sync timer (allow small drift, only sync if >5s difference)
-      if(typeof remoteSecs==='number'&&!isAuth){
-        const diff=Math.abs(secs-remoteSecs);
-        if(diff>5){secs=remoteSecs;upd();}
-      }
-    } else {
-      render();
+// Called every time Firebase updates
+window.onFirebaseUpdate=function(answers, state){
+  ans=answers;
+
+  // Only sync for group view
+  if(mode==='grp' && state){
+    const newPhase=state.phase;
+    const newSecs=state.secs;
+    let needRender=false;
+
+    if(typeof newPhase==='number' && newPhase!==phase){
+      phase=newPhase;
+      needRender=true;
+      console.log('Phase synced to '+phase);
     }
-  });
+
+    if(typeof newSecs==='number'){
+      const diff=Math.abs(secs-newSecs);
+      if(diff>8){
+        secs=newSecs;
+        upd();
+        console.log('Secs synced to '+secs);
+      }
+    }
+
+    if(needRender) render();
+  } else if(mode==='fac'||mode==='sum'){
+    // Just update answers display, don't change phase
+    render();
+  }
+};
+
+window.addEventListener('fbReady',()=>{
+  window.fbStartListening();
 });
 
-// Fac: broadcast state every 10 seconds while running
-function startStateBroadcast(){
-  if(stateIv)clearInterval(stateIv);
-  stateIv=setInterval(()=>{if(isAuth)window.fbSaveState(phase,secs);},10000);
-}
-
-function closeModal(id){document.getElementById(id).style.display='none';}
-function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
-function trySum(){if(isAuth)setMode('sum');else tryFac();}
-function checkPw(){
-  if(document.getElementById('pwInput').value===PASS){
-    isAuth=true;closeModal('loginOverlay');document.getElementById('pwInput').value='';setMode('fac');
-  } else {
-    document.getElementById('pwErr').textContent='Fel lösenord';
-    document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();
-  }
-}
-
-function openQR(){
-  const url=window.location.origin+window.location.pathname+'?join=1';
-  document.getElementById('qrModalDigits').textContent=JOIN_CODE;
-  document.getElementById('qrModalUrl').textContent=url;
-  const el=document.getElementById('qrModalCode');el.innerHTML='';
-  try{new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'});}
-  catch(e){el.textContent=url;}
-  document.getElementById('qrOverlay').style.display='flex';
-}
-
-function openTimeEditor(){
-  document.getElementById('timeEditor').innerHTML=PHASE_LABELS.map((l,i)=>
-    `<div class="time-row-e"><label>${l}</label><input type="number" id="te${i}" min="1" max="90" value="${PHASE_MINS[i]}"> min</div>`
-  ).join('');
-  updateTotalMins();
-  PHASE_LABELS.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updateTotalMins));
-  document.getElementById('timeOverlay').style.display='flex';
-}
-function updateTotalMins(){let t=0;PHASE_LABELS.forEach((_,i)=>{t+=parseInt(document.getElementById('te'+i).value)||0;});document.getElementById('totalMins').textContent=t;}
-function applyTimes(){
-  PHASE_LABELS.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
-  secs=totalSecs();running=false;clearInterval(iv);upd();renderChips();closeModal('timeOverlay');
-  if(isAuth)window.fbSaveState(phase,secs);
-}
-
+// ── TIMER ──
 function startT(){
-  if(running)return;running=true;
-  iv=setInterval(()=>{if(secs>0){secs--;upd();}else{clearInterval(iv);running=false;}},1000);
-  startStateBroadcast();
-  if(isAuth)window.fbSaveState(phase,secs);
+  if(running)return;
+  running=true;
+  iv=setInterval(()=>{
+    if(secs>0){secs--;upd();}
+    else{clearInterval(iv);running=false;}
+  },1000);
+  // Broadcast state every 5 seconds when running
+  if(broadcastIv)clearInterval(broadcastIv);
+  broadcastIv=setInterval(()=>{
+    if(isAuth&&running) window.fbSaveState(phase,secs);
+  },5000);
+  if(isAuth) window.fbSaveState(phase,secs);
 }
-function pauseT(){clearInterval(iv);running=false;if(isAuth)window.fbSaveState(phase,secs);}
-function resetT(){clearInterval(iv);running=false;secs=totalSecs();upd();if(isAuth)window.fbSaveState(phase,secs);}
-
+function pauseT(){
+  clearInterval(iv);running=false;
+  if(isAuth) window.fbSaveState(phase,secs);
+}
+function resetT(){
+  clearInterval(iv);running=false;
+  secs=totalSecs();upd();
+  if(isAuth) window.fbSaveState(phase,secs);
+}
 function upd(){
   const tot=totalSecs(),m=Math.floor(secs/60),s=secs%60;
   const el=document.getElementById('tdisp');
+  if(!el)return;
   el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
   el.className='tdisp'+(secs<300?' crit':secs<600?' warn':'');
   document.getElementById('pfill').style.width=`${((tot-secs)/tot*100).toFixed(1)}%`;
@@ -365,30 +338,58 @@ function renderChips(){
   }).join('');
 }
 
+// ── MODALS ──
+function closeModal(id){document.getElementById(id).style.display='none';}
+function tryFac(){document.getElementById('loginOverlay').style.display='flex';setTimeout(()=>document.getElementById('pwInput').focus(),100);}
+function trySum(){if(isAuth)setMode('sum');else tryFac();}
+function checkPw(){
+  if(document.getElementById('pwInput').value===PASS){
+    isAuth=true;closeModal('loginOverlay');document.getElementById('pwInput').value='';setMode('fac');
+  }else{
+    document.getElementById('pwErr').textContent='Fel lösenord';
+    document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();
+  }
+}
+function openQR(){
+  const url=window.location.origin+window.location.pathname+'?join=1';
+  document.getElementById('qrModalUrl').textContent=url;
+  const el=document.getElementById('qrModalCode');el.innerHTML='';
+  try{new QRCode(el,{text:url,width:150,height:150,colorDark:'#0F6E56',colorLight:'#ffffff'});}
+  catch(e){el.textContent=url;}
+  document.getElementById('qrOverlay').style.display='flex';
+}
+function openTimeEditor(){
+  document.getElementById('timeEditor').innerHTML=PHASE_LABELS.map((l,i)=>
+    `<div class="time-row-e"><label>${l}</label><input type="number" id="te${i}" min="1" max="90" value="${PHASE_MINS[i]}"> min</div>`
+  ).join('');
+  updateTotalMins();
+  PHASE_LABELS.forEach((_,i)=>document.getElementById('te'+i).addEventListener('input',updateTotalMins));
+  document.getElementById('timeOverlay').style.display='flex';
+}
+function updateTotalMins(){let t=0;PHASE_LABELS.forEach((_,i)=>{t+=parseInt(document.getElementById('te'+i).value)||0;});document.getElementById('totalMins').textContent=t;}
+function applyTimes(){
+  PHASE_LABELS.forEach((_,i)=>{PHASE_MINS[i]=parseInt(document.getElementById('te'+i).value)||PHASE_MINS[i];});
+  secs=totalSecs();running=false;clearInterval(iv);upd();closeModal('timeOverlay');
+  if(isAuth) window.fbSaveState(phase,secs);
+}
+
+// ── MODE ──
 function setMode(m){
   mode=m;
-  ['fac','grp','sum'].forEach((v,i)=>document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m));
+  ['fac','grp','sum'].forEach((v,i)=>
+    document.getElementById(['btnFac','btnGrp','btnSum'][i]).classList.toggle('active',v===m)
+  );
   document.getElementById('btnFac').textContent=isAuth?'✓ Facilitator':'🔒 Facilitator';
-  // Show/hide timer controls
-  const facCtrl=document.getElementById('tctrlFac');
-  const grpCtrl=document.getElementById('tctrlGrp');
-  if(m==='fac'||m==='sum'){
-    facCtrl.style.display='flex';grpCtrl.style.display='none';
-  } else {
-    facCtrl.style.display='none';
-    // grpCtrl shown by CSS media query on large screens
-    grpCtrl.style.display=''; // let CSS decide
-  }
+  // Timer controls: ONLY show in fac/sum mode, NEVER in grp
+  document.getElementById('tctrl').style.display=(m==='grp')?'none':'flex';
   render();
 }
 
 function go(i){
   phase=Math.max(0,Math.min(i,PHASE_LABELS.length-1));
-  renderChips();render();
-  if(isAuth){
-    window.fbSaveState(phase,secs);
-    lastRemotePhase=phase;
-  }
+  renderChips();
+  render();
+  if(isAuth) window.fbSaveState(phase,secs);
 }
 
 function ga(k){return ans[k]||'';}
@@ -407,36 +408,41 @@ async function sendAnswer(key,inputId,btnId,tagId){
 }
 
 function toggleInsights(id){
-  const body=document.getElementById('ib_'+id);
-  const tog=document.getElementById('it_'+id);
-  if(!body||!tog)return;
-  const open=body.classList.toggle('open');
-  tog.classList.toggle('open',open);
+  const b=document.getElementById('ib_'+id),t=document.getElementById('it_'+id);
+  if(!b||!t)return;
+  const o=b.classList.toggle('open');t.classList.toggle('open',o);
 }
 
+// ── RENDER ──
 function render(){
   const c=document.getElementById('mc');
+  if(!c)return;
   if(mode==='fac') c.innerHTML=renderFac();
   else if(mode==='grp') c.innerHTML=renderGrp();
   else c.innerHTML=renderSum();
   renderChips();
+  // Focus first code input if on code entry
+  setTimeout(()=>document.getElementById('c0')?.focus(),100);
 }
 
-function phaseNav(clickable=true){
+function phaseNav(clickable){
   return `<div class="pnav">${PHASE_LABELS.map((l,i)=>
-    `<div class="ppill${i===phase?' active':done[i]?' done':''}${!clickable?' nocursor':''}" ${clickable?`onclick="go(${i})"`:''}>
+    `<div class="ppill${i===phase?' active':done[i]?' done':''}${!clickable?' nocursor':''}"
+      ${clickable?`onclick="go(${i})"`:''}>
       ${l}<span style="opacity:.45;font-size:10px;margin-left:3px">${PHASE_MINS[i]}m</span>
     </div>`).join('')}</div>`;
 }
 
-// ===== GROUP VIEW =====
+// ── GROUP VIEW ──
 function renderGrp(){
-  if(directJoin&&!groupUnlocked) return renderGroupPicker();
-  if(!groupUnlocked) return renderCodeEntry();
-  if(phase===0||!groupUnlocked) return renderGroupPicker();
+  // Step 1: Must enter code
+  if(!codeEntered) return renderCodeEntry();
+  // Step 2: Must choose group
+  if(!groupChosen) return renderGroupPicker();
+  // Step 3: Show content based on synced phase
+  if(phase===0) return renderWaitingForFac();
   if(phase>=1&&phase<=4) return renderDelGrp(phase);
-  if(phase>=5) return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
-  return renderGroupPicker();
+  return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
 }
 
 function renderCodeEntry(){
@@ -444,10 +450,10 @@ function renderCodeEntry(){
     <h2>Välkommen!</h2>
     <div class="sub">Ange den 4-siffriga koden för att komma in</div>
     <div class="code-row">
-      <input type="tel" maxlength="1" id="c0" oninput="ci(0)" onkeydown="cb(event,0)">
-      <input type="tel" maxlength="1" id="c1" oninput="ci(1)" onkeydown="cb(event,1)">
-      <input type="tel" maxlength="1" id="c2" oninput="ci(2)" onkeydown="cb(event,2)">
-      <input type="tel" maxlength="1" id="c3" oninput="ci(3)" onkeydown="cb(event,3)">
+      <input type="tel" maxlength="1" id="c0" oninput="ci(0)" onkeydown="cb(event,0)" autocomplete="off">
+      <input type="tel" maxlength="1" id="c1" oninput="ci(1)" onkeydown="cb(event,1)" autocomplete="off">
+      <input type="tel" maxlength="1" id="c2" oninput="ci(2)" onkeydown="cb(event,2)" autocomplete="off">
+      <input type="tel" maxlength="1" id="c3" oninput="ci(3)" onkeydown="cb(event,3)" autocomplete="off">
     </div>
     <div class="merr" id="cErr"></div>
     <div class="divider">eller scanna QR-koden från projektorduken</div>
@@ -456,42 +462,60 @@ function renderCodeEntry(){
 function ci(i){
   const el=document.getElementById('c'+i);
   el.value=el.value.replace(/\D/,'').slice(-1);
-  if(el.value&&i<3)document.getElementById('c'+(i+1)).focus();
+  if(el.value&&i<3) document.getElementById('c'+(i+1)).focus();
   const code=['c0','c1','c2','c3'].map(id=>document.getElementById(id)?.value||'').join('');
   if(code.length===4){
-    if(code===JOIN_CODE){groupUnlocked=true;localStorage.setItem('gu','1');render();}
-    else{const e=document.getElementById('cErr');if(e)e.textContent='Fel kod – försök igen';['c0','c1','c2','c3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('c0')?.focus();}
+    if(code===JOIN_CODE){
+      codeEntered=true;
+      localStorage.setItem('ce','1');
+      render();
+    } else {
+      const e=document.getElementById('cErr');
+      if(e) e.textContent='Fel kod – försök igen';
+      ['c0','c1','c2','c3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+      document.getElementById('c0')?.focus();
+    }
   }
 }
 function cb(e,i){if(e.key==='Backspace'&&!document.getElementById('c'+i)?.value&&i>0)document.getElementById('c'+(i-1)).focus();}
 
 function renderGroupPicker(){
-  const st=ans['__state__'];
-  const facPhase=st&&typeof st.phase==='number'?st.phase:0;
   return `<div class="join-wrap"><div class="join-card">
     <h2>Välj din grupp</h2>
     <div class="sub">${selectedGroup?`Du är i <strong>${selectedGroup}</strong> – byt om du vill`:'Välj vilken grupp du tillhör'}</div>
     <div class="grp-select">${GROUPS.map(g=>`<button class="grp-btn${selectedGroup===g?' sel':''}" onclick="pickGrp('${g}')">${g}</button>`).join('')}</div>
-    <button class="lbtn" onclick="confirmGrp()">Gå in →</button>
-    ${selectedGroup?`<div class="cancel-link" style="margin-top:.65rem" onclick="skipToFacPhase()">Fortsätt som ${selectedGroup}</div>`:''}
+    <button class="lbtn" onclick="confirmGrp()" style="margin-top:.5rem">Gå in →</button>
   </div></div>`;
 }
-function pickGrp(g){selectedGroup=g;localStorage.setItem('sg',g);document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));}
+function pickGrp(g){
+  selectedGroup=g;
+  localStorage.setItem('sg',g);
+  document.querySelectorAll('.grp-btn').forEach(b=>b.classList.toggle('sel',b.textContent.trim()===g));
+}
 function confirmGrp(){
   if(!selectedGroup)return;
-  groupUnlocked=true;localStorage.setItem('gu','1');
-  skipToFacPhase();
-}
-function skipToFacPhase(){
-  // Always go to whatever phase facilitator is on
-  const st=ans['__state__'];
-  const fp=st&&typeof st.phase==='number'?st.phase:1;
-  phase=fp>0?fp:1;
-  lastRemotePhase=phase;
+  groupChosen=true;
+  localStorage.setItem('gc','1');
   render();
 }
 
-// ===== DEL DEFS =====
+function renderWaitingForFac(){
+  return `<div class="join-wrap"><div class="join-card">
+    <h2>Du är inne!</h2>
+    <div class="sub">Du är i <strong>${selectedGroup}</strong>. Väntar på att facilitatorn startar passet…</div>
+    <div style="margin-top:1rem;font-size:13px;color:#aaa"><span class="live-dot" style="vertical-align:middle"></span> Ansluten – synkar automatiskt</div>
+    <div style="margin-top:1.5rem">
+      <div class="cancel-link" onclick="resetGroupChoice()">Byt grupp</div>
+    </div>
+  </div></div>`;
+}
+function resetGroupChoice(){
+  groupChosen=false;selectedGroup='';
+  localStorage.removeItem('gc');localStorage.removeItem('sg');
+  render();
+}
+
+// ── DEFS ──
 const DEFS={
   1:{title:'Del 1 · Core Consulting Skills i praktiken',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
@@ -499,8 +523,8 @@ const DEFS={
       {h:'Diskutera 2',p:'Berätta om ett uppdrag där en soft skill – inte teknisk kompetens – avgjorde utfallet. Vad hände och vad lärde ni er?'},
       {h:'Diskutera 3',p:'Hur kopplar ni era Core Skills till de tre benen: Uppdrag/Kund, Kompetens, Sälj/Marknad? Vilket ben glömmer man lätt – och varför?'},
     ],
-    deliverable:'Välj <strong>1 skill</strong> ni är starka på som grupp + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
-    insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"','Kundförståelse = förstå bakomliggande behov, inte bara kravet'],
+    deliverable:'Välj <strong>1 skill</strong> ni är starka på + <strong>1 skill</strong> ni vill bli bättre på. Skriv kort varför.',
+    insights:['"Kommunikation är halva leveransen"','Kunden köper trygghet, inte bara timmar','Lyssnande är en teknisk skill','Soft skills syns mest när det krisar','"Rätt rapport i rätt tid > perfekt rapport för sent"'],
   },
   2:{title:'Del 2 · Konsultmässighet – eget varumärke',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
@@ -508,17 +532,17 @@ const DEFS={
       {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – t.ex. coacha en stressad kund, hantera konflikter, eller sälja in nästa fas?'},
       {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'},
     ],
-    deliverable:'Dela <strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet i praktiken.',
-    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Be om feedback – styrketecken','Du ÄR Combitech hos kunden'],
+    deliverable:'Dela <strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
+    insights:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','"Hur du avslutar minns folk lika länge"','Du ÄR Combitech hos kunden'],
   },
   3:{title:'Del 3 · Värdeskapande på obelagd tid',time:'Diskussion 12 min → Redovisning 8 min',
     questions:[
       {h:'Diskutera 1',p:'Vad gör ni faktiskt med obelagd tid? Vad borde man göra – och vad hindrar er i praktiken?'},
-      {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Varför underrapporterar konsulter, och vad kostar det för er och Combitech?'},
+      {h:'Diskutera 2',p:'"Jag är för feg för att tidrapportera det som är bestämt" – känner ni igen det? Varför underrapporterar konsulter, och vad kostar det?'},
       {h:'Diskutera 3',p:'Hur kan man skapa värde för Combitech och kunder utan att vara på ett aktivt uppdrag? Brainstorma konkreta exempel.'},
     ],
     deliverable:'<strong>1 konkret sak</strong> ni faktiskt kan göra nästa gång ni har obelagd tid.',
-    insights:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er','Rätt tidrapportering = ärlighet, inte girighet','Underrapportering döljer verkliga kostnader'],
+    insights:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, intern demo','Nätverka internt – ni vet inte vem som behöver er','Rätt tidrapportering = ärlighet, inte girighet'],
     extraNote:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
   },
   4:{title:'Del 4 · Många hattar – scenario',time:'Diskussion 10 min → Redovisning 5 min',
@@ -528,13 +552,13 @@ const DEFS={
       {h:'Scenario C',p:'Du hittar ett stort problem hos kunden utanför ditt uppdrag. Du är expert nog att se det – men det är formellt inte din uppgift. Vad gör du?'},
     ],
     deliverable:'Välj <strong>ett scenario</strong> – beskriv er bästa approach och varför just den.',
-    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation > teknisk lösning','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen','Konsultrollen = fler hattar än jobbtiteln'],
+    insights:['Psykologen i rummet är ofta det viktigaste jobbet','Transparent kommunikation > teknisk lösning','Flagga risker utanför uppdraget = extra värde','Kunden minns hur du hanterade krisen'],
     extraNote:'Inget rätt svar – poängen är att konsultrollen alltid är mer än jobbtiteln.',
   },
 };
 
-function insBlock(n,gid){
-  const d=DEFS[n],id=`${n}_${gid}`;
+function insBlock(n,uid){
+  const d=DEFS[n],id=`${n}_${uid}`;
   return `<div style="margin-top:.65rem">
     <div class="insights-toggle" id="it_${id}" onclick="toggleInsights('${id}')">Seniora insikter</div>
     <div class="insights-body" id="ib_${id}">${d.insights.map(i=>`<span class="ibadge">${i}</span>`).join('')}</div>
@@ -578,9 +602,9 @@ function renderDelGrp(n){
 }
 
 function renderFac(){
-  if(phase===0)return phaseNav()+renderIntroFac();
-  if(phase>=1&&phase<=4)return phaseNav()+renderDelFac(phase);
-  return phaseNav()+renderAvsl();
+  if(phase===0) return phaseNav(true)+renderIntroFac();
+  if(phase>=1&&phase<=4) return phaseNav(true)+renderDelFac(phase);
+  return phaseNav(true)+renderAvsl();
 }
 
 function renderDelFac(n){
@@ -598,7 +622,7 @@ function renderDelFac(n){
   const levHas=GROUPS.some(g=>ga(levKey(n,g)));
   return `<div class="card">
     <div class="ctitle">${d.title}</div>
-    <div class="csub">${d.time} &nbsp;·&nbsp; Kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
+    <div class="csub">${d.time} · Kod: <strong style="letter-spacing:.1em">${JOIN_CODE}</strong></div>
     ${d.extraNote?`<div class="fnote">${d.extraNote}</div>`:''}
     ${qBlocks}
     <div class="q-ans-block" style="border-color:#185FA5;margin-top:.5rem">
@@ -614,8 +638,7 @@ function renderDelFac(n){
 function renderIntroFac(){
   const tot=PHASE_MINS.reduce((a,b)=>a+b,0);
   return `
-  <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min) &nbsp;·&nbsp;
-  Deltagarnas kod: <strong style="font-size:18px;letter-spacing:.15em">${JOIN_CODE}</strong> &nbsp;–&nbsp; klicka <strong>📲 Visa kod</strong> för QR på projektor</div>
+  <div class="fnote">Facilitatorvy · Intro (${PHASE_MINS[0]} min) · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${JOIN_CODE}</strong> · klicka <strong>📲 Visa kod</strong> för QR på projektor</div>
   <div class="card">
     <div class="ctitle">Agenda – ${tot} min</div>
     <table class="stbl">${PHASE_LABELS.map((l,i)=>`<tr><td>${PHASE_MINS[i]} min</td><td>${l}</td></tr>`).join('')}</table>
@@ -635,7 +658,7 @@ function renderAvsl(){
   <div class="fnote">Avslut (${PHASE_MINS[5]} min) – Summera med kärnbudskapet nedan.</div>
   <div class="card">
     <div class="ctitle">Kärnbudskap</div>
-    <div class="qblock"><p>Konsultrollen är alltid fler hattar än jobbtiteln. Det är inte en nackdel – det är det som skapar verkligt värde.</p></div>
+    <div class="qblock"><p>Konsultrollen är alltid fler hattar än jobbtiteln – det är det som skapar verkligt värde.</p></div>
     <div class="qblock"><p>Att rapportera rätt är ärlighet mot sig själv och Combitech. Obelagd tid är investeringstid.</p></div>
     <div class="qblock"><p>De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
   </div>
@@ -684,11 +707,13 @@ function exportAnswers(){
     txt+='\n';
   }
   const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grc-workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='grc-workshop-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
 }
 
-upd();render();
-setTimeout(()=>document.getElementById('c0')?.focus(),200);
+// Init
+upd();
+render();
 </script>
 </body>
 </html>
