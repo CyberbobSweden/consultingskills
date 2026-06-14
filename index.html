@@ -208,7 +208,7 @@ const COL = db.collection("grc-v8");
 function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true}).catch(e=>updDebug('✗ SKRIV-FEL: '+e.code+' – '+e.message)); }
 function fbSaveState(ph, sc){
   const _t=setTimeout(()=>updDebug('✗ TIMEOUT vid skrivning (fas='+ph+') – servern svarar inte. Troligen blockerad av brandvägg/nätverk.'),5000);
-  COL.doc("__st__").set({phase:ph, secs:sc, ts:Date.now()})
+  COL.doc("state").set({phase:ph, secs:sc, ts:Date.now()})
     .then(()=>{clearTimeout(_t); updDebug('✓ Skrivet till server: fas='+ph+' sek='+sc+' kl '+new Date().toLocaleTimeString('sv-SE'));})
     .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (state): '+e.code+' – '+e.message);});
 }
@@ -216,7 +216,7 @@ function fbSaveState(ph, sc){
 function testFB(){
   updDebug('testar (server, 5s timeout)...');
   const _t=setTimeout(()=>updDebug('\u2717 TIMEOUT (5s) \u2013 ingen kontakt med Firestore-servern. Troligen blockerad av n\u00e4tverk/brandv\u00e4gg p\u00e5 detta n\u00e4tverk.'),5000);
-  COL.doc('__st__').get({source:'server'}).then(d=>{
+  COL.doc('state').get({source:'server'}).then(d=>{
     clearTimeout(_t);
     updDebug('\u2713 SERVER OK \u00b7 finns='+d.exists+' \u00b7 '+JSON.stringify(d.data()||{}));
   }).catch(e=>{
@@ -233,11 +233,11 @@ function updDebug(extra){
 COL.onSnapshot(snap => {
   const a = {}, state = {phase:null, secs:null};
   snap.forEach(d => {
-    if(d.id==='__st__'){ const x=d.data(); state.phase=x.phase; state.secs=x.secs; }
+    if(d.id==='state'){ const x=d.data(); state.phase=x.phase; state.secs=x.secs; }
     else a[d.id] = d.data().text||'';
   });
   ANS = a;
-  updDebug('lyssnar (cache) · __st__ fas='+state.phase+' sek='+state.secs+' · '+new Date().toLocaleTimeString('sv-SE'));
+  updDebug('lyssnar (cache) · state fas='+state.phase+' sek='+state.secs+' · '+new Date().toLocaleTimeString('sv-SE'));
   onUpdate(state);
 }, err => {
   updDebug('✗ FEL: '+err.code+' – '+err.message);
