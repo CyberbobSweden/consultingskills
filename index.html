@@ -198,7 +198,7 @@ const fb = firebase.initializeApp({
   projectId:"consultingskills-938d9"
 });
 const db = firebase.firestore();
-const COL = db.collection("grc-v7");
+const COL = db.collection("grc-v8");
 
 function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true}).catch(e=>console.error(e)); }
 function fbSaveState(ph, sc){ COL.doc("__st__").set({phase:ph, secs:sc, ts:Date.now()}).catch(e=>console.error(e)); }
@@ -220,7 +220,7 @@ const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
 let PM=[10,20,20,20,15,5]; // phase minutes
 const PL=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 
-let secs, run=false, iv=null, biv=null;
+let secs, run=false, iv=null;
 let MODE='grp', PHASE=0, AUTH=false, DONE={};
 let ANS={};
 let codeOK = localStorage.getItem('ce')==='1';
@@ -230,16 +230,24 @@ let SEL    = localStorage.getItem('sg')||'';
 // Restore fac auth
 if(sessionStorage.getItem('fa')==='1'){ AUTH=true; }
 
-function totS(){ return PM.reduce((a,b)=>a+b,0)*60; }
-secs = totS();
+secs = PM[PHASE]*60; // per-phase countdown
 
 // Called every time Firestore updates
 function onUpdate(state){
-  if(MODE==='grp' && state.phase !== null){
-    let changed = false;
-    if(state.phase !== PHASE){ PHASE=state.phase; changed=true; }
-    if(state.secs !== null && Math.abs(secs-state.secs)>8){ secs=state.secs; updTimer(); }
-    if(changed) render(); else patchFacAnswers();
+  if(MODE==='grp'){
+    if(state.phase !== null && state.phase !== undefined){
+      if(state.phase !== PHASE){
+        // Phase changed by facilitator -> jump there
+        PHASE = state.phase;
+        secs  = (state.secs!=null) ? state.secs : PM[PHASE]*60;
+        render();
+        return;
+      }
+      if(state.secs!=null && Math.abs(secs-state.secs)>2){
+        secs = state.secs;
+        updTimer();
+      }
+    }
   } else {
     patchFacAnswers();
   }
@@ -261,31 +269,36 @@ function patchFacAnswers(){
   });
 }
 
-// ── TIMER ──
+// ── TIMER (per-phase countdown) ──
 function startT(){
   if(run)return; run=true;
-  iv=setInterval(()=>{ if(secs>0){secs--;updTimer();}else{clearInterval(iv);run=false;} },1000);
-  if(biv)clearInterval(biv);
-  biv=setInterval(()=>{ if(AUTH&&run) fbSaveState(PHASE,secs); },5000);
+  iv=setInterval(()=>{
+    if(secs>0){
+      secs--; updTimer();
+      if(AUTH && secs%3===0) fbSaveState(PHASE,secs);
+    } else {
+      clearInterval(iv); run=false;
+      if(AUTH) fbSaveState(PHASE,secs);
+    }
+  },1000);
   if(AUTH) fbSaveState(PHASE,secs);
 }
 function pauseT(){ clearInterval(iv); run=false; if(AUTH) fbSaveState(PHASE,secs); }
-function resetT(){ clearInterval(iv); run=false; secs=totS(); updTimer(); if(AUTH) fbSaveState(PHASE,secs); }
+function resetT(){ clearInterval(iv); run=false; secs=PM[PHASE]*60; updTimer(); if(AUTH) fbSaveState(PHASE,secs); }
 function updTimer(){
-  const tot=totS(), m=Math.floor(secs/60), s=secs%60;
+  const tot=PM[PHASE]*60, m=Math.floor(secs/60), s=secs%60;
   const el=document.getElementById('tnum'); if(!el)return;
   el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
-  el.className='tnum'+(secs<300?' r':secs<600?' w':'');
-  document.getElementById('pf').style.width=`${((tot-secs)/tot*100).toFixed(1)}%`;
+  el.className='tnum'+(secs<60?' r':secs<180?' w':'');
+  document.getElementById('pf').style.width=`${Math.min(100,Math.max(0,((tot-secs)/tot*100))).toFixed(1)}%`;
   updChips();
 }
 function updChips(){
-  const tot=totS(), el=tot-secs; let c=0;
   const row=document.getElementById('chips'); if(!row)return;
   row.innerHTML=PL.map((l,i)=>{
-    const s0=c*60; c+=PM[i]; const e=c*60;
-    const act=el>=s0&&el<e, rem=Math.max(0,e-el), rm=Math.floor(rem/60), rs=rem%60;
-    return `<div class="chip${act?' on':''}"><span>${act?rm+':'+rs.toString().padStart(2,'0'):PM[i]+'m'}</span><span>${l}</span></div>`;
+    const act=(i===PHASE);
+    const label=act ? (Math.floor(secs/60)+':'+(secs%60).toString().padStart(2,'0')) : PM[i]+'m';
+    return `<div class="chip${act?' on':''}"><span>${label}</span><span>${l}</span></div>`;
   }).join('');
 }
 
@@ -321,7 +334,9 @@ function showTimeEd(){
 function updTot(){ let t=0; PL.forEach((_,i)=>{ t+=parseInt(document.getElementById('te'+i).value)||0; }); document.getElementById('te-tot').textContent=t; }
 function applyT(){
   PL.forEach((_,i)=>{ PM[i]=parseInt(document.getElementById('te'+i).value)||PM[i]; });
-  secs=totS(); run=false; clearInterval(iv); updTimer(); hide('ov-time');
+  clearInterval(iv); run=false;
+  secs=PM[PHASE]*60;
+  updTimer(); hide('ov-time');
   if(AUTH) fbSaveState(PHASE,secs);
 }
 
@@ -337,7 +352,10 @@ function setMode(m){
 
 function go(i){
   PHASE=Math.max(0,Math.min(i,PL.length-1));
-  updChips(); render();
+  clearInterval(iv); run=false;
+  secs=PM[PHASE]*60;
+  updTimer();
+  render();
   if(AUTH) fbSaveState(PHASE,secs);
 }
 
