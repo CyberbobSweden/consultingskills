@@ -188,6 +188,7 @@ footer strong{font-size:10px;color:white;letter-spacing:.05em}
 </div>
 <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
 <main id="main"></main>
+<div id="fbdebug" style="text-align:center;font-size:10px;color:#aaa;padding:3px;background:#fafafa;border-top:1px solid #eee">Firestore: ansluter…</div>
 <footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v8</span></footer>
 
 <!-- Firebase via CDN (non-module, using compat) -->
@@ -203,10 +204,14 @@ const fb = firebase.initializeApp({
 const db = firebase.firestore();
 const COL = db.collection("grc-v8");
 
-function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true}).catch(e=>console.error(e)); }
-function fbSaveState(ph, sc){ COL.doc("__st__").set({phase:ph, secs:sc, ts:Date.now()}).catch(e=>console.error(e)); }
+function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true}).catch(e=>updDebug('✗ SKRIV-FEL: '+e.code+' – '+e.message)); }
+function fbSaveState(ph, sc){ COL.doc("__st__").set({phase:ph, secs:sc, ts:Date.now()}).catch(e=>updDebug('✗ SKRIV-FEL (state): '+e.code+' – '+e.message)); }
 
-// Single persistent listener
+// Single persistent listener (with debug status)
+function updDebug(extra){
+  const el=document.getElementById('fbdebug');
+  if(el) el.textContent='Firestore: '+(extra||'');
+}
 COL.onSnapshot(snap => {
   const a = {}, state = {phase:null, secs:null};
   snap.forEach(d => {
@@ -214,7 +219,10 @@ COL.onSnapshot(snap => {
     else a[d.id] = d.data().text||'';
   });
   ANS = a;
+  updDebug('✓ ansluten · __st__ fas='+state.phase+' sek='+state.secs+' · '+new Date().toLocaleTimeString('sv-SE'));
   onUpdate(state);
+}, err => {
+  updDebug('✗ FEL: '+err.code+' – '+err.message);
 });
 
 // ── APP STATE ──
