@@ -314,9 +314,11 @@ if(sessionStorage.getItem('fa')==='1'){ AUTH=true; }
 secs = PM[PHASE]*60; // per-phase countdown
 
 // Called every time Firestore updates
+let LAST_STATE_PM=null;
 function onUpdate(state){
   if(MODE==='grp'){
     if(state.phase !== null && state.phase !== undefined){
+      LAST_STATE_PM = state.pm;
       updDebug('grp · mottagen fas='+state.phase+' · state.pm='+JSON.stringify(state.pm)+' · PM(min)='+JSON.stringify(PM)+' · '+new Date().toLocaleTimeString('sv-SE'));
       // Sync phase-time settings (PM) if facilitator changed them
       let pmChanged=false;
@@ -629,6 +631,7 @@ function rDelGrp(n){
   const lkey=lk(n,SEL), liid=`lv${n}`, lbid=`lb${n}`, ltid=`lt${n}`;
   const uid=`${n}g`;
   return `<div class="sb"><span class="ld"></span>&nbsp;Synkad – ${d.t} · tider(min): ${PM.join('/')}</div>
+    <div style="font-size:10px;color:#bbb;margin-bottom:.5rem">debug: senast mottaget state.pm=${JSON.stringify(LAST_STATE_PM)} | PM i minnet=${JSON.stringify(PM)}</div>
     ${nav(false)}
     <div class="card">
       <div class="ct">${d.t} <span style="font-size:11px;font-weight:400;color:#0F6E56">${SEL}</span></div>
