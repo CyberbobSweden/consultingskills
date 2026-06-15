@@ -209,7 +209,7 @@ footer strong{font-size:10px;color:white;letter-spacing:.05em}
 <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
 <main id="main"></main>
 <div id="fbdebug" style="text-align:center;font-size:10px;color:#aaa;padding:3px;background:#fafafa;border-top:1px solid #eee">Firestore: ansluter…</div>
-<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v9, little meatball</span></footer>
+<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v10, little meatball</span></footer>
 
 <!-- Firebase via CDN (non-module, using compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -230,6 +230,12 @@ function fbSaveState(ph, sc){
   COL.doc("state").set({phase:ph, secs:sc, pm:PM.slice(), ts:Date.now()}, {merge:true})
     .then(()=>{clearTimeout(_t); updDebug('✓ Skrivet till server: fas='+ph+' sek='+sc+' pm='+JSON.stringify(PM)+' kl '+new Date().toLocaleTimeString('sv-SE'));})
     .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (state): '+e.code+' – '+e.message);});
+}
+function fbSavePM(){
+  const _t=setTimeout(()=>updDebug('✗ TIMEOUT vid skrivning av tider'),5000);
+  COL.doc("pm").set({values:PM.slice(), ts:Date.now()})
+    .then(()=>{clearTimeout(_t); updDebug('✓ Tider sparade: '+JSON.stringify(PM)+' kl '+new Date().toLocaleTimeString('sv-SE'));})
+    .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (pm): '+e.code+' – '+e.message);});
 }
 
 const TERMS={
@@ -283,13 +289,19 @@ function updDebug(extra){
   if(el) el.textContent='Firestore: '+(extra||'');
 }
 COL.onSnapshot(snap => {
-  const a = {}, state = {phase:null, secs:null};
+  const a = {};
+  let stateDoc=null, pmDoc=null;
   snap.forEach(d => {
-    if(d.id==='state'){ const x=d.data(); state.phase=x.phase; state.secs=x.secs; }
+    if(d.id==='state') stateDoc=d.data();
+    else if(d.id==='pm') pmDoc=d.data();
     else a[d.id] = d.data().text||'';
   });
   ANS = a;
-  updDebug('lyssnar (cache) · state fas='+state.phase+' sek='+state.secs+' · '+new Date().toLocaleTimeString('sv-SE'));
+  const state = {phase:null, secs:null, pm:null};
+  if(stateDoc){ state.phase=stateDoc.phase; state.secs=stateDoc.secs; }
+  if(pmDoc && Array.isArray(pmDoc.values)) state.pm=pmDoc.values;
+  else if(stateDoc && Array.isArray(stateDoc.pm)) state.pm=stateDoc.pm;
+  updDebug('lyssnar (cache) · state fas='+state.phase+' sek='+state.secs+' pm='+JSON.stringify(state.pm)+' · '+new Date().toLocaleTimeString('sv-SE'));
   onUpdate(state);
 }, err => {
   updDebug('✗ FEL: '+err.code+' – '+err.message);
@@ -444,7 +456,7 @@ function applyT(){
   clearInterval(iv); run=false;
   secs=PM[PHASE]*60;
   updTimer(); hide('ov-time');
-  if(AUTH) fbSaveState(PHASE,secs);
+  if(AUTH){ fbSaveState(PHASE,secs); fbSavePM(); }
 }
 
 // ── MODE ──
