@@ -51,6 +51,9 @@ main{padding:1rem 1.5rem;max-width:900px;margin:0 auto;width:100%;flex:1}
 .np.cl{cursor:pointer}
 .np.done::after{content:" ✓"}
 .card{background:white;border:1px solid #e8e8e4;border-radius:10px;padding:.95rem 1.2rem;margin-bottom:.75rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.hero{background:linear-gradient(135deg,#0F6E56,#185FA5);border-radius:10px;padding:1rem 1.2rem;margin-bottom:.75rem;color:white;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.hero h2{font-size:15px;font-weight:700;margin-bottom:.35rem}
+.hero p{font-size:13px;line-height:1.55;opacity:.95}
 .ct{font-size:14px;font-weight:600;margin-bottom:.15rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .cs{font-size:11px;color:#888;margin-bottom:.75rem}
 .qb2{background:#f7f7f4;border-radius:8px;padding:.75rem 1rem;margin-bottom:.6rem;border-left:3px solid #0F6E56}
@@ -293,7 +296,7 @@ COL.onSnapshot(snap => {
 
 // ── APP STATE ──
 const PASS='cyberbob', CODE='1234';
-const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5'];
+const GROUPS=['Grupp 1','Grupp 2','Grupp 3','Grupp 4','Grupp 5','Grupp 6'];
 let PM=[10,20,20,20,15,5]; // phase minutes
 const PL=['Intro','Del 1','Del 2','Del 3','Del 4','Avslut'];
 
@@ -485,7 +488,18 @@ function rGrp(){
   if(!grpOK)  return rGrpPick();
   if(PHASE===0) return rWait();
   if(PHASE>=1&&PHASE<=4) return rDelGrp(PHASE);
-  return `<div class="card"><div class="empty">Passet är slut – tack för idag! 🎉</div></div>`;
+  return rAvslGrp();
+}
+function rAvslGrp(){
+  return `<div class="sb"><span class="ld"></span>&nbsp;Tack för era diskussioner och leveranser idag! 🎉</div>
+  <div class="card"><div class="ct">Kärnbudskap</div>
+    <div class="qb2"><p>Konsultrollen är alltid fler hattar än jobbtiteln – det är det som skapar verkligt värde.</p></div>
+    <div class="qb2"><p>Att rapportera rätt är ärlighet mot sig själv och Combitech. Obelagd tid är investeringstid.</p></div>
+    <div class="qb2"><p>De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
+  </div>
+  <div class="card"><div class="ct">Vad händer nu?</div>
+    <div class="qb2"><p>Era svar och leveranser är sparade. Facilitatorn samlar ihop allt, och de bästa idéerna och förslagen tas vidare och följs upp – så att de kommer till nytta för hela gruppen.</p></div>
+  </div>`;
 }
 function rCode(){
   return `<div class="jw"><div class="jc">
@@ -522,7 +536,11 @@ function rGrpPick(){
 function pickG(g){ SEL=g; localStorage.setItem('sg',g); document.querySelectorAll('.gb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===g)); }
 function confG(){ if(!SEL)return; grpOK=true; localStorage.setItem('gc','1'); render(); }
 function rWait(){
-  return `<div class="jw"><div class="jc">
+  return `<div class="hero">
+    <h2>🚀 Välkommen till 2026!</h2>
+    <p>Glöm PowerPoint-bilder från 2014 – det här är en levande, digital workshop. Era svar och idéer dyker upp live på skärmen, direkt från mobilen. Häng kvar – facilitatorn startar strax!</p>
+  </div>
+  <div class="jw"><div class="jc">
     <h2>Du är inne!</h2>
     <div class="sub">Du är i <strong>${SEL}</strong>.<br>Väntar på att facilitatorn startar…</div>
     <div style="margin-top:1rem;font-size:13px;color:#aaa"><span class="ld"></span> Ansluten – synkar automatiskt</div>
@@ -559,7 +577,7 @@ const DEFS={
     ],
     del:'<strong>1 konkret sak</strong> ni kan göra nästa gång ni har obelagd tid.',
     ins:['Obelagd tid = investeringstid','One-pagers, LinkedIn, offertarbete','Certifikat, studiegrupp, demo','Rätt tidrapportering = ärlighet, inte girighet'],
-    extra:'Exempel: säljstöd, kunskapsdelning, metoddok, rekrytering, kundanalys, demo-bygge',
+    extra:'Exempel: one-pagers, LinkedIn-inlägg, nätverka internt &amp; externt, omvärldsbevakning, kompetensdelning, säljstöd, kundanalys, metoddok',
   },
   4:{t:'Del 4 · Många hattar – scenario',ti:'Diskussion 10 min → Redovisning 5 min',
     qs:[
@@ -644,7 +662,11 @@ function rDelFac(n){
 }
 function rIntro(){
   const tot=PM.reduce((a,b)=>a+b,0);
-  return `<div class="fnote">Facilitatorvy · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${CODE}</strong> · klicka 📲 Visa kod för QR på projektor</div>
+  return `<div class="hero">
+    <h2>🚀 Välkommen till 2026!</h2>
+    <p>Glöm PowerPoint-bilder från 2014 – det här är en levande, digital workshop. Era svar och idéer dyker upp här live på skärmen, direkt från mobilen. Skanna koden, hoppa in och kör igång!</p>
+  </div>
+  <div class="fnote">Facilitatorvy · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${CODE}</strong> · klicka 📲 Visa kod för QR på projektor</div>
   <div class="card">
     <div class="ct">Agenda – ${tot} min</div>
     <table class="stbl">${PL.map((l,i)=>`<tr><td>${PM[i]} min</td><td>${l}</td></tr>`).join('')}</table>
