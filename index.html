@@ -318,8 +318,11 @@ function onUpdate(state){
   if(MODE==='grp'){
     if(state.phase !== null && state.phase !== undefined){
       // Sync phase-time settings (PM) if facilitator changed them
+      let pmChanged=false;
       if(Array.isArray(state.pm)){
-        for(let i=0;i<PM.length;i++){ if(typeof state.pm[i]==='number') PM[i]=state.pm[i]; }
+        for(let i=0;i<PM.length;i++){
+          if(typeof state.pm[i]==='number' && PM[i]!==state.pm[i]){ PM[i]=state.pm[i]; pmChanged=true; }
+        }
       }
       if(state.phase !== PHASE){
         // Phase changed by facilitator -> jump there
@@ -328,11 +331,15 @@ function onUpdate(state){
         render();
         return;
       }
+      if(pmChanged){
+        // PM values changed -> full rebuild so the phase-pills show correct times
+        if(state.secs!=null) secs=state.secs;
+        render();
+        return;
+      }
       if(state.secs!=null && Math.abs(secs-state.secs)>2){
         secs = state.secs;
         updTimer();
-      } else {
-        updChips(); updTotal();
       }
     }
   } else {
