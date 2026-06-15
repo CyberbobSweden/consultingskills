@@ -209,7 +209,7 @@ footer strong{font-size:10px;color:white;letter-spacing:.05em}
 <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
 <main id="main"></main>
 <div id="fbdebug" style="text-align:center;font-size:10px;color:#aaa;padding:3px;background:#fafafa;border-top:1px solid #eee">Firestore: ansluter…</div>
-<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v8</span></footer>
+<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v8, lite meatball</span></footer>
 
 <!-- Firebase via CDN (non-module, using compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -236,7 +236,8 @@ const TERMS={
   kund:{t:'Kundförståelse & problemlösning', d:'Att förstå kundens verkliga behov och ställa relevanta frågor är avgörande för att lösa rätt problem.'},
   komm:{t:'Kommunikation & anpassning', d:'Konsulter måste anpassa sitt språk och förklara komplex information tydligt för olika mottagare.'},
   prof:{t:'Professionalism & ansvar', d:'Att hålla löften, vara transparent och ta ansvar är centralt för en uppskattad konsultroll.'},
-  varde:{t:'Värdeskapande', d:'Att gå utöver det som efterfrågas och bidra med insikter eller förslag som skapar extra nytta för kunden – inte bara leverera det som beställts.'}
+  varde:{t:'Värdeskapande', d:'Att gå utöver det som efterfrågas och bidra med insikter eller förslag som skapar extra nytta för kunden – inte bara leverera det som beställts.'},
+  linje:{t:'Konsultroll vs linjeroll', d:'Konsultroll: du jobbar som konsult, ofta hos olika kunder och uppdrag – med varierande uppgifter och miljöer.\n\nLinjeroll: du har en fast plats i en organisation. Kan vara en enklare roll som handläggare, koordinator eller specialist – eller mer seniora roller som GRC-ansvarig, säkerhetschef, IT-chef eller verksamhetsutvecklare, hos ett företag eller en myndighet.'}
 };
 function showTerm(k){
   const x=TERMS[k]; if(!x)return;
@@ -564,7 +565,7 @@ const DEFS={
     qs:[
       {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden?'},
       {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – coacha kund, hantera konflikter, sälja in nästa fas?'},
-      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot linjeroll? Vad saknar ni – och vad uppskattar ni mest?'},
+      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot <span class="term" onclick="showTerm(\'linje\')">linjeroll</span>? Vad saknar ni – och vad uppskattar ni mest?'},
     ],
     del:'<strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
     ins:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','Du ÄR Combitech hos kunden'],
@@ -608,6 +609,7 @@ function rDelGrp(n){
     <div class="card">
       <div class="ct">${d.t} <span style="font-size:11px;font-weight:400;color:#0F6E56">${SEL}</span></div>
       <div class="cs">${d.ti}</div>
+      ${d.extra?`<div class="fnote">${d.extra}</div>`:''}
       ${qs}
       <div class="db">
         <h4>📌 Leverans – detta redovisar ni för hela rummet</h4>
@@ -687,7 +689,11 @@ function rAvsl(){
     <div class="qb2"><p>De bästa konsulterna vet när de ska vara psykolog, expert, säljare – och när de ska ringa chefen.</p></div>
   </div>
   <div class="card"><div class="ct">Uppföljning</div>
-    <textarea placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" style="min-height:75px"></textarea>
+    <textarea id="uppf" placeholder="Vad ska följas upp? Vad fastnade? Vem gör vad?" style="min-height:75px">${ga('uppfoljning')}</textarea>
+    <div class="sr">
+      <button class="btn-g" id="uppfb" onclick="send('uppfoljning','uppf','uppfb','uppft')">Spara</button>
+      <span class="stag" id="uppft">✓ Sparat!</span>
+    </div>
     <div style="margin-top:.65rem;display:flex;gap:.5rem;flex-wrap:wrap">
       <button class="nb" onclick="setMode('sum')">Visa summering →</button>
       <button class="eb" onclick="exportA()">⬇ Exportera (.txt)</button>
@@ -717,6 +723,10 @@ function rSum(){
     h+=`</div>`;
   }
   if(!any)h+=`<div class="card"><div class="empty">Inga svar inkomna ännu.</div></div>`;
+  const uppf=ga('uppfoljning');
+  if(uppf){
+    h+=`<div class="card"><div class="ct">📋 Uppföljning</div><div class="qb2"><p>${uppf}</p></div></div>`;
+  }
   return h;
 }
 function exportA(){
@@ -727,6 +737,8 @@ function exportA(){
     const lf=GROUPS.filter(g=>ga(lk(n,g)));if(lf.length){t+='\n  LEVERANS:\n';lf.forEach(g=>{t+='    '+g+': '+ga(lk(n,g))+'\n';});}
     t+='\n';
   }
+  const uppf=ga('uppfoljning');
+  if(uppf) t+='UPPFÖLJNING:\n  '+uppf+'\n\n';
   const blob=new Blob([t],{type:'text/plain;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grc-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
 }
