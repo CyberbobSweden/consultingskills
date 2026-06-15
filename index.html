@@ -329,12 +329,14 @@ function onUpdate(state){
         PHASE = state.phase;
         secs  = (state.secs!=null) ? state.secs : PM[PHASE]*60;
         render();
+        updTimer();
         return;
       }
       if(pmChanged){
         // PM values changed -> full rebuild so the phase-pills show correct times
         if(state.secs!=null) secs=state.secs;
         render();
+        updTimer(); // also refresh top chips bar (#chips is outside #main)
         return;
       }
       if(state.secs!=null && Math.abs(secs-state.secs)>2){
