@@ -395,6 +395,7 @@ function updChips(){
     const label=act ? (Math.floor(secs/60)+':'+(secs%60).toString().padStart(2,'0')) : PM[i]+'m';
     return `<div class="chip${act?' on':''}"><span>${label}</span><span>${l}</span></div>`;
   }).join('');
+  updNav();
 }
 
 // ── MODALS ──
@@ -485,8 +486,14 @@ function render(){
 function nav(click){
   return `<div class="nav">${PL.map((l,i)=>
     `<div class="np${i===PHASE?' on':DONE[i]?' done':''}${click?' cl':''}" ${click?`onclick="go(${i})"`:''}>
-      ${l}<span style="opacity:.4;font-size:10px;margin-left:3px">${PM[i]}m</span>
+      ${l}<span id="navm${i}" style="opacity:.4;font-size:10px;margin-left:3px">${PM[i]}m</span>
     </div>`).join('')}</div>`;
+}
+function updNav(){
+  for(let i=0;i<PL.length;i++){
+    const el=document.getElementById('navm'+i);
+    if(el) el.textContent=PM[i]+'m';
+  }
 }
 
 // ── GROUP ──
@@ -547,6 +554,7 @@ function rWait(){
     <h2>🚀 Välkommen till 2026!</h2>
     <p>Glöm PowerPoint-bilder från 2014 – det här är en levande, digital workshop. Era svar och idéer dyker upp live på skärmen, direkt från mobilen. Häng kvar – facilitatorn startar strax!</p>
   </div>
+  <div class="fnote">💡 Tips: diskutera frågorna tillsammans i gruppen – men låt <strong>en person</strong> skriva och skicka in svaret. Det är det senast skickade svaret per fråga som sparas, så undvik att flera skriver samtidigt.</div>
   <div class="jw"><div class="jc">
     <h2>Du är inne!</h2>
     <div class="sub">Du är i <strong>${SEL}</strong>.<br>Väntar på att facilitatorn startar…</div>
@@ -675,6 +683,7 @@ function rIntro(){
     <p>Glöm PowerPoint-bilder från 2014 – det här är en levande, digital workshop. Era svar och idéer dyker upp här live på skärmen, direkt från mobilen. Skanna koden, hoppa in och kör igång!</p>
   </div>
   <div class="fnote">Facilitatorvy · Deltagarnas kod: <strong style="font-size:16px;letter-spacing:.15em">${CODE}</strong> · klicka 📲 Visa kod för QR på projektor</div>
+  <div class="fnote">💡 Tips till grupperna: diskutera frågorna tillsammans – men låt <strong>en person</strong> skriva och skicka in svaret. Det är det senast skickade svaret per fråga som sparas, så undvik att flera skriver i samma ruta samtidigt.</div>
   <div class="card">
     <div class="ct">Agenda – ${tot} min</div>
     <table class="stbl">${PL.map((l,i)=>`<tr><td>${PM[i]} min</td><td>${l}</td></tr>`).join('')}</table>
