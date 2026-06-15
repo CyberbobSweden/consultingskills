@@ -209,7 +209,7 @@ footer strong{font-size:10px;color:white;letter-spacing:.05em}
 <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
 <main id="main"></main>
 <div id="fbdebug" style="text-align:center;font-size:10px;color:#aaa;padding:3px;background:#fafafa;border-top:1px solid #eee">Firestore: ansluter…</div>
-<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v8, lite meatball</span></footer>
+<footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v8, little meatball</span></footer>
 
 <!-- Firebase via CDN (non-module, using compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -227,7 +227,7 @@ const COL = db.collection("grc-v8");
 function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true}).catch(e=>updDebug('✗ SKRIV-FEL: '+e.code+' – '+e.message)); }
 function fbSaveState(ph, sc){
   const _t=setTimeout(()=>updDebug('✗ TIMEOUT vid skrivning (fas='+ph+') – servern svarar inte. Troligen blockerad av brandvägg/nätverk.'),5000);
-  COL.doc("state").set({phase:ph, secs:sc, ts:Date.now()})
+  COL.doc("state").set({phase:ph, secs:sc, pm:PM.slice(), ts:Date.now()})
     .then(()=>{clearTimeout(_t); updDebug('✓ Skrivet till server: fas='+ph+' sek='+sc+' kl '+new Date().toLocaleTimeString('sv-SE'));})
     .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (state): '+e.code+' – '+e.message);});
 }
@@ -237,7 +237,7 @@ const TERMS={
   komm:{t:'Kommunikation & anpassning', d:'Konsulter måste anpassa sitt språk och förklara komplex information tydligt för olika mottagare.'},
   prof:{t:'Professionalism & ansvar', d:'Att hålla löften, vara transparent och ta ansvar är centralt för en uppskattad konsultroll.'},
   varde:{t:'Värdeskapande', d:'Att gå utöver det som efterfrågas och bidra med insikter eller förslag som skapar extra nytta för kunden – inte bara leverera det som beställts.'},
-  linje:{t:'Konsultroll vs linjeroll', d:'Konsultroll: du jobbar som konsult, ofta hos olika kunder och uppdrag – med varierande uppgifter och miljöer.\n\nLinjeroll: du har en fast plats i en organisation. Kan vara en enklare roll som handläggare, koordinator eller specialist – eller mer seniora roller som GRC-ansvarig, säkerhetschef, IT-chef eller verksamhetsutvecklare, hos ett företag eller en myndighet.'}
+  linje:{t:'Konsultroll vs linjeroll', d:'Konsultroll: du jobbar som konsult, ofta hos olika kunder och uppdrag – med varierande uppgifter och miljöer.\n\nLinjeroll: du har en fast plats i en organisation, t.ex. som handläggare, koordinator, specialist, GRC-ansvarig, säkerhetschef, IT-chef eller verksamhetsutvecklare hos ett företag eller en myndighet.'}
 };
 function showTerm(k){
   const x=TERMS[k]; if(!x)return;
@@ -317,6 +317,10 @@ secs = PM[PHASE]*60; // per-phase countdown
 function onUpdate(state){
   if(MODE==='grp'){
     if(state.phase !== null && state.phase !== undefined){
+      // Sync phase-time settings (PM) if facilitator changed them
+      if(Array.isArray(state.pm)){
+        for(let i=0;i<PM.length;i++){ if(typeof state.pm[i]==='number') PM[i]=state.pm[i]; }
+      }
       if(state.phase !== PHASE){
         // Phase changed by facilitator -> jump there
         PHASE = state.phase;
@@ -327,6 +331,8 @@ function onUpdate(state){
       if(state.secs!=null && Math.abs(secs-state.secs)>2){
         secs = state.secs;
         updTimer();
+      } else {
+        updChips(); updTotal();
       }
     }
   } else {
@@ -565,7 +571,7 @@ const DEFS={
     qs:[
       {h:'Diskutera 1',p:'Tänk på ett uppdrag ni minns – vad var det konkret som byggde förtroende hos kunden?'},
       {h:'Diskutera 2',p:'Hur hanterar ni situationer där ni förväntas vara "mer än tekniker" – coacha kund, hantera konflikter, sälja in nästa fas?'},
-      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot <span class="term" onclick="showTerm(\'linje\')">linjeroll</span>? Vad saknar ni – och vad uppskattar ni mest?'},
+      {h:'Diskutera 3',p:'Vad är den tydligaste skillnaden mot <span class="term" onclick="showTerm(\'linje\')">linjeroll</span> <span style="font-size:11px;opacity:.5">(klicka för förklaring)</span>? Vad saknar ni – och vad uppskattar ni mest?'},
     ],
     del:'<strong>1 konkret tips</strong> – något ni faktiskt gjort eller sett som är bra konsultmässighet.',
     ins:['"Ingen frågar vad du kostar om du levererar värde"','Varumärket byggs i varje möte, varje mail','Pålitlighet > Briljans','Du ÄR Combitech hos kunden'],
