@@ -190,7 +190,6 @@ footer strong{font-size:10px;color:white;letter-spacing:.05em}
     <button class="mb on" id="b-grp" onclick="setMode('grp')">Gruppvy</button>
     <button class="mb" id="b-sum" onclick="trySum()">Summering</button>
     <button class="qb" onclick="showQR()">📲 Visa kod</button>
-    <button class="qb" onclick="testFB()">🔌 Testa</button>
     <button class="qb reset-btn" onclick="resetAll()" style="background:rgba(255,90,90,.25);border-color:rgba(255,160,160,.5)">🗑 Nollställ</button>
   </div>
 </div>
@@ -208,7 +207,6 @@ footer strong{font-size:10px;color:white;letter-spacing:.05em}
 </div>
 <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
 <main id="main"></main>
-<div id="fbdebug" style="text-align:center;font-size:10px;color:#aaa;padding:3px;background:#fafafa;border-top:1px solid #eee">Firestore: ansluter…</div>
 <footer><strong>GRC</strong><span>Governance · Risk &amp; Compliance</span><span> · </span><span>Combitech Enhetsträff</span><span style="opacity:.5"> · build v10, little meatball</span></footer>
 
 <!-- Firebase via CDN (non-module, using compat) -->
@@ -228,13 +226,13 @@ function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true
 function fbSaveState(ph, sc){
   const _t=setTimeout(()=>updDebug('✗ TIMEOUT vid skrivning (fas='+ph+') – servern svarar inte. Troligen blockerad av brandvägg/nätverk.'),5000);
   COL.doc("state").set({phase:ph, secs:sc, pm:PM.slice(), ts:Date.now()}, {merge:true})
-    .then(()=>{clearTimeout(_t); updDebug('✓ Skrivet till server: fas='+ph+' sek='+sc+' pm='+JSON.stringify(PM)+' kl '+new Date().toLocaleTimeString('sv-SE'));})
+    .then(()=>{clearTimeout(_t);})
     .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (state): '+e.code+' – '+e.message);});
 }
 function fbSavePM(){
   const _t=setTimeout(()=>updDebug('✗ TIMEOUT vid skrivning av tider'),5000);
   COL.doc("pm").set({values:PM.slice(), ts:Date.now()})
-    .then(()=>{clearTimeout(_t); updDebug('✓ Tider sparade: '+JSON.stringify(PM)+' kl '+new Date().toLocaleTimeString('sv-SE'));})
+    .then(()=>{clearTimeout(_t);})
     .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (pm): '+e.code+' – '+e.message);});
 }
 
@@ -271,23 +269,8 @@ function resetAll(){
   }).catch(e=>updDebug('✗ FEL vid nollställning: '+e.message));
 }
 
-function testFB(){
-  updDebug('testar (server, 5s timeout)...');
-  const _t=setTimeout(()=>updDebug('\u2717 TIMEOUT (5s) \u2013 ingen kontakt med Firestore-servern. Troligen blockerad av n\u00e4tverk/brandv\u00e4gg p\u00e5 detta n\u00e4tverk.'),5000);
-  COL.doc('state').get({source:'server'}).then(d=>{
-    clearTimeout(_t);
-    updDebug('\u2713 SERVER OK \u00b7 finns='+d.exists+' \u00b7 '+JSON.stringify(d.data()||{}));
-  }).catch(e=>{
-    clearTimeout(_t);
-    updDebug('\u2717 SERVER FEL: '+(e.code||'')+' \u2013 '+e.message);
-  });
-}
-
 // Single persistent listener (with debug status)
-function updDebug(extra){
-  const el=document.getElementById('fbdebug');
-  if(el) el.textContent='Firestore: '+(extra||'');
-}
+function updDebug(extra){ /* debug UI removed */ }
 COL.onSnapshot(snap => {
   const a = {};
   let stateDoc=null, pmDoc=null;
@@ -301,7 +284,6 @@ COL.onSnapshot(snap => {
   if(stateDoc){ state.phase=stateDoc.phase; state.secs=stateDoc.secs; }
   if(pmDoc && Array.isArray(pmDoc.values)) state.pm=pmDoc.values;
   else if(stateDoc && Array.isArray(stateDoc.pm)) state.pm=stateDoc.pm;
-  updDebug('lyssnar (cache) · state fas='+state.phase+' sek='+state.secs+' pm='+JSON.stringify(state.pm)+' · '+new Date().toLocaleTimeString('sv-SE'));
   onUpdate(state);
 }, err => {
   updDebug('✗ FEL: '+err.code+' – '+err.message);
@@ -326,12 +308,9 @@ if(sessionStorage.getItem('fa')==='1'){ AUTH=true; }
 secs = PM[PHASE]*60; // per-phase countdown
 
 // Called every time Firestore updates
-let LAST_STATE_PM=null;
 function onUpdate(state){
   if(MODE==='grp'){
     if(state.phase !== null && state.phase !== undefined){
-      LAST_STATE_PM = state.pm;
-      updDebug('grp · mottagen fas='+state.phase+' · state.pm='+JSON.stringify(state.pm)+' · PM(min)='+JSON.stringify(PM)+' · '+new Date().toLocaleTimeString('sv-SE'));
       // Sync phase-time settings (PM) if facilitator changed them
       let pmChanged=false;
       if(Array.isArray(state.pm)){
@@ -642,8 +621,7 @@ function rDelGrp(n){
   }).join('');
   const lkey=lk(n,SEL), liid=`lv${n}`, lbid=`lb${n}`, ltid=`lt${n}`;
   const uid=`${n}g`;
-  return `<div class="sb"><span class="ld"></span>&nbsp;Synkad – ${d.t} · tider(min): ${PM.join('/')}</div>
-    <div style="font-size:10px;color:#bbb;margin-bottom:.5rem">debug: senast mottaget state.pm=${JSON.stringify(LAST_STATE_PM)} | PM i minnet=${JSON.stringify(PM)}</div>
+  return `<div class="sb"><span class="ld"></span>&nbsp;Synkad – ${d.t}</div>
     ${nav(false)}
     <div class="card">
       <div class="ct">${d.t} <span style="font-size:11px;font-weight:400;color:#0F6E56">${SEL}</span></div>
