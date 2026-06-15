@@ -228,7 +228,7 @@ function fbSave(key, text){ COL.doc(key).set({text, ts: Date.now()}, {merge:true
 function fbSaveState(ph, sc){
   const _t=setTimeout(()=>updDebug('✗ TIMEOUT vid skrivning (fas='+ph+') – servern svarar inte. Troligen blockerad av brandvägg/nätverk.'),5000);
   COL.doc("state").set({phase:ph, secs:sc, pm:PM.slice(), ts:Date.now()})
-    .then(()=>{clearTimeout(_t); updDebug('✓ Skrivet till server: fas='+ph+' sek='+sc+' kl '+new Date().toLocaleTimeString('sv-SE'));})
+    .then(()=>{clearTimeout(_t); updDebug('✓ Skrivet till server: fas='+ph+' sek='+sc+' pm='+JSON.stringify(PM)+' kl '+new Date().toLocaleTimeString('sv-SE'));})
     .catch(e=>{clearTimeout(_t); updDebug('✗ SKRIV-FEL (state): '+e.code+' – '+e.message);});
 }
 
