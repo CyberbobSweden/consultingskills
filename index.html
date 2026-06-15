@@ -317,6 +317,7 @@ secs = PM[PHASE]*60; // per-phase countdown
 function onUpdate(state){
   if(MODE==='grp'){
     if(state.phase !== null && state.phase !== undefined){
+      updDebug('grp · mottagen fas='+state.phase+' · state.pm='+JSON.stringify(state.pm)+' · PM(min)='+JSON.stringify(PM)+' · '+new Date().toLocaleTimeString('sv-SE'));
       // Sync phase-time settings (PM) if facilitator changed them
       let pmChanged=false;
       if(Array.isArray(state.pm)){
@@ -627,7 +628,7 @@ function rDelGrp(n){
   }).join('');
   const lkey=lk(n,SEL), liid=`lv${n}`, lbid=`lb${n}`, ltid=`lt${n}`;
   const uid=`${n}g`;
-  return `<div class="sb"><span class="ld"></span>&nbsp;Synkad – ${d.t}</div>
+  return `<div class="sb"><span class="ld"></span>&nbsp;Synkad – ${d.t} · tider(min): ${PM.join('/')}</div>
     ${nav(false)}
     <div class="card">
       <div class="ct">${d.t} <span style="font-size:11px;font-weight:400;color:#0F6E56">${SEL}</span></div>
